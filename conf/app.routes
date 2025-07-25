@@ -20,7 +20,7 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad()
 
-GET        /changeToUseOfSpace                           controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
-POST       /changeToUseOfSpace                           controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
-GET        /changeChangeToUseOfSpace                     controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeChangeToUseOfSpace                     controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
+GET         /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
+POST        /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
+GET         /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-about-change-to-use-of-space         ontrollers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
