@@ -19,3 +19,8 @@ GET         /account/sign-out                            controllers.auth.AuthCo
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad()
+
+GET         /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
+POST        /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
+GET         /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
