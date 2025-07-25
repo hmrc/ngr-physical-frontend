@@ -18,22 +18,23 @@ package actions
 
 import com.google.inject.ImplementedBy
 import play.api.mvc.Results.Redirect
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.http.HeaderCarrier
-import config.AppConfig
+import config.{AppConfig, FrontendAppConfig}
 import connectors.NGRConnector
 import models.auth.AuthenticatedUserRequest
 import models.registration.CredId
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class RegistrationActionImpl @Inject()(
-                                    ngrConnector: NGRConnector,
-                                    authenticate: AuthRetrievals,
-                                    appConfig: AppConfig,
-                                    mcc: MessagesControllerComponents
+                                        ngrConnector: NGRConnector,
+                                        authenticate: AuthRetrievals,
+                                        appConfig: FrontendAppConfig,
+                                        mcc: MessagesControllerComponents
                                   )(implicit ec: ExecutionContext) extends RegistrationAction {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] = {

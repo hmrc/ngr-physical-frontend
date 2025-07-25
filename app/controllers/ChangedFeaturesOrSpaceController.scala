@@ -20,7 +20,7 @@ import actions.{AuthRetrievals, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.NotFoundException
-import config.AppConfig
+import config.{AppConfig, FrontendAppConfig}
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
@@ -37,7 +37,7 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   ngrConnector: NGRConnector,
                                                   authenticate: AuthRetrievals,
                                                   isRegisteredCheck: RegistrationAction,
-                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
+                                                )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async { implicit request =>
@@ -51,3 +51,4 @@ class ChangedFeaturesOrSpaceController @Inject()(
         
 
 }
+

@@ -21,7 +21,7 @@ import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, StringContextOps}
-import config.AppConfig
+import config.{AppConfig, FrontendAppConfig}
 import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
 import models.registration.{CredId, RatepayerRegistrationValuation}
 
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NGRConnector @Inject()(http: HttpClientV2,
-                             appConfig: AppConfig,
+                             appConfig: FrontendAppConfig,
                             )
                             (implicit ec: ExecutionContext) {
   private def url(path: String): URL = url"${appConfig.nextGenerationRatesUrl}/next-generation-rates/$path"
