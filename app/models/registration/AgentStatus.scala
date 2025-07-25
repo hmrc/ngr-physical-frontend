@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package models.registration
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import enumeratum.*
 
-import scala.concurrent.{ExecutionContext, Future}
+sealed trait AgentStatus extends EnumEntry
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+object AgentStatus extends Enum[AgentStatus] with PlayJsonEnum[AgentStatus]  {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
+  val values: IndexedSeq[AgentStatus] = findValues
 
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  case object Agent  extends AgentStatus
+  case object Autonomous extends AgentStatus
+
 }

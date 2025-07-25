@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package models.registration
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
-import scala.concurrent.{ExecutionContext, Future}
+final case class Nino(nino: String) {
+  def value: String = nino
+}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
-
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+object Nino  {
+  implicit val format: OFormat[Nino] = Json.format[Nino]
 }

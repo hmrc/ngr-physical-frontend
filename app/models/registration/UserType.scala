@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package models.registration
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import enumeratum.*
 
-import scala.concurrent.{ExecutionContext, Future}
+sealed trait UserType extends EnumEntry
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+object UserType extends Enum[UserType] with PlayJsonEnum[UserType]  {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
+  val values: IndexedSeq[UserType] = findValues
 
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  case object Individual  extends UserType
+  case object Organisation extends UserType
+
 }

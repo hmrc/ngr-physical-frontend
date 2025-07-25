@@ -16,7 +16,9 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import actions.IdentifierAction
+import config.FrontendAppConfig
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,7 +29,7 @@ class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identify: IdentifierAction,
                                  view: IndexView
-                               ) extends FrontendBaseController with I18nSupport {
+                               ) (implicit appConfig: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = identify { implicit request =>
     Ok(view())

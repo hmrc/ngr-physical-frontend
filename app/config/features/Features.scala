@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package config.features
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.Configuration
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
-
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+class Features @Inject()(implicit config: Configuration) {
+  val welshLanguageSupportEnabled = new Feature("features.welsh-language-support")
+  val vmvPropertyLookupTestEnabled = new Feature("vmvPropertyLookupTestEnabled.enabled")
 }

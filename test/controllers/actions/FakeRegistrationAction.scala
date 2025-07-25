@@ -16,21 +16,22 @@
 
 package controllers.actions
 
-import actions.IdentifierAction
+import actions.RegistrationAction
+import models.auth.AuthenticatedUserRequest
+import play.api.mvc.*
+import uk.gov.hmrc.auth.core.Nino
+import uk.gov.hmrc.auth.core.retrieve.Name
 
 import javax.inject.Inject
-import models.requests.IdentifierRequest
-import play.api.mvc.*
-
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class FakeRegistrationAction @Inject()(bodyParsers: PlayBodyParsers) extends RegistrationAction {
 
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id"))
-
-  override def parser: BodyParser[AnyContent] =
-    bodyParsers.default
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] =  {
+    val authRequest = AuthenticatedUserRequest(request = request, confidenceLevel = None, authProvider = None, email = Some("user@email.com"),  credId = Some("1234"), name = Some(Name(name = Some("Some name"), lastName = Some(""))), affinityGroup = None, nino = Nino(hasNino = true, Some("AA000003D")))
+    block(authRequest)
+  }
+  override def parser: BodyParser[AnyContent] = bodyParsers.defaultBodyParser
 
   override protected def executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global

@@ -16,17 +16,22 @@
 
 package controllers.actions
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import actions.AuthRetrievals
+import models.auth.AuthenticatedUserRequest
+import play.api.mvc.*
+import uk.gov.hmrc.auth.core.Nino
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+class FakeAuthRetrievals @Inject()(bodyParsers: PlayBodyParsers) extends AuthRetrievals {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] =  {
+    val authRequest = AuthenticatedUserRequest(request, None, None, Some("user@email.com"),  Some("1234"), None, None, nino = Nino(hasNino = true, Some("AA000003D")))
+    block(authRequest)
+  }
+  override def parser: BodyParser[AnyContent] = bodyParsers.defaultBodyParser
 
-  override protected implicit val executionContext: ExecutionContext =
+  override protected def executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 }
