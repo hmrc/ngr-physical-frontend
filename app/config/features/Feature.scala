@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package config.features
 
-import actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.Configuration
 
-import scala.concurrent.{ExecutionContext, Future}
+class Feature(val key: String)(implicit config: Configuration) {
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+  def apply(value: Boolean): Unit = sys.props += key -> value.toString
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  def apply(): Boolean = sys.props.get(key).fold(config.getOptional[Boolean](key).getOrElse(false))(_.toBoolean)
 }
