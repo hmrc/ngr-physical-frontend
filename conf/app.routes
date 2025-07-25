@@ -23,4 +23,4 @@ GET         /unauthorised                                controllers.Unauthorise
 GET         /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
 POST        /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
 GET         /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-about-change-to-use-of-space         ontrollers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
+POST        /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
