@@ -37,7 +37,7 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   ngrConnector: NGRConnector,
                                                   authenticate: AuthRetrievals,
                                                   isRegisteredCheck: RegistrationAction,
-                                                )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
+                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async { implicit request =>
