@@ -49,6 +49,31 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+service.name = ngr-physical-frontend
+service.text = This is your new service
+info.and.supporting.documents.heading = Information and supporting documents you need
+info.and.supporting.documents.sub.heading1 = Information you need
+info.and.supporting.documents.sub.heading2 = Supporting documents you need to upload
+info.and.supporting.documents.sub.heading3 = How your rateable value will change
+info.and.supporting.documents.p1 = You need information about the things you changed and what the property is like after the change.
+info.and.supporting.documents.p2 = You need the date you completed the change.
+info.and.supporting.documents.p3 = Depending on the change, you need to know things like:
+info.and.supporting.documents.change.bullet.point1 = the planning application reference, if you got planning permission
+info.and.supporting.documents.change.bullet.point2 = whether you added or removed features
+info.and.supporting.documents.change.bullet.point3 = how much of the property has air conditioning, heating, sprinklers, lifts or escalators
+info.and.supporting.documents.p4 = You must upload at least one document that supports all the changes you tell us about.
+info.and.supporting.documents.p5 = You can upload:
+info.and.supporting.documents.upload.bullet.point1 = plans
+info.and.supporting.documents.upload.bullet.point2 = photos
+info.and.supporting.documents.upload.bullet.point3 = letters or emails
+info.and.supporting.documents.upload.bullet.point4 = project plans or a schedule of works
+info.and.supporting.documents.p6 = We need to look at the changes you tell us about before we know how your rateable value will change. It may go up, down or stay the same. We will let your local council know about any change.
+info.and.supporting.help = Help with supporting documents
+info.and.supporting.help.details1 = Plans can be drawings with measurements, plans drawn to scale or your own sketch. Your architect or builder may be able to give you a copy of your plans.
+info.and.supporting.help.details2 = Photos must show what the property was like after the changes.
+info.and.supporting.help.details3 = Letters or emails must be about the changes. For example, receipts from suppliers or confirmation from your builder about the work they have done.
+info.and.supporting.help.details4 = Project plans or a schedule of works need to show what work was done when.
+
 #NavigationBar
 nav.home=Account home
 nav.signOut=Sign out

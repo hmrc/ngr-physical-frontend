@@ -12,3 +12,5 @@ GET        /account/sign-out                                      controllers.au
 GET        /account/signed-out                                    controllers.auth.SignedOutController.onPageLoad()
 GET        /unauthorised                                          controllers.UnauthorisedController.onPageLoad()
 GET        /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.show
+
+GET         /information-and-supporting-documents-need   controllers.InfoAndSupportingDocController.show
