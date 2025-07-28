@@ -16,25 +16,29 @@
 
 package controllers
 
+import actions.{AuthRetrievals, RegistrationAction}
+import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.NotFoundException
 import views.html.InfoAndSupportingDocView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InfoAndSupportingDocController @Inject()(
                                                 val controllerComponents: MessagesControllerComponents,
-                                                view: InfoAndSupportingDocView
-) extends FrontendBaseController with I18nSupport {
+                                                view: InfoAndSupportingDocView,
+                                                authenticate: AuthRetrievals,
+                                                isRegisteredCheck: RegistrationAction
+)(implicit appConfig: AppConfig, ec: ExecutionContext)  extends FrontendBaseController with I18nSupport {
 
-  val show: Action[AnyContent] = 
-    Action {
+  val show: Action[AnyContent] =
+    (authenticate andThen isRegisteredCheck).async {
       implicit request =>
-        Ok {
-          view()
-        }
+        Future.successful(Ok(view()))
     }
 
 }

@@ -16,9 +16,9 @@
 
 package views
 
+import helpers.ViewBaseSpec
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import utils.ViewBaseSpec
 import views.html.InfoAndSupportingDocView
 
 class InfoAndSupportingDocViewSpec extends ViewBaseSpec {

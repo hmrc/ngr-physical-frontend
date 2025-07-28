@@ -17,23 +17,25 @@
 package controllers
 
 
+import helpers.{ControllerSpecSupport, TestData}
 import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import utils.ControllerSpecSupport
 import views.html.InfoAndSupportingDocView
 
 import scala.concurrent.Future
 
-class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport  {
+class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with TestData {
 
   lazy val view: InfoAndSupportingDocView = inject[InfoAndSupportingDocView]
   private val fakeRequest = FakeRequest("GET", "/information-and-supporting-documents-need")
 
   def controller() = new InfoAndSupportingDocController(
     mcc,
-    view
-  )
+    view,
+    mockAuthJourney, 
+    mockIsRegisteredCheck
+  )(mockConfig)
 
   val pageTitle = "Information and supporting documents you need"
   val contentP = "You need information about the things you changed and what the property is like after the change."
@@ -41,7 +43,7 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport  {
   "Dashboard Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller().show(fakeRequest)
+        val result: Future[Result] = controller().show(authenticatedFakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
