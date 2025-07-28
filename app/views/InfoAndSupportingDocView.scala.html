@@ -22,7 +22,7 @@
       p: p,
       bulletPointList: bulletPointList,
       detailsDropdown: detailsDropdown,
-      govukButton: GovukButton)
+      saveAndContinueButton: saveAndContinueButton)
 
 @()(implicit request: RequestHeader, messages: Messages)
 
@@ -95,12 +95,7 @@ id = Some("para-6")) {
 }
 
 
-<p class="govuk-body">
-    @govukButton(
-    ButtonViewModel(messages("site.continue"))
-    .asLink("")
-    )
-</p>
+@saveAndContinueButton(msg = messages("site.continue"))
 
 }
 

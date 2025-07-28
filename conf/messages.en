@@ -1,5 +1,4 @@
 service.name = ngr-physical-frontend
-service.continue = Continue
 
 site.back = Back
 site.remove = Remove
