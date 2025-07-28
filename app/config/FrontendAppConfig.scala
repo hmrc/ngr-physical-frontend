@@ -20,9 +20,19 @@ import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
+import config.features.Features
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+trait AppConfig {
+  val ngrDashboardUrl: String
+  val ngrLogoutUrl: String
+  val nextGenerationRatesUrl: String
+  val registrationUrl: String
+  val features: Features
+}
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesConfig) extends AppConfig {
 
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
@@ -52,4 +62,22 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
+
+  override val registrationUrl: String = sc.baseUrl("ngr-login-register-frontend")
+  override val ngrDashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
+  override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
+  override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
+  override val features = new Features()(configuration)
+
+  def getString(key: String): String =
+    configuration.getOptional[String](key).filter(!_.isBlank).getOrElse(throwConfigNotFoundError(key))
+
+  private def throwConfigNotFoundError(key: String): String =
+    throw new RuntimeException(s"Could not find config key '$key'")
+
+  lazy val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  
+  
+  
 }

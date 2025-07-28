@@ -24,3 +24,5 @@ GET         /about-change-to-use-of-space                controllers.ChangeToUse
 POST        /about-change-to-use-of-space                controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
 GET         /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-about-change-to-use-of-space         controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
+GET         /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.show
+GET         /information-and-supporting-documents-need   controllers.InfoAndSupportingDocController.show

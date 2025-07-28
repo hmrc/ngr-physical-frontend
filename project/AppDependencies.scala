@@ -4,6 +4,7 @@ object AppDependencies {
 
   private val bootstrapVersion = "9.18.0"
   private val hmrcMongoVersion = "2.7.0"
+  private val enumeratumVersion = "1.9.0"
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
@@ -11,6 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"    % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"            % hmrcMongoVersion,
     "uk.gov.hmrc"       %% "play-conditional-form-mapping-play-30"  % "3.3.0"
+    "com.beachape"      %% "enumeratum-play"               % enumeratumVersion
   )
 
   val test: Seq[ModuleID] = Seq(

@@ -16,7 +16,8 @@
 
 package base
 
-import controllers.actions._
+import actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, IdentifierAction}
+import controllers.actions.*
 import models.UserAnswers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -45,8 +46,8 @@ trait SpecBase
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+    //    bind[DataRequiredAction].to[DataRequiredActionImpl],
+      //  bind[IdentifierAction].to[FakeIdentifierAction],
+     //   bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 }
