@@ -1,4 +1,5 @@
 service.name = ngr-physical-frontend
+service.continue = Continue
 
 site.back = Back
 site.remove = Remove
@@ -47,3 +48,44 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+#NavigationBar
+nav.home=Account home
+nav.signOut=Sign out
+nav.messages=Messages
+nav.actionNeeded=Action needed
+nav.profileAndSettings=Profile and settings
+
+#Changed Features or Space
+changedFeaturesOrSpace.title = Tell us you changed property features or use of space
+changedFeaturesOrSpace.p1 = We use information about certain things in your property to work out the rateable value. A change to them could affect the rateable value.
+changedFeaturesOrSpace.p2 = You must tell us within 60 days of completing a change.
+changedFeaturesOrSpace.div1 = If you made a change that is not shown on this page, you do not need to tell us about it.
+changedFeaturesOrSpace.h2.1 = Use of space
+changedFeaturesOrSpace.p3 = You only need to tell us if you:
+changedFeaturesOrSpace.ul1.li1 = changed the internal layout
+changedFeaturesOrSpace.ul1.li2 = moved or removed internal walls
+changedFeaturesOrSpace.ul1.li3 = built an extension
+changedFeaturesOrSpace.ul1.li4 = demolished part of the property
+changedFeaturesOrSpace.h2.2 = Internal features
+changedFeaturesOrSpace.p4 = You only need to tell us you changed:
+changedFeaturesOrSpace.ul2.li1 = air conditioning
+changedFeaturesOrSpace.ul2.li2 = compressed air systems
+changedFeaturesOrSpace.ul2.li3 = escalators
+changedFeaturesOrSpace.ul2.li4 = heating
+changedFeaturesOrSpace.ul2.li5 = lifts
+changedFeaturesOrSpace.ul2.li6 = security cameras
+changedFeaturesOrSpace.ul2.li7 = sprinklers
+changedFeaturesOrSpace.h2.3 = External features
+changedFeaturesOrSpace.p5 = You only need to tell us you changed:
+changedFeaturesOrSpace.ul3.li1 = advertising displays on your property
+changedFeaturesOrSpace.ul3.li2 = bike sheds
+changedFeaturesOrSpace.ul3.li3 = canopies
+changedFeaturesOrSpace.ul3.li4 = land
+changedFeaturesOrSpace.ul3.li5 = loading bays
+changedFeaturesOrSpace.ul3.li6 = lock-up garages
+changedFeaturesOrSpace.ul3.li7 = outdoor seating
+changedFeaturesOrSpace.ul3.li8 = parking
+changedFeaturesOrSpace.ul3.li9 = portable buildings
+changedFeaturesOrSpace.ul3.li10 = shipping containers
+changedFeaturesOrSpace.ul3.li11 = solar panels

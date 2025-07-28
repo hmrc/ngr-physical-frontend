@@ -3,6 +3,8 @@
     If you encounter any issue with Sass compilation using the plugin, please reach out to the PlatUI team.
  */
 
+@import 'components/nav';
+
 .js-visible {
   display: none !important;
 }

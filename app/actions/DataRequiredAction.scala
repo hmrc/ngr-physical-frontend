@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package actions
 
 import javax.inject.Inject
 import controllers.routes
