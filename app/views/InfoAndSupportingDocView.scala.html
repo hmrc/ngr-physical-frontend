@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
+@import models.NavigationBarContent
+@import config.AppConfig
 @import views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(layout: templates.Layout,
+@this(layout: Layout,
       h1: h1,
       h2: h2,
       p: p,
@@ -24,7 +27,7 @@
       detailsDropdown: detailsDropdown,
       saveAndContinueButton: saveAndContinueButton)
 
-@()(implicit request: RequestHeader, messages: Messages)
+@(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @dropDownContentHelp = {
 
@@ -36,8 +39,9 @@
 }
 
 
-@layout(pageTitle = "ngr-physical-frontend") {
+@layout(pageTitle = Some("ngr-physical-frontend"), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
+<span class="govuk-caption-m">@address</span>
 @h1(msg = messages("info.and.supporting.documents.heading"), id = Some("page-heading"))
 
 @h2(msg = messages("info.and.supporting.documents.sub.heading1"), optId = Some("sub-heading-1"))

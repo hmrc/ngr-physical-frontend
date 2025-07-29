@@ -28,7 +28,7 @@ formHelper: FormWithCSRF
 @(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some("ngr-physical-frontend"), navigationBarContent = Some(navigationBarContent)) {
-    @formHelper(action = controllers.routes.ChangedFeaturesOrSpaceController.show){
+    @formHelper(action = controllers.routes.InfoAndSupportingDocController.show){
         <span class="govuk-caption-m">@address</span>
         <h1 class="govuk-heading-l">@messages("changedFeaturesOrSpace.title")</h1>
         <p class="govuk-body">@messages("changedFeaturesOrSpace.p1")</p>

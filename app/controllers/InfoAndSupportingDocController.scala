@@ -18,6 +18,9 @@ package controllers
 
 import actions.{AuthRetrievals, RegistrationAction}
 import config.AppConfig
+import connectors.NGRConnector
+import models.NavBarPageContents.createDefaultNavBar
+import models.registration.CredId
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.NotFoundException
@@ -32,13 +35,19 @@ class InfoAndSupportingDocController @Inject()(
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: InfoAndSupportingDocView,
                                                 authenticate: AuthRetrievals,
-                                                isRegisteredCheck: RegistrationAction
+                                                isRegisteredCheck: RegistrationAction,
+                                                ngrConnector: NGRConnector
 )(implicit appConfig: AppConfig, ec: ExecutionContext)  extends FrontendBaseController with I18nSupport {
 
   val show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async {
       implicit request =>
-        Future.successful(Ok(view()))
+        val credId = request.credId.getOrElse(throw new NotFoundException("No cred id found"))
+        ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
+          case Some(property) =>
+            Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))
+          case None => throw new RuntimeException("No Address found")
+        }
     }
 
 }
