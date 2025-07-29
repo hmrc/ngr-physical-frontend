@@ -15,3 +15,7 @@ GET        /unauthorised                                            controllers.
 GET        /tell-us-changed-property-features-or-use-of-space       controllers.ChangedFeaturesOrSpaceController.show
 POST       /tell-us-changed-property-features-or-use-of-space       controllers.ChangedFeaturesOrSpaceController.next
 GET        /information-and-supporting-documents-need               controllers.InfoAndSupportingDocController.show
+GET        /about-change-to-use-of-space                            controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
+POST       /about-change-to-use-of-space                            controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
+GET        /change-about-change-to-use-of-space                     controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-about-change-to-use-of-space                     controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)

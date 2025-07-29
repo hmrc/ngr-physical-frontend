@@ -20,7 +20,7 @@ import actions.{AuthRetrievals, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.NotFoundException
-import config.{AppConfig, FrontendAppConfig}
+import config.AppConfig
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId

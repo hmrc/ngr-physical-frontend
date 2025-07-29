@@ -16,11 +16,12 @@
 
 package controllers
 
-import controllers.actions.*
+import actions.*
 import forms.ChangeToUseOfSpaceFormProvider
-import models.{Mode, UserAnswers}
+import models.{ChangeToUseOfSpace, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ChangeToUseOfSpacePage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -34,15 +35,14 @@ class ChangeToUseOfSpaceController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       sessionRepository: SessionRepository,
                                       navigator: Navigator,
-                                      identify: IdentifierAction,
+                                      identify: AuthRetrievals,
                                       getData: DataRetrievalAction,
-                                      requireData: DataRequiredAction,
                                       formProvider: ChangeToUseOfSpaceFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChangeToUseOfSpaceView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[ChangeToUseOfSpace] = formProvider()
 
   //TODO: add requireData along with getData in onPageLoad and onSubmit methods when first page is implemented
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
