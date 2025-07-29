@@ -24,7 +24,7 @@ import views.html.InfoAndSupportingDocView
 class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
 
   val view: InfoAndSupportingDocView = app.injector.instanceOf[InfoAndSupportingDocView]
-
+  val address: String = "123 Street Lane"
 
   object Selectors {
     val firstSubHeading = "#sub-heading-1"
@@ -34,11 +34,11 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
     val secondParagraph = "#para-2"
     val thirdParagraph = "#para-4"
     val fourthParagraph = "#para-6"
-    val firstBulletPointSection = "#main-content > div > div > ul:nth-child(6) >"
+    val firstBulletPointSection = "#main-content > div > div > ul:nth-child(7) >"
     val firstBulletPointSection_1 = s"$firstBulletPointSection li:nth-child(1)"
     val firstBulletPointSection_2 = s"$firstBulletPointSection li:nth-child(2)"
     val firstBulletPointSection_3 = s"$firstBulletPointSection li:nth-child(3)"
-    val secondBulletPointSection = "#main-content > div > div > ul:nth-child(10)  >"
+    val secondBulletPointSection = "#main-content > div > div > ul:nth-child(11)  >"
     val secondBulletPointSection_1 = s"$secondBulletPointSection li:nth-child(1)"
     val secondBulletPointSection_2 = s"$secondBulletPointSection li:nth-child(2)"
     val secondBulletPointSection_3 = s"$secondBulletPointSection li:nth-child(3)"
@@ -53,7 +53,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
   }
 
   "Dashboard view" must {
-    val dashboardView = view()
+    val dashboardView = view(address, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(dashboardView.body)
 
 

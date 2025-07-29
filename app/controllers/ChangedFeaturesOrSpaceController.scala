@@ -48,7 +48,10 @@ class ChangedFeaturesOrSpaceController @Inject()(
         case None => throw new RuntimeException("No Address found")
       }
     }
-        
 
+  def next: Action[AnyContent] =
+    (authenticate andThen isRegisteredCheck).async { implicit request =>
+      Future.successful(Redirect(routes.InfoAndSupportingDocController.show))
+    }
 }
 

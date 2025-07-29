@@ -18,6 +18,9 @@ package controllers
 
 
 import helpers.{ControllerSpecSupport, TestData}
+import models.registration.CredId
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -34,12 +37,15 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
     mcc,
     view,
     mockAuthJourney, 
-    mockIsRegisteredCheck
+    mockIsRegisteredCheck,
+    mockNGRConnector
   )(mockConfig)
 
   val pageTitle = "Information and supporting documents you need"
   val contentP = "You need information about the things you changed and what the property is like after the change."
 
+  when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
+  
   "Dashboard Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
