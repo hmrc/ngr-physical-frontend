@@ -21,6 +21,7 @@ import models.{ChangeToUseOfSpace, UseOfSpaces}
 import play.api.data.Form
 import play.api.data.Forms.*
 import uk.gov.voa.play.form.ConditionalMappings.*
+import models.UseOfSpaces.*
 
 import javax.inject.Inject
 
@@ -28,7 +29,9 @@ class ChangeToUseOfSpaceFormProvider @Inject() extends Mappings {
 
    private val permissionReferenceMaxLength = 20
   
-   def apply(): Form[ChangeToUseOfSpace] = Form(
+   def apply(): Form[ChangeToUseOfSpace] =
+     println("Available enums: " + enumerable[UseOfSpaces]("error").withPrefix("selectUseOfSpace"))
+     Form(
      mapping(
       "selectUseOfSpace" -> set(enumerable[UseOfSpaces]("changeToUseOfSpace.selectUseOfSpace.error.required")).verifying(nonEmptySet("changeToUseOfSpace.selectUseOfSpace.error.required")),
       "hasPlanningPermission" -> boolean("changeToUseOfSpace.hasPlanningPermission.error.required"),

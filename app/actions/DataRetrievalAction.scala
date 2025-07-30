@@ -16,9 +16,6 @@
 
 package actions
 
-import models.auth.AuthenticatedUserRequest
-import models.registration.CredId
-
 import javax.inject.Inject
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
@@ -30,12 +27,11 @@ class DataRetrievalActionImpl @Inject()(
                                          val sessionRepository: SessionRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
-  override protected def transform[A](request: AuthenticatedUserRequest[A]): Future[OptionalDataRequest[A]] = {
-
-    sessionRepository.get(request.credId.getOrElse("")).map {
-      OptionalDataRequest(request.request, request.credId.getOrElse(""), _)
+  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+    sessionRepository.get(request.credId).map { userAnswersOpt =>
+      OptionalDataRequest(request.request, request.credId, userAnswersOpt)
     }
   }
 }
 
-trait DataRetrievalAction extends ActionTransformer[AuthenticatedUserRequest, OptionalDataRequest]
+trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]

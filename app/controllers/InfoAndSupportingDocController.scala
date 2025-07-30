@@ -42,7 +42,7 @@ class InfoAndSupportingDocController @Inject()(
   val show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async {
       implicit request =>
-        val credId = request.credId.getOrElse(throw new NotFoundException("No cred id found"))
+        val credId = request.credId
         ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
           case Some(property) =>
             Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))

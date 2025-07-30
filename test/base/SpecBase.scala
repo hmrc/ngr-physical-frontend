@@ -16,18 +16,27 @@
 
 package base
 
-import actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, IdentifierAction}
-import controllers.actions.*
+import actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.{FakeDataRetrievalAction, FakeIdentifierAction}
 import models.UserAnswers
+import navigation.{FakeNavigator, Navigator}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.mvc.BodyParsers
+import repositories.SessionRepository
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait SpecBase
   extends AnyFreeSpec
@@ -39,15 +48,30 @@ trait SpecBase
 
   val userAnswersId: String = "id"
 
-  def emptyUserAnswers : UserAnswers = UserAnswers(userAnswersId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
-  def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+  def messages(app: Application): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  implicit lazy val actorSystem: ActorSystem = ActorSystem("TestActorSystem")
+  implicit lazy val mat: Materializer = Materializer(actorSystem)
+
+  val bodyParsers = new BodyParsers.Default()(mat)
+  val fakeIdentifier = new FakeIdentifierAction("userId", bodyParsers)
+  var fakeGetData: DataRetrievalAction = new FakeDataRetrievalAction(Some(emptyUserAnswers))
+  val mockSessionRepository: SessionRepository = mock[SessionRepository]
+
+  def onwardRoute: Call = Call("GET", "/foo")
+  
+  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
+    fakeGetData = new FakeDataRetrievalAction(userAnswers.orElse(Some(emptyUserAnswers)))
+
     new GuiceApplicationBuilder()
       .overrides(
-    //    bind[DataRequiredAction].to[DataRequiredActionImpl],
-      //  bind[IdentifierAction].to[FakeIdentifierAction],
-     //   bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[IdentifierAction].toInstance(fakeIdentifier),
+        bind[DataRetrievalAction].toInstance(fakeGetData),
+        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[SessionRepository].toInstance(mockSessionRepository)
       )
+  }
 }

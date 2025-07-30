@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class KeepAliveController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
-                                     authenticate: AuthRetrievals,
+                                     authenticate: IdentifierAction,
                                      isRegisteredCheck: RegistrationAction,
                                      getData: DataRetrievalAction,
                                      sessionRepository: SessionRepository

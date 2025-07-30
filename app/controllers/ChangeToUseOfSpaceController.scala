@@ -35,7 +35,7 @@ class ChangeToUseOfSpaceController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       sessionRepository: SessionRepository,
                                       navigator: Navigator,
-                                      identify: AuthRetrievals,
+                                      identify: IdentifierAction,
                                       getData: DataRetrievalAction,
                                       formProvider: ChangeToUseOfSpaceFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
@@ -57,12 +57,14 @@ class ChangeToUseOfSpaceController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
+      form.bindFromRequest()(request.request).fold(
         formWithErrors =>
+          println("Raw data: " + request.body)
+          println("Errors: " + formWithErrors.errors)
           Future.successful(BadRequest(view(formWithErrors, mode))),
 
         value =>
+          println("Form bound value: " + value)
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(ChangeToUseOfSpacePage, value))
             _              <- sessionRepository.set(updatedAnswers)

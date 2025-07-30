@@ -25,6 +25,7 @@ import config.{AppConfig, FrontendAppConfig}
 import connectors.NGRConnector
 import models.auth.AuthenticatedUserRequest
 import models.registration.CredId
+import models.requests.IdentifierRequest
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
@@ -32,17 +33,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RegistrationActionImpl @Inject()(
                                         ngrConnector: NGRConnector,
-                                        authenticate: AuthRetrievals,
+                                        authenticate: IdentifierAction,
                                         appConfig: FrontendAppConfig,
                                         mcc: MessagesControllerComponents
                                   )(implicit ec: ExecutionContext) extends RegistrationAction {
 
-  override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] = {
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
-    authenticate.invokeBlock(request, { implicit authRequest: AuthenticatedUserRequest[A] =>
+    authenticate.invokeBlock(request, { implicit authRequest: IdentifierRequest[A] =>
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(authRequest, authRequest.session)
 
-      val credId = CredId(authRequest.credId.getOrElse(""))
+      val credId = CredId(authRequest.credId)
 
       ngrConnector.getRatepayer(credId).flatMap{ maybeRatepayer =>
         val isRegistered = maybeRatepayer
@@ -56,7 +57,7 @@ class RegistrationActionImpl @Inject()(
           .getOrElse(Some(""))
 
         if (isRegistered) {
-          block(authRequest.copy( name = Some(Name(name = name, lastName = Some("")))))
+          block(authRequest.copy())
         } else {
          redirectToRegister()
         }
@@ -76,4 +77,4 @@ class RegistrationActionImpl @Inject()(
 }
 
 @ImplementedBy(classOf[RegistrationActionImpl])
-trait RegistrationAction extends ActionBuilder[AuthenticatedUserRequest, AnyContent] with ActionFunction[Request, AuthenticatedUserRequest]
+trait RegistrationAction extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
