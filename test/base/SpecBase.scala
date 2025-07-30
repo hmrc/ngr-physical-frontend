@@ -36,7 +36,7 @@ import play.api.mvc.Call
 import play.api.mvc.BodyParsers
 import repositories.SessionRepository
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 trait SpecBase
   extends AnyFreeSpec
@@ -53,11 +53,13 @@ trait SpecBase
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit lazy val actorSystem: ActorSystem = ActorSystem("TestActorSystem")
   implicit lazy val mat: Materializer = Materializer(actorSystem)
 
   val bodyParsers = new BodyParsers.Default()(mat)
   val fakeIdentifier = new FakeIdentifierAction("userId", bodyParsers)
+
   var fakeGetData: DataRetrievalAction = new FakeDataRetrievalAction(Some(emptyUserAnswers))
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
 

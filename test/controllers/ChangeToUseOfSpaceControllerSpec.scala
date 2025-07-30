@@ -28,12 +28,10 @@ import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.ChangeToUseOfSpaceView
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar {
-
-
-
+  
   val formProvider = new ChangeToUseOfSpaceFormProvider()
   val form: Form[ChangeToUseOfSpace] = formProvider()
   lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode).url

@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{AuthRetrievals, RegistrationAction}
+import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.NotFoundException
@@ -35,7 +35,7 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   mcc: MessagesControllerComponents,
                                                   view: ChangedFeaturesOrSpaceView,
                                                   ngrConnector: NGRConnector,
-                                                  authenticate: AuthRetrievals,
+                                                  authenticate: IdentifierAction,
                                                   isRegisteredCheck: RegistrationAction,
                                                 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 

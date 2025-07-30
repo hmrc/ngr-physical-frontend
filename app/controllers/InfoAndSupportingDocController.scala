@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{AuthRetrievals, RegistrationAction}
+import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
 import config.AppConfig
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class InfoAndSupportingDocController @Inject()(
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: InfoAndSupportingDocView,
-                                                authenticate: AuthRetrievals,
+                                                authenticate: IdentifierAction,
                                                 isRegisteredCheck: RegistrationAction,
                                                 ngrConnector: NGRConnector
 )(implicit appConfig: AppConfig, ec: ExecutionContext)  extends FrontendBaseController with I18nSupport {
