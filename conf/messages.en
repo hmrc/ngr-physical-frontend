@@ -48,6 +48,24 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+changeToUseOfSpace.title = About the change to use of space
+changeToUseOfSpace.useOfSpace.h2 = How did you change the use of space?
+changeToUseOfSpace.permission.h2 = Did you get planning permission?
+changeToUseOfSpace.rearrangedTheUseOfSpace = Rearranged the use of space in the property
+changeToUseOfSpace.builtAnExtension = Built an extension
+changeToUseOfSpace.demolishedPart = Demolished part of the property
+changeToUseOfSpace.selectAll = Select all that apply
+changeToUseOfSpace.permissionReference = What is the planning application reference?
+changeToUseOfSpace.permissionReference.hint = This is the reference your council gave your planning application
+changeToUseOfSpace.checkYourAnswersLabel = ChangeToUseOfSpace
+changeToUseOfSpace.selectUseOfSpace.error.required = Select how you changed use of space
+changeToUseOfSpace.hasPlanningPermission.error.required = Select yes if you got planning permission
+changeToUseOfSpace.permissionReference.error.required = Enter the planning application reference
+changeToUseOfSpace.permissionReference.error.length = Planning application reference should be 20 characters or less
+changeToUseOfSpace.selectUseOfSpace.change.hidden = selectUseOfSpace
+changeToUseOfSpace.hasPlanningPermission.change.hidden = hasPlanningPermission
+
+
 service.name = ngr-physical-frontend
 service.text = This is your new service
 info.and.supporting.documents.heading = Information and supporting documents you need

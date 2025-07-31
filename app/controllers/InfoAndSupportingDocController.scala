@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{AuthRetrievals, RegistrationAction}
+import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
 import config.AppConfig
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class InfoAndSupportingDocController @Inject()(
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: InfoAndSupportingDocView,
-                                                authenticate: AuthRetrievals,
+                                                authenticate: IdentifierAction,
                                                 isRegisteredCheck: RegistrationAction,
                                                 ngrConnector: NGRConnector
 )(implicit appConfig: AppConfig, ec: ExecutionContext)  extends FrontendBaseController with I18nSupport {
@@ -42,7 +42,7 @@ class InfoAndSupportingDocController @Inject()(
   val show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async {
       implicit request =>
-        val credId = request.credId.getOrElse(throw new NotFoundException("No cred id found"))
+        val credId = request.credId
         ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
           case Some(property) =>
             Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))

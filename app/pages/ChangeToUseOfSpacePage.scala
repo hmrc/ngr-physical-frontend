@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package models.requests
+package pages
 
-import play.api.mvc.{Request, WrappedRequest}
+import models.ChangeToUseOfSpace
+import play.api.libs.json.JsPath
 
-case class IdentifierRequest[A] (request: Request[A], userId: String, credId: String) extends WrappedRequest[A](request)
+case object ChangeToUseOfSpacePage extends QuestionPage[ChangeToUseOfSpace] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "changeToUseOfSpace"
+}

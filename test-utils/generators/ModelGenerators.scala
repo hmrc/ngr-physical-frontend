@@ -21,4 +21,18 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
+
+  implicit lazy val arbitraryChangeToUseOfSpace: Arbitrary[ChangeToUseOfSpace] =
+    Arbitrary {
+      for {
+        selectUseOfSpace <- arbitrary[Set[UseOfSpaces]]
+        hasPlanningPermission <- arbitrary[Boolean]
+        permissionReference <- if (hasPlanningPermission) arbitrary[Option[String]] else Gen.const(None)
+      } yield ChangeToUseOfSpace(selectUseOfSpace, hasPlanningPermission, permissionReference)
+    }
+
+  implicit lazy val arbitraryUseOfSpaces: Arbitrary[UseOfSpaces] =
+    Arbitrary {
+      Gen.oneOf(UseOfSpaces.values)
+    }
 }

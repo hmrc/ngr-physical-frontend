@@ -20,21 +20,23 @@ import org.mockito.Mockito.when
 import play.api.mvc.*
 import uk.gov.hmrc.auth.core.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import actions.{AuthRetrievals, RegistrationAction}
+import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
 import models.auth.AuthenticatedUserRequest
+import models.requests.IdentifierRequest
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ControllerSpecSupport extends TestSupport {
 
   val mockIsRegisteredCheck: RegistrationAction = mock[RegistrationAction]
-  val mockAuthJourney: AuthRetrievals = mock[AuthRetrievals]
+  val mockAuthJourney: IdentifierAction = mock[IdentifierAction]
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   mockRequest(true)
 
   def mockRequest(hasCredId: Boolean = false, hasNino: Boolean = true): Unit =
-    when(mockAuthJourney andThen mockIsRegisteredCheck) thenReturn new ActionBuilder[AuthenticatedUserRequest, AnyContent] {
-      override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] =  {
-        val authRequest = AuthenticatedUserRequest(request, None, None, Some("user@email.com"), if (hasCredId) Some("1234") else None, None, None, nino = if (hasNino) Nino(hasNino = true, Some("AA000003D")) else Nino(hasNino = false, None))
+    when(mockAuthJourney andThen mockIsRegisteredCheck) thenReturn new ActionBuilder[IdentifierRequest, AnyContent] {
+      override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =  {
+        val authRequest = IdentifierRequest(request, "id", "id")
         block(authRequest)
       }
       override def parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser

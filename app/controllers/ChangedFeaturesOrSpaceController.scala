@@ -16,11 +16,11 @@
 
 package controllers
 
-import actions.{AuthRetrievals, RegistrationAction}
+import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.NotFoundException
-import config.{AppConfig, FrontendAppConfig}
+import config.AppConfig
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
@@ -35,13 +35,13 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   mcc: MessagesControllerComponents,
                                                   view: ChangedFeaturesOrSpaceView,
                                                   ngrConnector: NGRConnector,
-                                                  authenticate: AuthRetrievals,
+                                                  authenticate: IdentifierAction,
                                                   isRegisteredCheck: RegistrationAction,
                                                 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] =
     (authenticate andThen isRegisteredCheck).async { implicit request =>
-      val credId = request.credId.getOrElse(throw new NotFoundException("No cred id found"))
+      val credId = request.credId
       ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
         case Some(property) => 
           Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))

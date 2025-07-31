@@ -18,6 +18,7 @@ package controllers.actions
 
 import actions.RegistrationAction
 import models.auth.AuthenticatedUserRequest
+import models.requests.IdentifierRequest
 import play.api.mvc.*
 import uk.gov.hmrc.auth.core.Nino
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -27,8 +28,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeRegistrationAction @Inject()(bodyParsers: PlayBodyParsers) extends RegistrationAction {
 
-  override def invokeBlock[A](request: Request[A], block: AuthenticatedUserRequest[A] => Future[Result]): Future[Result] =  {
-    val authRequest = AuthenticatedUserRequest(request = request, confidenceLevel = None, authProvider = None, email = Some("user@email.com"),  credId = Some("1234"), name = Some(Name(name = Some("Some name"), lastName = Some(""))), affinityGroup = None, nino = Nino(hasNino = true, Some("AA000003D")))
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =  {
+    val authRequest = IdentifierRequest(request, "id", "id")
     block(authRequest)
   }
   override def parser: BodyParser[AnyContent] = bodyParsers.defaultBodyParser

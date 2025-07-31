@@ -49,7 +49,7 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
   "Dashboard Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller().show(authenticatedFakeRequest)
+        val result: Future[Result] = controller().show(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)

@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json.*
 
-case class IdentifierRequest[A] (request: Request[A], userId: String, credId: String) extends WrappedRequest[A](request)
+case class ChangeToUseOfSpace (selectUseOfSpace: Set[UseOfSpaces], hasPlanningPermission: Boolean, permissionReference: Option[String])
+
+object ChangeToUseOfSpace {
+
+  implicit val format: OFormat[ChangeToUseOfSpace] = Json.format
+}
