@@ -33,7 +33,6 @@ class ChangedFeaturesOrSpaceControllerSpec
   "GET /" should :
     
     when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
-    
     "return 200" in :
       val result = controller.show(authenticatedFakeRequest)
       status(result) mustBe Status.OK

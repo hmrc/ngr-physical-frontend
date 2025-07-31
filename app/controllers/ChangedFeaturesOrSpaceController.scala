@@ -16,17 +16,15 @@
 
 package controllers
 
-import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
+import actions.{ IdentifierAction, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.NotFoundException
 import config.AppConfig
 import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
 import views.html.ChangedFeaturesOrSpaceView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
