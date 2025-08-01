@@ -17,6 +17,7 @@
 package forms
 
 import forms.behaviours.BooleanFieldBehaviours
+import models.Space
 import play.api.data.FormError
 
 class HaveYouChangedFormProviderSpec extends BooleanFieldBehaviours {
@@ -24,7 +25,7 @@ class HaveYouChangedFormProviderSpec extends BooleanFieldBehaviours {
   val requiredKey = "haveYouChanged.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new HaveYouChangedFormProvider()()
+  val form = new HaveYouChangedFormProvider()(Space)
 
   ".value" - {
 

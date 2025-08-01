@@ -3,7 +3,7 @@ package views
 import forms.HaveYouChangedFormProvider
 import helpers.ViewBaseSpec
 import models.NavBarPageContents.createDefaultNavBar
-import models.{External, Internal, NormalMode, Space}
+import models.{External, HaveYouChangedControllerUse, Internal, NormalMode, Space}
 import org.jsoup.Jsoup
 import play.api.data.Form
 import views.html.HaveYouChangedView
@@ -11,7 +11,12 @@ import views.html.HaveYouChangedView
 class HaveYouChangedViewSpec extends ViewBaseSpec {
   val view: HaveYouChangedView = inject[HaveYouChangedView]
   val formProvider: HaveYouChangedFormProvider = inject[HaveYouChangedFormProvider]
-  val form: Form[Boolean] = formProvider.apply()
+
+  def formWithError(use: HaveYouChangedControllerUse): Form[Boolean] = formProvider.apply(use).withError("value", use match {
+    case Space => "haveYouChangedSpace.error.required"
+    case Internal => "haveYouChangedInternal.error.required"
+    case External => "haveYouChangedExternal.error.required"
+  })
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
@@ -20,11 +25,14 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
     val yes = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(1) > label"
     val no = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(2) > label"
     val button = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
+    val topError = "#main-content > div > div.govuk-grid-column-two-thirds > form > div.govuk-error-summary > div > div > ul > li > a"
+    val bottomError = "#value-error"
   }
 
   "HaveYouChangedView" must {
     "show correct strings" when {
       "space mode" in {
+        val form = formWithError(Space)
         val document = Jsoup.parse(view("123 street", "haveYouChangedSpace.title", "haveYouChangedSpace.hint", form, Space, NormalMode, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed use of space?"
@@ -32,8 +40,11 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
         elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.topError)(document) mustBe "Select yes if you have changed use of space"
+        elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed use of space"
       }
       "internal mode" in {
+        val form = formWithError(Internal)
         val document = Jsoup.parse(view("123 street", "haveYouChangedInternal.title", "haveYouChangedInternal.hint", form, Internal, NormalMode, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed internal features?"
@@ -41,8 +52,11 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
         elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.topError)(document) mustBe "Select yes if you have changed internal features"
+        elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed internal features"
       }
       "external mode" in {
+        val form = formWithError(External)
         val document = Jsoup.parse(view("123 street", "haveYouChangedExternal.title", "haveYouChangedExternal.hint", form, External, NormalMode, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed external features?"
@@ -50,6 +64,8 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
         elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.topError)(document) mustBe "Select yes if you have changed external features"
+        elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed external features"
       }
     }
   }

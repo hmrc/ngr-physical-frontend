@@ -42,11 +42,10 @@ class HaveYouChangedController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: HaveYouChangedView
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
-
-  val form: Form[Boolean] = formProvider()
-
+  
   def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
+      val form: Form[Boolean] = formProvider(use)
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(pageType(use)) match {
         case None => form
         case Some(value) => form.fill(value)
@@ -57,6 +56,7 @@ class HaveYouChangedController @Inject()(
 
   def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
+      val form: Form[Boolean] = formProvider(use)
       form.bindFromRequest().fold(
         formWithErrors =>
           val (title, hint) = getMessageKeys(use)

@@ -18,12 +18,17 @@ package forms
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.{External, HaveYouChangedControllerUse, Internal, Space}
 import play.api.data.Form
 
 class HaveYouChangedFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(use: HaveYouChangedControllerUse): Form[Boolean] =
     Form(
-      "value" -> boolean("haveYouChanged.error.required")
+      "value" -> boolean(use match {
+        case Space => "haveYouChangedSpace.error.required"
+        case Internal => "haveYouChangedInternal.error.required"
+        case External => "haveYouChangedExternal.error.required"
+      })
     )
 }
