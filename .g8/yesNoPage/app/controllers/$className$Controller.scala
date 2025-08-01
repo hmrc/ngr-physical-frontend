@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.actions._
+import actions._
 import forms.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
@@ -11,8 +11,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.$className$View
-
+import config.AppConfig
 import scala.concurrent.{ExecutionContext, Future}
+import connectors.NGRConnector
 
 class $className;format="cap"$Controller @Inject()(
                                          override val messagesApi: MessagesApi,
@@ -22,9 +23,10 @@ class $className;format="cap"$Controller @Inject()(
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
                                          formProvider: $className$FormProvider,
+                                         ngrConnector: NGRConnector,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: $className$View
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                 )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 

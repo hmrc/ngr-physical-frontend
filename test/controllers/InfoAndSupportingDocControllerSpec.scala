@@ -36,9 +36,9 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
   def controller() = new InfoAndSupportingDocController(
     mcc,
     view,
-    mockAuthJourney, 
-    mockIsRegisteredCheck,
-    mockNGRConnector
+    fakeAuth,
+    fakeReg,
+    fakeData(None)
   )(mockConfig)
 
   val pageTitle = "Information and supporting documents you need"

@@ -27,7 +27,9 @@ import pages.ChangeToUseOfSpacePage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import repositories.SessionRepository
 import views.html.ChangeToUseOfSpaceView
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar {
@@ -78,7 +80,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = app
 
       running(application) {
         val request = FakeRequest(POST, changeToUseOfSpaceRoute)

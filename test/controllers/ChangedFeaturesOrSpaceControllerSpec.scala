@@ -26,14 +26,13 @@ import views.html.ChangedFeaturesOrSpaceView
 import scala.concurrent.Future
 
 class ChangedFeaturesOrSpaceControllerSpec
-  extends ControllerSpecSupport with TestData {
+  extends ControllerSpecSupport {
   lazy val view: ChangedFeaturesOrSpaceView = inject[ChangedFeaturesOrSpaceView]
-  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, mockNGRConnector, mockAuthJourney, mockIsRegisteredCheck)(mockConfig)
+  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, fakeAuth, fakeReg, fakeData(None))(mockConfig)
 
   "GET /" should :
     
     when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
-    
     "return 200" in :
       val result = controller.show(authenticatedFakeRequest)
       status(result) mustBe Status.OK

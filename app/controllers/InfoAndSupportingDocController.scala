@@ -16,19 +16,14 @@
 
 package controllers
 
-import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
+import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
 import config.AppConfig
-import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
-import models.registration.CredId
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.NotFoundException
 import views.html.InfoAndSupportingDocView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InfoAndSupportingDocController @Inject()(
@@ -36,18 +31,13 @@ class InfoAndSupportingDocController @Inject()(
                                                 view: InfoAndSupportingDocView,
                                                 authenticate: IdentifierAction,
                                                 isRegisteredCheck: RegistrationAction,
-                                                ngrConnector: NGRConnector
-)(implicit appConfig: AppConfig, ec: ExecutionContext)  extends FrontendBaseController with I18nSupport {
+                                                getData: DataRetrievalAction
+)(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
   val show: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck).async {
+    (authenticate andThen isRegisteredCheck andThen getData) {
       implicit request =>
-        val credId = request.credId
-        ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
-          case Some(property) =>
-            Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))
-          case None => throw new RuntimeException("No Address found")
-        }
+        Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
 
 }
