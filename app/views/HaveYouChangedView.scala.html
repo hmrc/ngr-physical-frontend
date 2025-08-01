@@ -18,6 +18,7 @@
 @import config.AppConfig
 @import views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import models.HaveYouChangedControllerUse
 
 @this(
     layout: Layout,
@@ -27,7 +28,7 @@
     govukButton: GovukButton
 )
 
-@(address: String, titleKey: String, hintKey: String, form: Form[_], use: String, mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(address: String, titleKey: String, hintKey: String, form: Form[_], use: HaveYouChangedControllerUse, mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, messages(titleKey))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
