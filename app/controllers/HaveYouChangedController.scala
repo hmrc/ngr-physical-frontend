@@ -21,7 +21,7 @@ import forms.HaveYouChangedFormProvider
 import javax.inject.{Inject, Singleton}
 import models.{HaveYouChangedControllerUse, Mode, UserAnswers}
 import navigation.Navigator
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,7 +34,6 @@ import play.api.data.Form
 
 @Singleton
 class HaveYouChangedController @Inject()(
-                                          override val messagesApi: MessagesApi,
                                           sessionRepository: SessionRepository,
                                           navigator: Navigator,
                                           identify: IdentifierAction,
@@ -70,4 +69,5 @@ class HaveYouChangedController @Inject()(
           } yield Redirect(navigator.nextPage(page, mode, updatedAnswers))
       )
   }
+  
 }

@@ -38,7 +38,7 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
     view,
     fakeAuth,
     fakeReg,
-    fakeData
+    fakeData(None)
   )(mockConfig)
 
   val pageTitle = "Information and supporting documents you need"

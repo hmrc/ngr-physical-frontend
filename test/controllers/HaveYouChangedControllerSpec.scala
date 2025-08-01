@@ -16,142 +16,81 @@
 
 package controllers
 
-import base.SpecBase
 import forms.HaveYouChangedFormProvider
-import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import helpers.ControllerSpecSupport
+import models.{CheckMode, External, HaveYouChangedControllerUse, Internal, Mode, NormalMode, Space, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-//import pages.HaveYouChangedPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import repositories.SessionRepository
+import org.scalatest.Assertion
+import pages.HaveYouChangedSpacePage
+import play.api.test.Helpers.*
 import views.html.HaveYouChangedView
 
 import scala.concurrent.Future
 
-//class HaveYouChangedControllerSpec extends SpecBase with MockitoSugar {
-//
-//  def onwardRoute = Call("GET", "/foo")
-//
-//  val formProvider = new HaveYouChangedFormProvider()
-//  val form = formProvider()
-//
-//  lazy val haveYouChangedRoute = routes.HaveYouChangedController.onPageLoad(NormalMode).url
-//
-//  "HaveYouChanged Controller" - {
-//
-//    "must return OK and the correct view for a GET" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, haveYouChangedRoute)
-//
-//        val result = route(application, request).value
-//
-//        val view = application.injector.instanceOf[HaveYouChangedView]
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must populate the view correctly on a GET when the question has previously been answered" in {
-//
-//      val userAnswers = UserAnswers(userAnswersId).set(HaveYouChangedPage, true).success.value
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, haveYouChangedRoute)
-//
-//        val view = application.injector.instanceOf[HaveYouChangedView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to the next page when valid data is submitted" in {
-//
-//      val mockSessionRepository = mock[SessionRepository]
-//
-//      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-//          .overrides(
-//            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-//            bind[SessionRepository].toInstance(mockSessionRepository)
-//          )
-//          .build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, haveYouChangedRoute)
-//            .withFormUrlEncodedBody(("value", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual onwardRoute.url
-//      }
-//    }
-//
-//    "must return a Bad Request and errors when invalid data is submitted" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, haveYouChangedRoute)
-//            .withFormUrlEncodedBody(("value", ""))
-//
-//        val boundForm = form.bind(Map("value" -> ""))
-//
-//        val view = application.injector.instanceOf[HaveYouChangedView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual BAD_REQUEST
-//        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, haveYouChangedRoute)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, haveYouChangedRoute)
-//            .withFormUrlEncodedBody(("value", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//  }
-//}
+class HaveYouChangedControllerSpec extends ControllerSpecSupport {
+  lazy val view: HaveYouChangedView = inject[HaveYouChangedView]
+  lazy val controller: HaveYouChangedController =
+    HaveYouChangedController(
+      mockSessionRepository,
+      navigator,
+      fakeAuth,
+      fakeData(None),
+      HaveYouChangedFormProvider(),
+      mcc,
+      view
+    )
+
+  lazy val userAnswersFilled: Option[UserAnswers] = UserAnswers("id").set(HaveYouChangedSpacePage, true).toOption
+
+  "HaveYouChangedController" must {
+    "return 200 for space" in {
+      checkForOkPageLoad(Space, NormalMode)
+      checkForOkPageLoad(Space, CheckMode)
+      checkForOkPageLoad(Internal, NormalMode)
+      checkForOkPageLoad(Internal, CheckMode)
+      checkForOkPageLoad(External, NormalMode)
+      checkForOkPageLoad(External, CheckMode)
+    }
+
+    "return HTML" in {
+      val result = controller.onPageLoad(Space, NormalMode)(authenticatedFakeRequest)
+      contentType(result) mustBe Some("text/html")
+      charset(result) mustBe Some("utf-8")
+    }
+
+    "pre-filled form" in {
+      val filledController = HaveYouChangedController(
+        mockSessionRepository,
+        navigator,
+        fakeAuth,
+        fakeData(userAnswersFilled),
+        HaveYouChangedFormProvider(),
+        mcc,
+        view
+      )
+
+      val result = filledController.onPageLoad(Space, NormalMode)(authenticatedFakeRequest)
+      contentAsString(result) must include("checked")
+    }
+
+    "should redirect on successful submission" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      val formRequest = requestWithForm(("value", "true"))
+      val result = controller.onSubmit(Space, NormalMode)(formRequest)
+      status(result) mustBe 303
+    }
+
+    "should error if no selection" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      val result = controller.onSubmit(Space, NormalMode)(authenticatedFakeRequest)
+      status(result) mustBe BAD_REQUEST
+    }
+
+  }
+
+  def checkForOkPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Assertion =
+    val result = controller.onPageLoad(use, mode)(authenticatedFakeRequest)
+    status(result) mustBe OK
+
+}

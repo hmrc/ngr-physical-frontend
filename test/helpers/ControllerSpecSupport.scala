@@ -16,24 +16,21 @@
 
 package helpers
 
-import actions.*
 import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
 import models.UserAnswers
-import models.requests.*
-import org.mockito.Mockito.when
-import play.api.mvc.*
+import navigation.Navigator
 import play.api.test.Helpers.stubMessagesControllerComponents
+import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
-
-import scala.concurrent.{ExecutionContext, Future}
 
 trait ControllerSpecSupport extends TestSupport with TestData {
   
   val fakeAuth = new FakeIdentifierAction(mcc.parsers.defaultBodyParser)
   val fakeReg = new FakeRegistrationAction(stubMessagesControllerComponents().parsers)
-  val fakeData = new FakeDataRetrievalAction(Some(UserAnswers("id")))
+  def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
   val fakeRequireData = new FakeDataRequiredAction()
-  val fakeId = new FakeIdentifierAction(mcc.parsers.defaultBodyParser)
+  val mockSessionRepository: SessionRepository = mock[SessionRepository]
+  val navigator: Navigator = inject[Navigator]
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   
