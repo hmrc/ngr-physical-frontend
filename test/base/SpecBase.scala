@@ -16,8 +16,8 @@
 
 package base
 
-import actions.{DataRetrievalAction, IdentifierAction}
-import controllers.actions.{FakeDataRetrievalAction, FakeIdentifierAction}
+import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
+import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
@@ -29,11 +29,10 @@ import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.mvc.BodyParsers
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.{AnyContent, BodyParser, Call, MessagesControllerComponents}
+import play.api.test.{FakeRequest, Injecting}
 import repositories.SessionRepository
 
 import scala.concurrent.ExecutionContext
@@ -44,7 +43,8 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with Injecting {
 
   val userAnswersId: String = "id"
 
@@ -56,24 +56,30 @@ trait SpecBase
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit lazy val actorSystem: ActorSystem = ActorSystem("TestActorSystem")
   implicit lazy val mat: Materializer = Materializer(actorSystem)
-
-  val bodyParsers = new BodyParsers.Default()(mat)
-  val fakeIdentifier = new FakeIdentifierAction("userId", bodyParsers)
-
-  var fakeGetData: DataRetrievalAction = new FakeDataRetrievalAction(Some(emptyUserAnswers))
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
-
-  def onwardRoute: Call = Call("GET", "/foo")
   
+  def onwardRoute: Call = Call("GET", "/foo")
+
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
-    fakeGetData = new FakeDataRetrievalAction(userAnswers.orElse(Some(emptyUserAnswers)))
+    val stubMcc = play.api.test.Helpers.stubMessagesControllerComponents()
+    val bodyParsers: BodyParser[AnyContent] = stubMcc.parsers.defaultBodyParser
+
+    val fakeAuth = new FakeIdentifierAction(bodyParsers)
+    val fakeReg = new FakeRegistrationAction(stubMcc.parsers)
+    def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
+    val fakeRequireData = new FakeDataRequiredAction()
+    
 
     new GuiceApplicationBuilder()
       .overrides(
-        bind[IdentifierAction].toInstance(fakeIdentifier),
-        bind[DataRetrievalAction].toInstance(fakeGetData),
+        bind[IdentifierAction].toInstance(fakeAuth),
+        bind[RegistrationAction].toInstance(fakeReg),
+        bind[DataRetrievalAction].toInstance(fakeData(userAnswers)),
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[SessionRepository].toInstance(mockSessionRepository)
       )
   }
+
+  implicit lazy val app: Application = applicationBuilder().build()
+  lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[play.api.mvc.MessagesControllerComponents]
 }

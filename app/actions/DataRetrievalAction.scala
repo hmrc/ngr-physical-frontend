@@ -18,19 +18,24 @@ package actions
 
 import connectors.NGRConnector
 import models.registration.CredId
+
 import javax.inject.Inject
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
 import repositories.SessionRepository
 import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(
                                          val sessionRepository: SessionRepository,
                                          ngrConnector: NGRConnector
-                                       )(implicit val executionContext: ExecutionContext, hc: HeaderCarrier) extends DataRetrievalAction {
+                                       )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
     sessionRepository.get(request.credId).flatMap { userAnswersOpt =>
       ngrConnector.getLinkedProperty(CredId(request.credId)).map {
         case Some(property) =>

@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class ChangedFeaturesOrSpaceControllerSpec
   extends ControllerSpecSupport with TestData {
   lazy val view: ChangedFeaturesOrSpaceView = inject[ChangedFeaturesOrSpaceView]
-  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, mockNGRConnector, mockAuthJourney, mockIsRegisteredCheck)(mockConfig)
+  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, fakeAuth, fakeReg, fakeData)(mockConfig)
 
   "GET /" should :
     
