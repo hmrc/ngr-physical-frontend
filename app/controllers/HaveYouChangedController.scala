@@ -43,46 +43,34 @@ class HaveYouChangedController @Inject()(
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
                                           formProvider: HaveYouChangedFormProvider,
-                                          ngrConnector: NGRConnector,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: HaveYouChangedView
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-
-      val credId = request.userId
-      ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
-        case Some(property) =>
-          val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(pageType(use)) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
-          val (title, hint) = getMessageKeys(use)
-          Future.successful(Ok(view(property.addressFull, title, hint, preparedForm, use, mode, createDefaultNavBar())))
-        case None => throw new NotFoundException("Property not found")
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(pageType(use)) match {
+        case None => form
+        case Some(value) => form.fill(value)
       }
+      val (title, hint) = getMessageKeys(use)
+      Ok(view(request.property.addressFull, title, hint, preparedForm, use, mode, createDefaultNavBar()))
   }
 
   def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val credId = request.userId
-      ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
-        case Some(property) =>
-          form.bindFromRequest().fold(
-            formWithErrors =>
-              val (title, hint) = getMessageKeys(use)
-              Future.successful(BadRequest(view(property.addressFull, title, hint, formWithErrors, use, mode, createDefaultNavBar()))),
-            value =>
-              val page = pageType(use)
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(page, value))
-                _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(page, mode, updatedAnswers))
-          )
-        case None => throw new NotFoundException("Property not found")
-      }
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          val (title, hint) = getMessageKeys(use)
+          Future.successful(BadRequest(view(request.property.addressFull, title, hint, formWithErrors, use, mode, createDefaultNavBar()))),
+        value =>
+          val page = pageType(use)
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(page, value))
+            _ <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(page, mode, updatedAnswers))
+      )
   }
 }
