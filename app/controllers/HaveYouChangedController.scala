@@ -28,12 +28,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HaveYouChangedView
 import config.AppConfig
 import scala.concurrent.{ExecutionContext, Future}
-import connectors.NGRConnector
 import models.HaveYouChangedControllerUse.{getMessageKeys, pageType}
 import models.NavBarPageContents.createDefaultNavBar
-import models.registration.CredId
 import play.api.data.Form
-import uk.gov.hmrc.http.NotFoundException
 
 @Singleton
 class HaveYouChangedController @Inject()(
