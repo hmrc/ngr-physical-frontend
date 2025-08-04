@@ -52,7 +52,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
 
   }
 
-  "Dashboard view" must {
+  "InfoAndSupportingDoc view" must {
     val dashboardView = view(address, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(dashboardView.body)
 
