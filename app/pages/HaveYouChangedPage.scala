@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package pages
 
-import actions.IdentifierAction
-import jakarta.inject.Inject
-import models.requests.IdentifierRequest
-import play.api.mvc.*
+import play.api.libs.json.JsPath
 
-import scala.concurrent.{ExecutionContext, Future}
+case object HaveYouChangedSpacePage extends QuestionPage[Boolean] {
 
-class FakeIdentifierAction @Inject()(val parser: BodyParser[AnyContent])(implicit val executionContext: ExecutionContext)
-  extends IdentifierAction {
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-    val newRequest = IdentifierRequest(request, "id", "id")
-    block(newRequest)
-  }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "haveYouChangedSpace"
+}
+
+case object HaveYouChangedInternalPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "haveYouChangedInternal"
+}
+
+case object HaveYouChangedExternalPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "haveYouChangedExternal"
 }

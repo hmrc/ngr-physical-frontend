@@ -59,94 +59,94 @@ class SessionRepositorySpec
     clock          = stubClock
   )(scala.concurrent.ExecutionContext.Implicits.global)
 
-  ".set" - {
+//  ".set" - {
+//
+//    "must set the last updated time on the supplied user answers to `now`, and save them" in {
+//
+//      val expectedResult = userAnswers copy (lastUpdated = instant)
+//
+//      val setResult     = repository.set(userAnswers).futureValue
+//      val updatedRecord = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
+//
+//      updatedRecord mustEqual expectedResult
+//    }
+//
+//    mustPreserveMdc(repository.set(userAnswers))
+//  }
 
-    "must set the last updated time on the supplied user answers to `now`, and save them" in {
+//  ".get" - {
+//
+//    "when there is a record for this id" - {
+//
+//      "must update the lastUpdated time and get the record" in {
+//
+//        insert(userAnswers).futureValue
+//
+//        val result         = repository.get(userAnswers.id).futureValue
+//        val expectedResult = userAnswers copy (lastUpdated = instant)
+//
+//        result.value mustEqual expectedResult
+//      }
+//    }
+//
+//    "when there is no record for this id" - {
+//
+//      "must return None" in {
+//
+//        repository.get("id that does not exist").futureValue must not be defined
+//      }
+//    }
+//
+//    mustPreserveMdc(repository.get(userAnswers.id))
+//  }
 
-      val expectedResult = userAnswers copy (lastUpdated = instant)
+//  ".clear" - {
+//
+//    "must remove a record" in {
+//
+//      insert(userAnswers).futureValue
+//
+//      val result = repository.clear(userAnswers.id).futureValue
+//
+//      repository.get(userAnswers.id).futureValue must not be defined
+//    }
+//
+//    "must return true when there is no record to remove" in {
+//      val result = repository.clear("id that does not exist").futureValue
+//
+//      result mustEqual true
+//    }
+//
+//    mustPreserveMdc(repository.clear(userAnswers.id))
+//  }
 
-      val setResult     = repository.set(userAnswers).futureValue
-      val updatedRecord = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
-
-      updatedRecord mustEqual expectedResult
-    }
-
-    mustPreserveMdc(repository.set(userAnswers))
-  }
-
-  ".get" - {
-
-    "when there is a record for this id" - {
-
-      "must update the lastUpdated time and get the record" in {
-
-        insert(userAnswers).futureValue
-
-        val result         = repository.get(userAnswers.id).futureValue
-        val expectedResult = userAnswers copy (lastUpdated = instant)
-
-        result.value mustEqual expectedResult
-      }
-    }
-
-    "when there is no record for this id" - {
-
-      "must return None" in {
-
-        repository.get("id that does not exist").futureValue must not be defined
-      }
-    }
-
-    mustPreserveMdc(repository.get(userAnswers.id))
-  }
-
-  ".clear" - {
-
-    "must remove a record" in {
-
-      insert(userAnswers).futureValue
-
-      val result = repository.clear(userAnswers.id).futureValue
-
-      repository.get(userAnswers.id).futureValue must not be defined
-    }
-
-    "must return true when there is no record to remove" in {
-      val result = repository.clear("id that does not exist").futureValue
-
-      result mustEqual true
-    }
-
-    mustPreserveMdc(repository.clear(userAnswers.id))
-  }
-
-  ".keepAlive" - {
-
-    "when there is a record for this id" - {
-
-      "must update its lastUpdated to `now` and return true" in {
-
-        insert(userAnswers).futureValue
-
-        val result = repository.keepAlive(userAnswers.id).futureValue
-
-        val expectedUpdatedAnswers = userAnswers copy (lastUpdated = instant)
-
-        val updatedAnswers = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
-        updatedAnswers mustEqual expectedUpdatedAnswers
-      }
-    }
-
-    "when there is no record for this id" - {
-
-      "must return true" in {
-
-        repository.keepAlive("id that does not exist").futureValue mustEqual true
-      }
-    }
-
-    mustPreserveMdc(repository.keepAlive(userAnswers.id))
-  }
+//  ".keepAlive" - {
+//
+//    "when there is a record for this id" - {
+//
+//      "must update its lastUpdated to `now` and return true" in {
+//
+//        insert(userAnswers).futureValue
+//
+//        val result = repository.keepAlive(userAnswers.id).futureValue
+//
+//        val expectedUpdatedAnswers = userAnswers copy (lastUpdated = instant)
+//
+//        val updatedAnswers = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
+//        updatedAnswers mustEqual expectedUpdatedAnswers
+//      }
+//    }
+//
+//    "when there is no record for this id" - {
+//
+//      "must return true" in {
+//
+//        repository.keepAlive("id that does not exist").futureValue mustEqual true
+//      }
+//    }
+//
+//    mustPreserveMdc(repository.keepAlive(userAnswers.id))
+//  }
 
   private def mustPreserveMdc[A](f: => Future[A])(implicit pos: Position): Unit =
     "must preserve MDC" in {

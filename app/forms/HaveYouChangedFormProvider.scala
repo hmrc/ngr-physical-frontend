@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package forms
 
-import actions.IdentifierAction
-import jakarta.inject.Inject
-import models.requests.IdentifierRequest
-import play.api.mvc.*
+import javax.inject.Inject
+import forms.mappings.Mappings
+import models.{External, HaveYouChangedControllerUse, Internal, Space}
+import play.api.data.Form
 
-import scala.concurrent.{ExecutionContext, Future}
+class HaveYouChangedFormProvider @Inject() extends Mappings {
 
-class FakeIdentifierAction @Inject()(val parser: BodyParser[AnyContent])(implicit val executionContext: ExecutionContext)
-  extends IdentifierAction {
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-    val newRequest = IdentifierRequest(request, "id", "id")
-    block(newRequest)
-  }
+  def apply(use: HaveYouChangedControllerUse): Form[Boolean] =
+    Form(
+      "value" -> boolean(use match {
+        case Space => "haveYouChangedSpace.error.required"
+        case Internal => "haveYouChangedInternal.error.required"
+        case External => "haveYouChangedExternal.error.required"
+      })
+    )
 }

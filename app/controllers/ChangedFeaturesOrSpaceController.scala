@@ -16,37 +16,28 @@
 
 package controllers
 
-import actions.{AuthRetrievals, IdentifierAction, RegistrationAction}
+import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.NotFoundException
 import config.AppConfig
-import connectors.NGRConnector
 import models.NavBarPageContents.createDefaultNavBar
-import models.registration.CredId
 import views.html.ChangedFeaturesOrSpaceView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class ChangedFeaturesOrSpaceController @Inject()(
                                                   mcc: MessagesControllerComponents,
                                                   view: ChangedFeaturesOrSpaceView,
-                                                  ngrConnector: NGRConnector,
                                                   authenticate: IdentifierAction,
                                                   isRegisteredCheck: RegistrationAction,
-                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
+                                                  getData: DataRetrievalAction
+                                                )(implicit appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck).async { implicit request =>
-      val credId = request.credId
-      ngrConnector.getLinkedProperty(CredId(credId)).flatMap {
-        case Some(property) => 
-          Future.successful(Ok(view(property.addressFull, createDefaultNavBar())))
-        case None => throw new RuntimeException("No Address found")
-      }
+    (authenticate andThen isRegisteredCheck andThen getData) { implicit request =>
+      Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
 
   def next: Action[AnyContent] =
