@@ -17,28 +17,33 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
-//import pages.HaveYouChangedPage
+import models.{CheckMode, External, HaveYouChangedControllerUse, Internal, Space, UserAnswers}
+import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, QuestionPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
-//object HaveYouChangedSummary  {
-//
-//  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-//    answers.get(HaveYouChangedPage).map {
-//      answer =>
-//
-//        val value = if (answer) "site.yes" else "site.no"
-//
-//        SummaryListRowViewModel(
-//          key     = "haveYouChanged.checkYourAnswersLabel",
-//          value   = ValueViewModel(value),
-//          actions = Seq(
-//            ActionItemViewModel("site.change", routes.HaveYouChangedController.onPageLoad(CheckMode).url)
-//              .withVisuallyHiddenText(messages("haveYouChanged.change.hidden"))
-//          )
-//        )
-//    }
-//}
+object HaveYouChangedSummary  {
+  def row(answers: UserAnswers, use: HaveYouChangedControllerUse)(implicit messages: Messages): Option[SummaryListRow] = {
+
+    val (page: QuestionPage[Boolean], key: String) = use match {
+      case Space => (HaveYouChangedSpacePage, "haveYouChangedSpace")
+      case Internal => (HaveYouChangedInternalPage, "haveYouChangedInternal")
+      case External => (HaveYouChangedExternalPage, "haveYouChangedExternal")
+    }
+
+    answers.get(page).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
+        SummaryListRowViewModel(
+          key     = s"$key.checkYourAnswersLabel",
+          value   = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.HaveYouChangedController.onPageLoad(use, CheckMode).url)
+              .withVisuallyHiddenText(messages(s"$key.change.hidden"))
+          )
+        )
+    }
+  }
+}
