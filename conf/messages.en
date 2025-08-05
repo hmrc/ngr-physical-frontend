@@ -132,6 +132,21 @@ changedFeaturesOrSpace.ul3.li8 = parking
 changedFeaturesOrSpace.ul3.li9 = portable buildings
 changedFeaturesOrSpace.ul3.li10 = shipping containers
 changedFeaturesOrSpace.ul3.li11 = solar panels
+whenCompleteChange.title = When did you complete the change? - Manage your business rates valuation
+whenCompleteChange.heading = When did you complete the change?
+whenCompleteChange.hint = For example, 27 6 2026.
+
+
+whenCompleteChange.checkYourAnswersLabel = WhenCompleteChange
+
+
+whenCompleteChange.error.required.all = Enter when you completed the change.
+whenCompleteChange.error.required.two =  When you completed the change must include {0} and {1}.
+whenCompleteChange.error.required =  When you completed the change must include {0}.
+whenCompleteChange.error.invalid = When you completed the change must be a real date.
+whenCompleteChange.change.hidden = WhenCompleteChange
+
+
 
 haveYouChangedSpace.title = Have you changed use of space?
 haveYouChangedSpace.hint = For example, you increased the size of the retail area by building an extension.

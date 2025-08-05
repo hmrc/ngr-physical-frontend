@@ -1,14 +1,19 @@
+@import models.NavigationBarContent
+@import config.AppConfig
+@import views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
 @this(
-    layout: templates.Layout,
+    layout: Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukDateInput: GovukDateInput,
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+@layout(pageTitle = Some(title(form, messages("$className;format="decap"$.title"))), navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

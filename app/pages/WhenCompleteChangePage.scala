@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package models.requests
+package pages
 
-import play.api.mvc.{Request, WrappedRequest}
-import models.UserAnswers
-import models.propertyLinking.VMVProperty
+import java.time.LocalDate
 
-case class OptionalDataRequest[A] (request: Request[A], userId: String, userAnswers: Option[UserAnswers], property: VMVProperty) extends WrappedRequest[A](request)
+import play.api.libs.json.JsPath
 
-case class DataRequest[A] (request: Request[A], credId: String, userAnswers: UserAnswers) extends WrappedRequest[A](request)
+case object WhenCompleteChangePage extends QuestionPage[LocalDate] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "whenCompleteChange"
+}
