@@ -19,13 +19,16 @@
 @import views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(layout: Layout,
-      h1: h1,
-      h2: h2,
-      p: p,
-      bulletPointList: bulletPointList,
-      detailsDropdown: detailsDropdown,
-      saveAndContinueButton: saveAndContinueButton)
+@this(
+    layout: Layout,
+    h1: h1,
+    h2: h2,
+    p: p,
+    bulletPointList: bulletPointList,
+    detailsDropdown: detailsDropdown,
+    saveAndContinueButton: saveAndContinueButton,
+    formHelper: FormWithCSRF
+)
 
 @(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
@@ -41,8 +44,10 @@
 
 @layout(pageTitle = Some("ngr-physical-frontend"), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
+@formHelper(action = controllers.routes.InfoAndSupportingDocController.next) {
+
 <span class="govuk-caption-m">@address</span>
-@h1(msg = messages("info.and.supporting.documents.heading"), id = Some("page-heading"))
+@h1(msg = messages("info.and.supporting.documents.heading"), size = "l", id = Some("page-heading"))
 
 @h2(msg = messages("info.and.supporting.documents.sub.heading1"), optId = Some("sub-heading-1"))
 
@@ -100,6 +105,8 @@ id = Some("para-6")) {
 
 
 @saveAndContinueButton(msg = messages("site.continue"))
+
+}
 
 }
 

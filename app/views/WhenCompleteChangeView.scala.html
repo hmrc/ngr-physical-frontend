@@ -40,11 +40,11 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("whenCompleteChange.heading")).asPageHeading()
+                legend = Legend(content = messages("whenCompleteChange.heading"), classes = "govuk-fieldset__legend--l")
             )
             .withHint(HintViewModel(messages("whenCompleteChange.hint")))
         )
 
-        @saveAndContinueButton(msg = messages("site.continue"))
+        @saveAndContinueButton(msg = messages("site.saveAndContinue"))
     }
 }
