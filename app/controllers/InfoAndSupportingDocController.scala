@@ -19,10 +19,12 @@ package controllers
 import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
+import models.NormalMode
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.InfoAndSupportingDocView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -39,5 +41,9 @@ class InfoAndSupportingDocController @Inject()(
       implicit request =>
         Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
-
+    
+  val next: Action[AnyContent] =
+    (authenticate andThen isRegisteredCheck andThen getData) {
+      Redirect(routes.WhenCompleteChangeController.onPageLoad(NormalMode))
+    }
 }
