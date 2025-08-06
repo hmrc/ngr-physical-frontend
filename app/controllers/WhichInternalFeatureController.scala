@@ -19,7 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
-
+import models.NavBarPageContents.createDefaultNavBar
 import javax.inject.Inject
 import models.{InternalFeature, Mode, NormalMode, UserAnswers}
 import navigation.Navigator
@@ -48,14 +48,14 @@ class WhichInternalFeatureController @Inject()(
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      Ok(view(request.property.addressFull, form))
+      Ok(view(request.property.addressFull, form, createDefaultNavBar()))
   }
 
   def onSubmit: Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
         value =>
           val optionalFeature = value match {
             case "other" =>
@@ -72,7 +72,7 @@ class WhichInternalFeatureController @Inject()(
               } yield Redirect(navigator.nextPage(WhichInternalFeaturePage, NormalMode, updatedAnswers))
             case None =>
               val errorForm = form.withError("value", "whichInternalFeature.error.required")
-              Future.successful(BadRequest(view(request.property.addressFull, errorForm)))
+              Future.successful(BadRequest(view(request.property.addressFull, errorForm, createDefaultNavBar())))
           }
       )
 

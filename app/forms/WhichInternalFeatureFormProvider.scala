@@ -18,17 +18,16 @@ package forms
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.InternalFeature
 import play.api.data.Form
-import models.{InternalFeature, WithName}
-import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms._
 
 class WhichInternalFeatureFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> nonEmptyText.verifying("whichInternalFeature.error.required", value =>
-        InternalFeature.withNameOption(value).isDefined || value == "other"
+      "value" -> text("whichInternalFeature.error.required").verifying("whichInternalFeature.error.required", value =>
+        value.nonEmpty && (InternalFeature.withNameOption(value).isDefined || value == "other")
       )
     )
-
 }

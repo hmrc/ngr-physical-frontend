@@ -66,7 +66,8 @@ object InternalFeature extends Enumerable.Implicits {
     val dropdownModel = Select(
       id = "other-select",
       name = "otherSelect",
-      items = remaining.map { value =>
+      items = SelectItem(value = None, text = messages("whichInternalFeature.chooseOther")) +:
+        remaining.map { value =>
          SelectItem(value = Some(value.toString), text = messages(s"whichInternalFeature.${value.toString}"))
       }
     )

@@ -34,6 +34,18 @@ class Navigator @Inject()() {
         case Some(false) => routes.HaveYouChangedController.onPageLoad(Internal, NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case HaveYouChangedInternalPage => answers =>
+      answers.get(HaveYouChangedInternalPage) match {
+        case Some(true) => routes.WhichInternalFeatureController.onPageLoad
+        case Some(false) => routes.HaveYouChangedController.onPageLoad(External, NormalMode)
+        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      }
+    case WhichInternalFeaturePage => answers =>
+      answers.get(WhichInternalFeaturePage) match {
+        case Some(feature) =>
+          routes.WhichInternalFeatureController.onPageLoad
+        case None => throw new RuntimeException("No selection - should be caught by form validation")
+      }
     case _ => _ => routes.IndexController.onPageLoad()
   }
 

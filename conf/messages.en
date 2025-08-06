@@ -168,7 +168,7 @@ whichInternalFeature.other = Other internal feature
 whichInternalFeature.selectOther = Select other internal feature
 whichInternalFeature.chooseOther = Choose internal feature
 whichInternalFeature.checkYourAnswersLabel = Which internal feature have you changed?
-whichInternalFeature.error.required = Select whichInternalFeature
+whichInternalFeature.error.required = Select which internal feature you have changed
 whichInternalFeature.change.hidden = WhichInternalFeature
 
 whichInternalFeature.airConditioning = Air conditioning
