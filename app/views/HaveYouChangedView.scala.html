@@ -42,7 +42,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages(titleKey)).asPageHeading()
+                legend = Legend(content = messages(titleKey), classes = "govuk-fieldset__legend--l")
             )
             .withHint(
                 HintViewModel(messages(hintKey))

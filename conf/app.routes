@@ -1,29 +1,31 @@
 # microservice specific routes
 
-->         /hmrc-frontend                                           hmrcfrontend.Routes
-GET        /                                                        controllers.IndexController.onPageLoad()
-GET        /assets/*file                                            controllers.Assets.versioned(path="/public", file: Asset)
-GET        /language/:lang                                          controllers.LanguageSwitchController.switchToLanguage(lang: String)
-GET        /refresh-session                                         controllers.KeepAliveController.keepAlive()
-GET        /there-is-a-problem                                      controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
-GET        /check-your-answers                                      controllers.CheckYourAnswersController.onPageLoad()
-GET        /account/sign-out-survey                                 controllers.auth.AuthController.signOut()
-GET        /account/sign-out                                        controllers.auth.AuthController.signOutNoSurvey()
-GET        /account/signed-out                                      controllers.auth.SignedOutController.onPageLoad()
-GET        /unauthorised                                            controllers.UnauthorisedController.onPageLoad()
-GET        /tell-us-changed-property-features-or-use-of-space       controllers.ChangedFeaturesOrSpaceController.show
-POST       /tell-us-changed-property-features-or-use-of-space       controllers.ChangedFeaturesOrSpaceController.next
-  
-GET        /information-and-supporting-documents-need               controllers.InfoAndSupportingDocController.show
-GET        /when-complete-change                                    controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = NormalMode)
-POST       /when-complete-change                                    controllers.WhenCompleteChangeController.onSubmit(mode: Mode = NormalMode)
-GET        /when-complete-change                                    controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = CheckMode)
-POST       /when-complete-change                                    controllers.WhenCompleteChangeController.onSubmit(mode: Mode = CheckMode)
-  
-GET        /about-change-to-use-of-space                            controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
-POST       /about-change-to-use-of-space                            controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
-GET        /change-about-change-to-use-of-space                     controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-about-change-to-use-of-space                     controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
+->         /hmrc-frontend                                         hmrcfrontend.Routes
+GET        /                                                      controllers.IndexController.onPageLoad()
+GET        /assets/*file                                          controllers.Assets.versioned(path="/public", file: Asset)
+GET        /language/:lang                                        controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /refresh-session                                       controllers.KeepAliveController.keepAlive()
+GET        /there-is-a-problem                                    controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET        /check-your-answers                                    controllers.CheckYourAnswersController.onPageLoad()
+GET        /account/sign-out-survey                               controllers.auth.AuthController.signOut()
+GET        /account/sign-out                                      controllers.auth.AuthController.signOutNoSurvey()
+GET        /account/signed-out                                    controllers.auth.SignedOutController.onPageLoad()
+GET        /unauthorised                                          controllers.UnauthorisedController.onPageLoad()
+GET        /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.show
+POST       /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.next
+
+GET        /information-and-supporting-documents-need             controllers.InfoAndSupportingDocController.show
+POST       /information-and-supporting-documents-need             controllers.InfoAndSupportingDocController.next
+
+GET        /when-complete-change                                  controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = NormalMode)
+POST       /when-complete-change                                  controllers.WhenCompleteChangeController.onSubmit(mode: Mode = NormalMode)
+GET        /when-complete-change                                  controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = CheckMode)
+POST       /when-complete-change                                  controllers.WhenCompleteChangeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /about-change-to-use-of-space                          controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
+POST       /about-change-to-use-of-space                          controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
+GET        /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
 
 GET        /have-you-changed-use-of-space                           controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = Space, mode: Mode = NormalMode)
 POST       /have-you-changed-use-of-space                           controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = Space, mode: Mode = NormalMode)

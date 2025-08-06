@@ -34,21 +34,20 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
     val secondParagraph = "#para-2"
     val thirdParagraph = "#para-4"
     val fourthParagraph = "#para-6"
-    val firstBulletPointSection = "#main-content > div > div > ul:nth-child(7) >"
+    val firstBulletPointSection = "#main-content > div > div.govuk-grid-column-two-thirds > form > ul:nth-child(7) >"
     val firstBulletPointSection_1 = s"$firstBulletPointSection li:nth-child(1)"
     val firstBulletPointSection_2 = s"$firstBulletPointSection li:nth-child(2)"
     val firstBulletPointSection_3 = s"$firstBulletPointSection li:nth-child(3)"
-    val secondBulletPointSection = "#main-content > div > div > ul:nth-child(11)  >"
+    val secondBulletPointSection = "#main-content > div > div > form > ul:nth-child(11)  >"
     val secondBulletPointSection_1 = s"$secondBulletPointSection li:nth-child(1)"
     val secondBulletPointSection_2 = s"$secondBulletPointSection li:nth-child(2)"
     val secondBulletPointSection_3 = s"$secondBulletPointSection li:nth-child(3)"
     val secondBulletPointSection_4 = s"$secondBulletPointSection li:nth-child(4)"
-    val helpDetailTitle = "#main-content > div > div > details > summary > span"
-    val helpDetail_1 = "#main-content > div > div > details > div > p:nth-child(1)"
-    val helpDetail_2 = "#main-content > div > div > details > div > p:nth-child(2)"
-    val helpDetail_3 = "#main-content > div > div > details > div > p:nth-child(3)"
-    val helpDetail_4 = "#main-content > div > div > details > div > p:nth-child(4)"
-
+    val helpDetailTitle = "#help-details-dropdown > summary > span"
+    val helpDetail_1 = "#detail-para-1"
+    val helpDetail_2 = "#detail-para-2"
+    val helpDetail_3 = "#detail-para-3"
+    val helpDetail_4 = "#detail-para-4"
 
   }
 

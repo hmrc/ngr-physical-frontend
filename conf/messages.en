@@ -1,4 +1,6 @@
-service.name = ngr-physical-frontend
+service.name = Manage your business rates valuation
+service.text = This is your new service
+service.base.title = Manage your business rates valuation
 
 site.back = Back
 site.remove = Remove
@@ -67,8 +69,7 @@ changeToUseOfSpace.selectUseOfSpace.change.hidden = selectUseOfSpace
 changeToUseOfSpace.hasPlanningPermission.change.hidden = hasPlanningPermission
 
 
-service.name = ngr-physical-frontend
-service.text = This is your new service
+
 info.and.supporting.documents.heading = Information and supporting documents you need
 info.and.supporting.documents.sub.heading1 = Information you need
 info.and.supporting.documents.sub.heading2 = Supporting documents you need to upload

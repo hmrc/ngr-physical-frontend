@@ -36,7 +36,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
-    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > legend > h1"
+    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > legend"
     val hint = "#value-hint"
     val yes = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(1) > label"
     val no = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(2) > label"

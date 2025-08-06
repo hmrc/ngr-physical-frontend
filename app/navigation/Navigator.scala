@@ -27,6 +27,13 @@ import models._
 class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case WhenCompleteChangePage => _ => routes.HaveYouChangedController.onPageLoad(Space, NormalMode)
+    case HaveYouChangedSpacePage => answers =>
+      answers.get(HaveYouChangedSpacePage) match {
+        case Some(true) => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
+        case Some(false) => routes.HaveYouChangedController.onPageLoad(Internal, NormalMode)
+        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      }
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
