@@ -22,9 +22,9 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryWhichInternalFeature: Arbitrary[WhichInternalFeature] =
+  implicit lazy val arbitraryWhichInternalFeature: Arbitrary[InternalFeature] =
     Arbitrary {
-      Gen.oneOf(WhichInternalFeature.values.toSeq)
+      Gen.oneOf(InternalFeature.values)
     }
 
   implicit lazy val arbitraryChangeToUseOfSpace: Arbitrary[ChangeToUseOfSpace] =
