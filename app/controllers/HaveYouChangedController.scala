@@ -17,20 +17,20 @@
 package controllers
 
 import actions.*
+import config.AppConfig
 import forms.HaveYouChangedFormProvider
-import javax.inject.{Inject, Singleton}
+import models.HaveYouChangedControllerUse.{getMessageKeys, pageType}
+import models.NavBarPageContents.createDefaultNavBar
 import models.{HaveYouChangedControllerUse, Mode, UserAnswers}
 import navigation.Navigator
+import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HaveYouChangedView
-import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import models.HaveYouChangedControllerUse.{getMessageKeys, pageType}
-import models.NavBarPageContents.createDefaultNavBar
-import play.api.data.Form
 
 @Singleton
 class HaveYouChangedController @Inject()(

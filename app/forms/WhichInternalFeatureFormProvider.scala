@@ -16,11 +16,11 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.InternalFeature
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
+import javax.inject.Inject
 
 class WhichInternalFeatureFormProvider @Inject() extends Mappings {
 

@@ -16,8 +16,8 @@
 
 @import models.NavigationBarContent
 @import config.AppConfig
-@import views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.html.components.*
+@import uk.gov.hmrc.govukfrontend.views.html.components.*
 
 @this(
     layout: Layout,
@@ -27,7 +27,7 @@
     saveAndContinueButton: saveAndContinueButton
 )
 
-@(address: String, form: Form[_], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(address: String, form: Form[?], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, messages("whenCompleteChange.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
     <span class="govuk-caption-m">@address</span>

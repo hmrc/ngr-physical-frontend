@@ -17,12 +17,12 @@
 package controllers
 
 import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
-import views.html.ChangedFeaturesOrSpaceView
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.html.ChangedFeaturesOrSpaceView
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 

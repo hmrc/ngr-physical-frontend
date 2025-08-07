@@ -19,10 +19,8 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhenCompleteChangeFormProvider
-
-import javax.inject.{Inject, Singleton}
-import models.{Mode, UserAnswers}
 import models.NavBarPageContents.createDefaultNavBar
+import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.WhenCompleteChangePage
 import play.api.i18n.I18nSupport
@@ -30,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhenCompleteChangeView
-
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

@@ -17,10 +17,10 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import config.features.Features
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
-import config.features.Features
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {

@@ -17,17 +17,14 @@
 package actions
 
 import com.google.inject.ImplementedBy
-import play.api.mvc.Results.Redirect
-import play.api.mvc.*
-import uk.gov.hmrc.auth.core.retrieve.Name
-import uk.gov.hmrc.http.HeaderCarrier
-import config.{AppConfig, FrontendAppConfig}
+import config.FrontendAppConfig
 import connectors.NGRConnector
-import models.auth.AuthenticatedUserRequest
 import models.registration.CredId
 import models.requests.IdentifierRequest
+import play.api.mvc.*
+import play.api.mvc.Results.Redirect
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,10 +48,10 @@ class RegistrationActionImpl @Inject()(
           .flatMap(_.isRegistered)
           .getOrElse(false)
 
-        val name:Option[String] = maybeRatepayer
-          .flatMap(user => user.ratepayerRegistration)
-          .map(info => info.name.map(value => value.value))
-          .getOrElse(Some(""))
+//        val name:Option[String] = maybeRatepayer
+//          .flatMap(user => user.ratepayerRegistration)
+//          .map(info => info.name.map(value => value.value))
+//          .getOrElse(Some(""))
 
         if (isRegistered) {
           block(authRequest.copy())

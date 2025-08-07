@@ -17,7 +17,6 @@
 package models.propertyLinking
 
 import play.api.libs.json.{Format, Json, OFormat}
-
 import java.time.LocalDate
 
 case class VMVProperty(uarn: Long,

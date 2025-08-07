@@ -17,11 +17,11 @@
 package forms
 
 import forms.mappings.Mappings
+import models.UseOfSpaces.*
 import models.{ChangeToUseOfSpace, UseOfSpaces}
 import play.api.data.Form
 import play.api.data.Forms.*
 import uk.gov.voa.play.form.ConditionalMappings.*
-import models.UseOfSpaces.*
 import javax.inject.Inject
 
 class ChangeToUseOfSpaceFormProvider @Inject() extends Mappings {
