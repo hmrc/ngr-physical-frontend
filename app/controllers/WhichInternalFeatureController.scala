@@ -19,30 +19,24 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
+import models.InternalFeature
 import models.NavBarPageContents.createDefaultNavBar
-import javax.inject.Inject
-import models.{InternalFeature, Mode, NormalMode, UserAnswers}
-import navigation.Navigator
-import pages.WhichInternalFeaturePage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhichInternalFeatureView
-
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import scala.concurrent.Future
 
 class WhichInternalFeatureController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       sessionRepository: SessionRepository,
-                                       navigator: Navigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       formProvider: WhichInternalFeatureFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: WhichInternalFeatureView
-                                     )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
+                                                override val messagesApi: MessagesApi,
+                                                identify: IdentifierAction,
+                                                getData: DataRetrievalAction,
+                                                formProvider: WhichInternalFeatureFormProvider,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: WhichInternalFeatureView
+                                              )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form: Form[String] = formProvider()
 
@@ -66,16 +60,23 @@ class WhichInternalFeatureController @Inject()(
           }
           optionalFeature match {
             case Some(feature) =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhichInternalFeaturePage, feature))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(WhichInternalFeaturePage, NormalMode, updatedAnswers))
+              nextPage(feature)
             case None =>
               val errorForm = form.withError("value", "whichInternalFeature.error.required")
               Future.successful(BadRequest(view(request.property.addressFull, errorForm, createDefaultNavBar())))
           }
       )
 
+  }
+
+  def nextPage(feature: InternalFeature): Future[Result] = {
+    val call = feature match {
+      case InternalFeature.SecurityCamera => routes.WhichInternalFeatureController.onPageLoad // Group 2
+      case InternalFeature.CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
+      case InternalFeature.Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
+      case _ => routes.WhichInternalFeatureController.onPageLoad // Group 1
+    }
+    Future.successful(Redirect(call))
   }
 
 }
