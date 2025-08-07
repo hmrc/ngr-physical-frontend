@@ -49,7 +49,6 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          println(formWithErrors)
           Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
         value =>
           val optionalFeature = value match {
