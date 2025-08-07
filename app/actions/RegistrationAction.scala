@@ -48,11 +48,6 @@ class RegistrationActionImpl @Inject()(
           .flatMap(_.isRegistered)
           .getOrElse(false)
 
-//        val name:Option[String] = maybeRatepayer
-//          .flatMap(user => user.ratepayerRegistration)
-//          .map(info => info.name.map(value => value.value))
-//          .getOrElse(Some(""))
-
         if (isRegistered) {
           block(authRequest.copy())
         } else {

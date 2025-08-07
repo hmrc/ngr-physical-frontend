@@ -31,9 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class WhichInternalFeatureController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                identify: IdentifierAction,
+class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
                                                 getData: DataRetrievalAction,
                                                 formProvider: WhichInternalFeatureFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
@@ -51,6 +49,7 @@ class WhichInternalFeatureController @Inject()(
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
+          println(formWithErrors)
           Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
         value =>
           val optionalFeature = value match {

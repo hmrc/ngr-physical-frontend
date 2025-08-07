@@ -65,9 +65,9 @@ trait TestSupport extends PlaySpec
   lazy val authenticatedFakeRequest: IdentifierRequest[AnyContentAsEmpty.type] =
     IdentifierRequest(fakeRequest, "id", "id")
     
-  def requestWithForm(formData: (String, String)): IdentifierRequest[AnyContentAsFormUrlEncoded] =
+  def requestWithForm(formData: Map[String, String]): IdentifierRequest[AnyContentAsFormUrlEncoded] =
     IdentifierRequest(
-      fakeRequest.withFormUrlEncodedBody(formData),
+      fakeRequest.withFormUrlEncodedBody(formData.toSeq*),
       "id",
       "id"
     )

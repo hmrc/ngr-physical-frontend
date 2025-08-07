@@ -16,144 +16,52 @@
 
 package controllers
 
-import base.SpecBase
 import forms.WhichInternalFeatureFormProvider
-import models.{NormalMode, InternalFeature, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.WhichInternalFeaturePage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import repositories.SessionRepository
+import helpers.ControllerSpecSupport
+import models.InternalFeature
 import views.html.WhichInternalFeatureView
+import play.api.test.Helpers.*
 
-import scala.concurrent.Future
+class WhichInternalFeatureControllerSpec extends ControllerSpecSupport {
+  lazy val view: WhichInternalFeatureView = inject[WhichInternalFeatureView]
+  lazy val formProvider: WhichInternalFeatureFormProvider = WhichInternalFeatureFormProvider()
+  private val controller: WhichInternalFeatureController = new WhichInternalFeatureController(
+    identify = fakeAuth, getData = fakeData(None), formProvider = formProvider, controllerComponents = mcc, view = view
+  )
 
-//class WhichInternalFeatureControllerSpec extends SpecBase with MockitoSugar {
-//
-//  def onwardRoute = Call("GET", "/foo")
-//
-//  lazy val whichInternalFeatureRoute: String = routes.WhichInternalFeatureController.onPageLoad.url
-//
-//  val formProvider = new WhichInternalFeatureFormProvider()
-//  val form = formProvider()
-//  val address = "123 street road"
-//
-//  "WhichInternalFeature Controller" - {
-//
-//    "must return OK and the correct view for a GET" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, whichInternalFeatureRoute)
-//
-//        val result = route(application, request).value
-//
-//        val view = application.injector.instanceOf[WhichInternalFeatureView]
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(address, form)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must populate the view correctly on a GET when the question has previously been answered" in {
-//
-//      val userAnswers = UserAnswers(userAnswersId).set(WhichInternalFeaturePage, InternalFeature.values.head).success.value
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, whichInternalFeatureRoute)
-//
-//        val view = application.injector.instanceOf[WhichInternalFeatureView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(form.fill(InternalFeature.values.head), NormalMode)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to the next page when valid data is submitted" in {
-//
-//      val mockSessionRepository = mock[SessionRepository]
-//
-//      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-//          .overrides(
-//            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-//            bind[SessionRepository].toInstance(mockSessionRepository)
-//          )
-//          .build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, whichInternalFeatureRoute)
-//            .withFormUrlEncodedBody(("value", InternalFeature.values.head.toString))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual onwardRoute.url
-//      }
-//    }
-//
-//    "must return a Bad Request and errors when invalid data is submitted" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, whichInternalFeatureRoute)
-//            .withFormUrlEncodedBody(("value", "invalid value"))
-//
-//        val boundForm = form.bind(Map("value" -> "invalid value"))
-//
-//        val view = application.injector.instanceOf[WhichInternalFeatureView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual BAD_REQUEST
-//        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, whichInternalFeatureRoute)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//
-//    "redirect to Journey Recovery for a POST if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, whichInternalFeatureRoute)
-//            .withFormUrlEncodedBody(("value", InternalFeature.values.head.toString))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//  }
-//}
+  "WhichInternalFeatureController" should {
+    "onPageLoad" must {
+      "return 200" in {
+        val result = controller.onPageLoad(authenticatedFakeRequest)
+        status(result) mustBe 200
+      }
+
+      "return HTML" in {
+        val result = controller.onPageLoad(authenticatedFakeRequest)
+        contentType(result) mustBe Some("text/html")
+        charset(result) mustBe Some("utf-8")
+      }
+    }
+    "onSubmit" must {
+      "redirect" in {
+        InternalFeature.values.map { feature =>
+          val formRequest = requestWithForm(Map("value" -> feature.toString))
+          val result = controller.onSubmit(formRequest)
+          status(result) mustBe 303
+        }
+      }
+
+      "get other value" in {
+        val formRequest = requestWithForm(Map("value" -> "other", "otherSelect" -> "sprinklers"))
+        val result = controller.onSubmit(formRequest)
+        status(result) mustBe 303
+      }
+
+      "BadRequest when no form data" in {
+        val result = controller.onSubmit(authenticatedFakeRequest)
+        status(result) mustBe 400
+      }
+    }
+
+  }
+}
