@@ -20,15 +20,17 @@ import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
 import models.InternalFeature
+import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhichInternalFeatureView
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
+@Singleton
 class WhichInternalFeatureController @Inject()(
                                                 override val messagesApi: MessagesApi,
                                                 identify: IdentifierAction,
@@ -69,11 +71,11 @@ class WhichInternalFeatureController @Inject()(
 
   }
 
-  def nextPage(feature: InternalFeature): Future[Result] = {
+  private def nextPage(feature: InternalFeature): Future[Result] = {
     val call = feature match {
-      case InternalFeature.SecurityCamera => routes.WhichInternalFeatureController.onPageLoad // Group 2
-      case InternalFeature.CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
-      case InternalFeature.Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
+      case SecurityCamera => routes.WhichInternalFeatureController.onPageLoad // Group 2
+      case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
+      case Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
       case _ => routes.WhichInternalFeatureController.onPageLoad // Group 1
     }
     Future.successful(Redirect(call))
