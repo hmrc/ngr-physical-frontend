@@ -19,7 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
-import models.{InternalFeature, NormalMode}
+import models.InternalFeature
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.data.Form
