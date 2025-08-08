@@ -17,6 +17,7 @@
 package controllers
 
 import actions.*
+import config.AppConfig
 import forms.ChangeToUseOfSpaceFormProvider
 import models.{ChangeToUseOfSpace, Mode, UserAnswers}
 import navigation.Navigator
@@ -27,11 +28,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ChangeToUseOfSpaceView
-import javax.inject.Inject
+import models.NavBarPageContents.createDefaultNavBar
+import javax.inject.{Singleton, Inject}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class ChangeToUseOfSpaceController @Inject()(
-                                      override val messagesApi: MessagesApi,
                                       sessionRepository: SessionRepository,
                                       navigator: Navigator,
                                       identify: IdentifierAction,
@@ -39,7 +41,7 @@ class ChangeToUseOfSpaceController @Inject()(
                                       formProvider: ChangeToUseOfSpaceFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChangeToUseOfSpaceView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form: Form[ChangeToUseOfSpace] = formProvider()
 
@@ -51,14 +53,14 @@ class ChangeToUseOfSpaceController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(request.property.addressFull, createDefaultNavBar(), preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest()(request.request).fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(request.property.addressFull, createDefaultNavBar(), formWithErrors, mode))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(ChangeToUseOfSpacePage, value))
