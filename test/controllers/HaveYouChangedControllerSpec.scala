@@ -76,7 +76,7 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport {
 
     "should redirect on successful submission" in {
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val formRequest = requestWithForm(("value", "true"))
+      val formRequest = requestWithForm(Map("value" -> "true"))
       val result = controller.onSubmit(Space, NormalMode)(formRequest)
       status(result) mustBe 303
     }

@@ -17,7 +17,6 @@
 package config.features
 
 import play.api.Configuration
-
 import javax.inject.Inject
 
 class Features @Inject()(implicit config: Configuration) {

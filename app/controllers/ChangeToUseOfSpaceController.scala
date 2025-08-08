@@ -19,18 +19,17 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.ChangeToUseOfSpaceFormProvider
+import models.NavBarPageContents.createDefaultNavBar
 import models.{ChangeToUseOfSpace, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ChangeToUseOfSpacePage
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ChangeToUseOfSpaceView
-import models.NavBarPageContents.createDefaultNavBar
-
-import javax.inject.{Singleton, Inject}
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

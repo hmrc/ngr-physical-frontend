@@ -17,12 +17,12 @@
 package actions
 
 import com.google.inject.ImplementedBy
-import play.api.mvc._
-import uk.gov.hmrc.auth.core._
+import models.auth.AuthenticatedUserRequest
+import play.api.mvc.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
-import models.auth.AuthenticatedUserRequest
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject

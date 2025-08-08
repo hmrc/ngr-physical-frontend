@@ -16,8 +16,8 @@
 
 package models
 
-import play.api.mvc.Call
 import config.AppConfig
+import play.api.mvc.Call
 
 case class NavButton(
                       fieldName: String,

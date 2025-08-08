@@ -16,7 +16,7 @@
 
 package controllers
 
-import helpers.{ControllerSpecSupport, TestData}
+import helpers.ControllerSpecSupport
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

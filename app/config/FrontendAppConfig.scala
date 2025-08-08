@@ -17,13 +17,14 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import config.features.Features
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
-import config.features.Features
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
+  val ngrLoginUrl: String
   val ngrDashboardUrl: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
@@ -66,6 +67,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
 
   override val registrationUrl: String = sc.baseUrl("ngr-login-register-frontend")
   override val ngrDashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
+  override val ngrLoginUrl: String = s"$ngrLoginRegisterBaseUrl/ngr-login-register-frontend/register"
   override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
   override val features = new Features()(configuration)
@@ -76,8 +78,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   private def throwConfigNotFoundError(key: String): String =
     throw new RuntimeException(s"Could not find config key '$key'")
 
-  lazy val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
-  
-  
+  lazy val dashboardHost: String = configuration.get[Service]("microservice.services.ngr-dashboard-frontend").baseUrl
+  lazy val ngrLoginRegisterBaseUrl: String = configuration.get[Service]("microservice.services.ngr-login-register-frontend").baseUrl
   
 }

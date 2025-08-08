@@ -16,8 +16,8 @@
 
 package models.auth
 
-import play.api.libs.json.{Json, OFormat}
 import models.forms.Nino
+import play.api.libs.json.{Json, OFormat}
 
 final case class Identity(provider: String,
                     nino: Option[Nino],

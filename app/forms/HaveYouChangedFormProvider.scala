@@ -16,10 +16,10 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.{External, HaveYouChangedControllerUse, Internal, Space}
 import play.api.data.Form
+import javax.inject.Inject
 
 class HaveYouChangedFormProvider @Inject() extends Mappings {
 

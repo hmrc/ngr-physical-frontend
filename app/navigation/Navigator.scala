@@ -16,12 +16,11 @@
 
 package navigation
 
-import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.Call
 import controllers.routes
-import pages._
-import models._
+import models.*
+import pages.*
+import play.api.mvc.Call
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class Navigator @Inject()() {
@@ -33,6 +32,18 @@ class Navigator @Inject()() {
         case Some(true) => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
         case Some(false) => routes.HaveYouChangedController.onPageLoad(Internal, NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      }
+    case HaveYouChangedInternalPage => answers =>
+      answers.get(HaveYouChangedInternalPage) match {
+        case Some(true) => routes.WhichInternalFeatureController.onPageLoad
+        case Some(false) => routes.HaveYouChangedController.onPageLoad(External, NormalMode)
+        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      }
+    case WhichInternalFeaturePage => answers =>
+      answers.get(WhichInternalFeaturePage) match {
+        case Some(feature) =>
+          routes.WhichInternalFeatureController.onPageLoad
+        case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case _ => _ => routes.IndexController.onPageLoad()
   }

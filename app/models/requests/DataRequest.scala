@@ -16,9 +16,9 @@
 
 package models.requests
 
-import play.api.mvc.{Request, WrappedRequest}
 import models.UserAnswers
 import models.propertyLinking.VMVProperty
+import play.api.mvc.{Request, WrappedRequest}
 
 case class OptionalDataRequest[A] (request: Request[A], userId: String, userAnswers: Option[UserAnswers], property: VMVProperty) extends WrappedRequest[A](request)
 

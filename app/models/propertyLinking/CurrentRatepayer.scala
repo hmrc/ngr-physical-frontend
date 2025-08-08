@@ -18,7 +18,6 @@ package models.propertyLinking
 
 import play.api.libs.json.{Format, Json}
 
-
 final case class CurrentRatepayer(isBeforeApril: Boolean, becomeRatepayerDate: Option[String])
 
 object CurrentRatepayer {

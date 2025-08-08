@@ -16,8 +16,8 @@
 
 package models.propertyLinking
 
-import play.api.libs.json.{Format, Json}
 import models.registration.CredId
+import play.api.libs.json.{Format, Json}
 
 case class PropertyLinkingUserAnswers (credId: CredId,
                                        vmvProperty: VMVProperty,

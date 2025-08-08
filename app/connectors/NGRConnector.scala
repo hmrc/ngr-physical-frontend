@@ -16,15 +16,14 @@
 
 package connectors
 
+import config.FrontendAppConfig
+import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
+import models.registration.{CredId, RatepayerRegistrationValuation}
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, StringContextOps}
-import config.{AppConfig, FrontendAppConfig}
-import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
-import models.registration.{CredId, RatepayerRegistrationValuation}
-
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

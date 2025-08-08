@@ -161,3 +161,21 @@ haveYouChanged.change.hidden = HaveYouChanged
 haveYouChangedSpace.error.required = Select yes if you have changed use of space
 haveYouChangedInternal.error.required = Select yes if you have changed internal features
 haveYouChangedExternal.error.required = Select yes if you have changed external features
+
+whichInternalFeature.title = Which internal feature have you changed?
+whichInternalFeature.heading = Which internal feature have you changed?
+whichInternalFeature.other = Other internal feature
+whichInternalFeature.selectOther = Select other internal feature
+whichInternalFeature.chooseOther = Choose internal feature
+whichInternalFeature.checkYourAnswersLabel = Which internal feature have you changed?
+whichInternalFeature.error.required = Select which internal feature you have changed
+whichInternalFeature.change.hidden = WhichInternalFeature
+
+whichInternalFeature.airConditioning = Air conditioning
+whichInternalFeature.escalators = Escalators
+whichInternalFeature.goodsLift = Goods lifts
+whichInternalFeature.passengerLift = Passenger lifts
+whichInternalFeature.securityCamera = Security cameras
+whichInternalFeature.compressedAir = Compressed air systems
+whichInternalFeature.heating = Heating
+whichInternalFeature.sprinklers = Sprinklers

@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{AuthRetrievals, DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,7 +32,7 @@ class CheckYourAnswersController @Inject()(
                                             requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: CheckYourAnswersView
-                                          ) (implicit appConfig: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
+                                          ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (authenticate andThen getData andThen requireData) {
     implicit request =>
