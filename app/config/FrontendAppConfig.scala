@@ -78,7 +78,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   private def throwConfigNotFoundError(key: String): String =
     throw new RuntimeException(s"Could not find config key '$key'")
 
-  lazy val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  lazy val dashboardHost: String = configuration.get[Service]("microservice.services.ngr-dashboard-frontend").baseUrl
   lazy val ngrLoginRegisterBaseUrl: String = configuration.get[Service]("microservice.services.ngr-login-register-frontend").baseUrl
   
 }
