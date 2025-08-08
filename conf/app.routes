@@ -44,3 +44,8 @@ POST       /change-have-you-changed-external-features               controllers.
 
 GET        /which-internal-feature-have-changed                     controllers.WhichInternalFeatureController.onPageLoad
 POST       /which-internal-feature-have-changed                     controllers.WhichInternalFeatureController.onSubmit
+
+GET        /how-many-security-cameras-inside-property               controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-many-security-cameras-inside-property               controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-many-security-cameras-inside-property        controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-many-security-cameras-inside-property        controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = CheckMode)
