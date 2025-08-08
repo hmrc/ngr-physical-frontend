@@ -32,15 +32,15 @@ object ChangeToUseOfSpaceSummary  {
     answers.get(ChangeToUseOfSpacePage).map {
       answer =>
         //TODO display it as per prototype
-        val checkBoxValue = ValueViewModel(
-          HtmlContent(
-            answer.selectUseOfSpace.map {
-                answer => HtmlFormat.escape(messages(s"useOfSpaces.$answer")).toString
-              }
-              .mkString(",<br>")
-          )
-        )
-        val booleanValue: String = if (answer.hasPlanningPermission) "site.yes" else "site.no"
+//        val checkBoxValue = ValueViewModel(
+//          HtmlContent(
+//            answer.selectUseOfSpace.map {
+//                answer => HtmlFormat.escape(messages(s"useOfSpaces.$answer")).toString
+//              }
+//              .mkString(",<br>")
+//          )
+//        )
+//        val booleanValue: String = if (answer.hasPlanningPermission) "site.yes" else "site.no"
 
       val value = HtmlFormat.escape(answer.permissionReference.getOrElse("")).toString
 
