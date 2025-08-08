@@ -18,6 +18,7 @@
 @import config.AppConfig
 @import views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import models.InternalFeature
 
 @this(
     layout: Layout,
@@ -27,7 +28,7 @@
     govukButton: GovukButton
 )
 
-@(address: String, form: Form[?], navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(address: String, form: Form[InternalFeature], navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("whichInternalFeature.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 

@@ -18,16 +18,35 @@ package forms
 
 import forms.mappings.Mappings
 import models.InternalFeature
-import play.api.data.Form
 import play.api.data.Forms.*
+import play.api.data.format.Formatter
+import play.api.data.{Form, FormError}
 import javax.inject.Inject
 
 class WhichInternalFeatureFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def formatter: Formatter[InternalFeature] = new Formatter[InternalFeature] {
+    
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], InternalFeature] =
+      data.get(key).filter(_.nonEmpty) match {
+        case Some("other") => 
+          val otherValue = data.get("otherSelect").flatMap(InternalFeature.withNameOption)
+          otherValue.toRight(Seq(FormError("otherSelect", "whichInternalFeature.error.required")))
+        case Some(value) => 
+          InternalFeature.withNameOption(value)
+            .toRight(Seq(FormError(key, "whichInternalFeature.error.required")))
+        case None =>
+          Left(Seq(FormError(key, "whichInternalFeature.error.required")))
+      }
+      
+    override def unbind(key: String, value: InternalFeature): Map[String, String] =
+      Map(key -> value.toString)
+  }
+
+  def apply(): Form[InternalFeature] = {
     Form(
-      "value" -> text("whichInternalFeature.error.required").verifying("whichInternalFeature.error.required", value =>
-        value.nonEmpty && (InternalFeature.withNameOption(value).isDefined || value == "other")
-      )
+      "value" -> of(formatter)
     )
+  }
+
 }

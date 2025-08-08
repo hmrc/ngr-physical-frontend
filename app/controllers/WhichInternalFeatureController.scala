@@ -23,7 +23,7 @@ import models.InternalFeature
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhichInternalFeatureView
@@ -38,7 +38,7 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
                                                 view: WhichInternalFeatureView
                                               )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[String] = formProvider()
+  val form: Form[InternalFeature] = formProvider()
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
@@ -50,23 +50,9 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
-        value =>
-          val optionalFeature = value match {
-            case "other" =>
-              request.body.asFormUrlEncoded.flatMap(_.get("otherSelect").flatMap(_.headOption))
-                .flatMap(InternalFeature.withNameOption)
-            case _ =>
-              InternalFeature.withNameOption(value)
-          }
-          optionalFeature match {
-            case Some(feature) =>
-              nextPage(feature)
-            case None =>
-              val errorForm = form.withError("value", "whichInternalFeature.error.required")
-              Future.successful(BadRequest(view(request.property.addressFull, errorForm, createDefaultNavBar())))
-          }
+        feature =>
+          nextPage(feature)
       )
-
   }
 
   private def nextPage(feature: InternalFeature): Future[Result] = {
