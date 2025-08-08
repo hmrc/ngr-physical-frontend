@@ -26,19 +26,19 @@ import javax.inject.Inject
 class WhichInternalFeatureFormProvider @Inject() extends Mappings {
 
   def formatter: Formatter[InternalFeature] = new Formatter[InternalFeature] {
-    
+
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], InternalFeature] =
       data.get(key).filter(_.nonEmpty) match {
-        case Some("other") => 
+        case Some("other") =>
           val otherValue = data.get("otherSelect").flatMap(InternalFeature.withNameOption)
-          otherValue.toRight(Seq(FormError("otherSelect", "whichInternalFeature.error.required")))
-        case Some(value) => 
+          otherValue.toRight(Seq(FormError("other-select", "whichInternalFeature.error.required")))
+        case Some(value) =>
           InternalFeature.withNameOption(value)
             .toRight(Seq(FormError(key, "whichInternalFeature.error.required")))
         case None =>
           Left(Seq(FormError(key, "whichInternalFeature.error.required")))
       }
-      
+
     override def unbind(key: String, value: InternalFeature): Map[String, String] =
       Map(key -> value.toString)
   }
