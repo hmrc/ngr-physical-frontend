@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,30 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout,
-    govukButton: GovukButton
-)
+package forms
 
-@()(implicit request: Request[?], messages: Messages)
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-@layout(
-    pageTitle    = titleNoForm(messages("signedOut.title")),
-    showBackLink = false,
-    timeout      = false,
-    showSignOut  = false
-) {
+class SecurityCamerasChangeFormProvider @Inject() extends Mappings {
 
-    <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
-
-    <p class="govuk-body">@messages("signedOut.guidance")</p>
-
-    <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.signIn"))
-                .asLink(routes.IndexController.onPageLoad().url)
-        )
-    </p>
+  def apply(): Form[Int] =
+    Form(
+      "value" -> int(
+        "securityCamerasChange.error.required",
+        "securityCamerasChange.error.wholeNumber",
+        "securityCamerasChange.error.nonNumeric")
+          .verifying(inRange(0, 9999, "securityCamerasChange.error.outOfRange"))
+    )
 }

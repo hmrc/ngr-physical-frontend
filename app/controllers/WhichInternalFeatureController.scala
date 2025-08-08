@@ -19,9 +19,9 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
-import models.InternalFeature
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
+import models.{InternalFeature, NormalMode}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -57,7 +57,7 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
 
   private def nextPage(feature: InternalFeature): Future[Result] = {
     val call = feature match {
-      case SecurityCamera => routes.WhichInternalFeatureController.onPageLoad // Group 2
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode) // Group 2
       case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
       case Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
       case _ => routes.WhichInternalFeatureController.onPageLoad // Group 1

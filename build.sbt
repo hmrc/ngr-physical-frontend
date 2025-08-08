@@ -38,11 +38,8 @@ lazy val microservice = (project in file("."))
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
-      "-deprecation",
-      "-unchecked",
-      "-encoding", "UTF-8",
-      "-feature",
-      "-Wconf:cat=deprecation:s,cat=feature:s"
+      "-Wconf:cat=deprecation:s,cat=feature:s",
+      "-Wconf:msg=unused import:s",
     ),
     scalacOptions := scalacOptions.value.distinct,
     libraryDependencies ++= AppDependencies(),
@@ -51,7 +48,7 @@ lazy val microservice = (project in file("."))
     Assets / pipelineStages := Seq(concat)
   )
 
-lazy val testSettings: Seq[Def.Setting[_]] = Seq(
+lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   fork := true,
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )

@@ -179,3 +179,12 @@ whichInternalFeature.securityCamera = Security cameras
 whichInternalFeature.compressedAir = Compressed air systems
 whichInternalFeature.heating = Heating
 whichInternalFeature.sprinklers = Sprinklers
+
+securityCamerasChange.title = How many security cameras are there inside the property?
+securityCamerasChange.heading = How many security cameras are there inside the property?
+securityCamerasChange.checkYourAnswersLabel = SecurityCamerasChange
+securityCamerasChange.error.nonNumeric = How many security cameras there are inside the property must be a number, like 8
+securityCamerasChange.error.required = Enter how many security cameras there are inside the property
+securityCamerasChange.error.wholeNumber = How many security cameras there are inside the property must be a number, like 8
+securityCamerasChange.error.outOfRange = How many security cameras there are inside the property must be 9,999 or less
+securityCamerasChange.change.hidden = How many security cameras are there inside the property?

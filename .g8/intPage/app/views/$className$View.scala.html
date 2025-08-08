@@ -1,16 +1,20 @@
-@import viewmodels.InputWidth._
+@import viewmodels.InputWidth.*
+@import models.NavigationBarContent
+@import config.AppConfig
+@import views.html.components.*
+@import uk.gov.hmrc.govukfrontend.views.html.components.*
 
 @this(
-    layout: templates.Layout,
+    layout: Layout,
+    saveAndContinueButton: saveAndContinueButton,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukInput: GovukInput
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+@layout(pageTitle = Some(messages("$className;format="decap"$.title")), navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -27,8 +31,7 @@
             .withWidth(Fixed10)
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveAndContinueButton(msg = messages("site.saveAndContinue"))
+
     }
 }
