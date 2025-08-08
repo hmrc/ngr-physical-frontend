@@ -19,9 +19,9 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
-import models.InternalFeature
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
+import models.{InternalFeature, NormalMode}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

@@ -44,7 +44,6 @@ class OptionFieldBehaviours extends FieldBehaviours {
         value =>
 
           val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-          println(s"ERRORS: ${result.errors}")
           result.errors must contain only invalidError
       }
     }
