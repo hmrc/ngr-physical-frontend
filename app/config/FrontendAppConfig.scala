@@ -28,7 +28,6 @@ trait AppConfig {
   val ngrDashboardUrl: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
-  val registrationUrl: String
   val features: Features
 }
 
@@ -44,10 +43,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
-  val loginUrl: String         = configuration.get[String]("urls.login")
-  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String       = configuration.get[String]("urls.signOut")
-
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/ngr-physical-frontend"
 
@@ -61,14 +56,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
-
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
 
-  override val registrationUrl: String = sc.baseUrl("ngr-login-register-frontend")
-  override val ngrDashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
-  override val ngrLoginUrl: String = s"$ngrLoginRegisterBaseUrl/ngr-login-register-frontend/register"
-  override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
+  override val ngrDashboardUrl: String = sc.baseUrl("ngr-dashboard-frontend")
+  override val ngrLoginUrl: String = sc.baseUrl("ngr-login-register-frontend")
+  override val ngrLogoutUrl: String = s"$ngrDashboardUrl/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
   override val features = new Features()(configuration)
 
@@ -78,7 +71,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   private def throwConfigNotFoundError(key: String): String =
     throw new RuntimeException(s"Could not find config key '$key'")
 
-  lazy val dashboardHost: String = configuration.get[Service]("microservice.services.ngr-dashboard-frontend").baseUrl
-  lazy val ngrLoginRegisterBaseUrl: String = configuration.get[Service]("microservice.services.ngr-login-register-frontend").baseUrl
-  
 }
