@@ -31,7 +31,7 @@ class WhichInternalFeatureFormProvider @Inject() extends Mappings {
       data.get(key).filter(_.nonEmpty) match {
         case Some("other") =>
           val otherValue = data.get("otherSelect").flatMap(InternalFeature.withNameOption)
-          otherValue.toRight(Seq(FormError("other-select", "whichInternalFeature.error.required")))
+          otherValue.toRight(Seq(FormError("other-select", "whichInternalFeature.error.dropdown")))
         case Some(value) =>
           InternalFeature.withNameOption(value)
             .toRight(Seq(FormError(key, "whichInternalFeature.error.required")))
