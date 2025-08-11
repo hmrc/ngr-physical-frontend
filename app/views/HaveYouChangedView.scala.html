@@ -28,11 +28,20 @@
     govukButton: GovukButton
 )
 
-@(address: String, titleKey: String, hintKey: String, form: Form[?], use: HaveYouChangedControllerUse, mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(
+    address: String, 
+    titleKey: String, 
+    hintKey: String, 
+    form: Form[?], 
+    use: HaveYouChangedControllerUse, 
+    mode: Mode, 
+    submitAction: Call, 
+    navigationBarContent: NavigationBarContent
+)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, messages(titleKey))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.HaveYouChangedController.onSubmit(use, mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

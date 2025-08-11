@@ -23,10 +23,12 @@ import models.{External, HaveYouChangedControllerUse, Internal, NormalMode, Spac
 import org.jsoup.Jsoup
 import play.api.data.Form
 import views.html.HaveYouChangedView
+import play.api.mvc.Call
 
 class HaveYouChangedViewSpec extends ViewBaseSpec {
   val view: HaveYouChangedView = inject[HaveYouChangedView]
   val formProvider: HaveYouChangedFormProvider = inject[HaveYouChangedFormProvider]
+  val call: Call = Call("", "")
 
   def formWithError(use: HaveYouChangedControllerUse): Form[Boolean] = formProvider.apply(use).withError("value", use match {
     case Space => "haveYouChangedSpace.error.required"
@@ -49,7 +51,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
     "show correct strings" when {
       "space mode" in {
         val form = formWithError(Space)
-        val document = Jsoup.parse(view("123 street", "haveYouChangedSpace.title", "haveYouChangedSpace.hint", form, Space, NormalMode, createDefaultNavBar()).body)
+        val document = Jsoup.parse(view("123 street", "haveYouChangedSpace.title", "haveYouChangedSpace.hint", form, Space, NormalMode, call, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed use of space?"
         elementText(Selectors.hint)(document) mustBe "For example, you increased the size of the retail area by building an extension."
@@ -61,7 +63,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
       }
       "internal mode" in {
         val form = formWithError(Internal)
-        val document = Jsoup.parse(view("123 street", "haveYouChangedInternal.title", "haveYouChangedInternal.hint", form, Internal, NormalMode, createDefaultNavBar()).body)
+        val document = Jsoup.parse(view("123 street", "haveYouChangedInternal.title", "haveYouChangedInternal.hint", form, Internal, NormalMode, call, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed internal features?"
         elementText(Selectors.hint)(document) mustBe "For example you added air conditioning and removed sprinklers."
@@ -73,7 +75,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
       }
       "external mode" in {
         val form = formWithError(External)
-        val document = Jsoup.parse(view("123 street", "haveYouChangedExternal.title", "haveYouChangedExternal.hint", form, External, NormalMode, createDefaultNavBar()).body)
+        val document = Jsoup.parse(view("123 street", "haveYouChangedExternal.title", "haveYouChangedExternal.hint", form, External, NormalMode, call, createDefaultNavBar()).body)
         elementText(Selectors.address)(document) mustBe "123 street"
         elementText(Selectors.heading)(document) mustBe "Have you changed external features?"
         elementText(Selectors.hint)(document) mustBe "For example you added parking and removed lock-up garages."

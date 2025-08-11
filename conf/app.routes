@@ -27,20 +27,20 @@ POST       /about-change-to-use-of-space                          controllers.Ch
 GET        /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
 
-GET        /have-you-changed-use-of-space                           controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = Space, mode: Mode = NormalMode)
-POST       /have-you-changed-use-of-space                           controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = Space, mode: Mode = NormalMode)
-GET        /change-have-you-changed-use-of-space                    controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = Space, mode: Mode = CheckMode)
-POST       /change-have-you-changed-use-of-space                    controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = Space, mode: Mode = CheckMode)
+GET        /have-you-changed-use-of-space                           controllers.HaveYouChangedController.loadSpace(mode: Mode = NormalMode)
+POST       /have-you-changed-use-of-space                           controllers.HaveYouChangedController.submitSpace(mode: Mode = NormalMode)
+GET        /change-have-you-changed-use-of-space                    controllers.HaveYouChangedController.loadSpace(mode: Mode = CheckMode)
+POST       /change-have-you-changed-use-of-space                    controllers.HaveYouChangedController.submitSpace(mode: Mode = CheckMode)
 
-GET        /have-you-changed-internal-features                      controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = Internal, mode: Mode = NormalMode)
-POST       /have-you-changed-internal-features                      controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = Internal, mode: Mode = NormalMode)
-GET        /change-have-you-changed-internal-features               controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = Internal, mode: Mode = CheckMode)
-POST       /change-have-you-changed-internal-features               controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = Internal, mode: Mode = CheckMode)
+GET        /have-you-changed-internal-features                      controllers.HaveYouChangedController.loadInternal(mode: Mode = NormalMode)
+POST       /have-you-changed-internal-features                      controllers.HaveYouChangedController.submitInternal(mode: Mode = NormalMode)
+GET        /change-have-you-changed-internal-features               controllers.HaveYouChangedController.loadInternal(mode: Mode = CheckMode)
+POST       /change-have-you-changed-internal-features               controllers.HaveYouChangedController.submitInternal(mode: Mode = CheckMode)
 
-GET        /have-you-changed-external-features                      controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = External, mode: Mode = NormalMode)
-POST       /have-you-changed-external-features                      controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = External, mode: Mode = NormalMode)
-GET        /change-have-you-changed-external-features               controllers.HaveYouChangedController.onPageLoad(use: HaveYouChangedControllerUse = External, mode: Mode = CheckMode)
-POST       /change-have-you-changed-external-features               controllers.HaveYouChangedController.onSubmit(use: HaveYouChangedControllerUse = External, mode: Mode = CheckMode)
+GET        /have-you-changed-external-features                      controllers.HaveYouChangedController.loadExternal(mode: Mode = NormalMode)
+POST       /have-you-changed-external-features                      controllers.HaveYouChangedController.submitExternal(mode: Mode = NormalMode)
+GET        /change-have-you-changed-external-features               controllers.HaveYouChangedController.loadExternal(mode: Mode = CheckMode)
+POST       /change-have-you-changed-external-features               controllers.HaveYouChangedController.submitExternal(mode: Mode = CheckMode)
 
 GET        /which-internal-feature-have-changed                     controllers.WhichInternalFeatureController.onPageLoad
 POST       /which-internal-feature-have-changed                     controllers.WhichInternalFeatureController.onSubmit

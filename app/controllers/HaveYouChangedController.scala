@@ -21,14 +21,15 @@ import config.AppConfig
 import forms.HaveYouChangedFormProvider
 import models.HaveYouChangedControllerUse.{getMessageKeys, pageType}
 import models.NavBarPageContents.createDefaultNavBar
-import models.{HaveYouChangedControllerUse, Mode, UserAnswers}
+import models.{External, HaveYouChangedControllerUse, Internal, Mode, Space, UserAnswers}
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HaveYouChangedView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +43,11 @@ class HaveYouChangedController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: HaveYouChangedView
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
-  
+
+  def loadSpace(mode: Mode): Action[AnyContent] = onPageLoad(Space, mode)
+  def loadInternal(mode: Mode): Action[AnyContent] = onPageLoad(Internal, mode)
+  def loadExternal(mode: Mode): Action[AnyContent] = onPageLoad(External, mode)
+
   def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
@@ -51,8 +56,18 @@ class HaveYouChangedController @Inject()(
         case Some(value) => form.fill(value)
       }
       val (title, hint) = getMessageKeys(use)
-      Ok(view(request.property.addressFull, title, hint, preparedForm, use, mode, createDefaultNavBar()))
+      Ok(view(request.property.addressFull, title, hint, preparedForm, use, mode, submitAction(use, mode), createDefaultNavBar()))
   }
+  
+  def submitAction(use: HaveYouChangedControllerUse, mode: Mode): Call = use match {
+    case Space => routes.HaveYouChangedController.submitSpace(mode)
+    case Internal => routes.HaveYouChangedController.submitInternal(mode)
+    case External => routes.HaveYouChangedController.submitExternal(mode)
+  }
+
+  def submitSpace(mode: Mode): Action[AnyContent] = onSubmit(Space, mode)
+  def submitInternal(mode: Mode): Action[AnyContent] = onSubmit(Internal, mode)
+  def submitExternal(mode: Mode): Action[AnyContent] = onSubmit(External, mode)
 
   def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
@@ -60,7 +75,7 @@ class HaveYouChangedController @Inject()(
       form.bindFromRequest().fold(
         formWithErrors =>
           val (title, hint) = getMessageKeys(use)
-          Future.successful(BadRequest(view(request.property.addressFull, title, hint, formWithErrors, use, mode, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, title, hint, formWithErrors, use, mode, submitAction(use, mode), createDefaultNavBar()))),
         value =>
           val page = pageType(use)
           for {
