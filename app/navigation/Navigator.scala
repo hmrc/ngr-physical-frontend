@@ -26,17 +26,17 @@ import javax.inject.{Inject, Singleton}
 class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case WhenCompleteChangePage => _ => routes.HaveYouChangedController.onPageLoad(Space, NormalMode)
+    case WhenCompleteChangePage => _ => routes.HaveYouChangedController.loadSpace(NormalMode)
     case HaveYouChangedSpacePage => answers =>
       answers.get(HaveYouChangedSpacePage) match {
         case Some(true) => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
-        case Some(false) => routes.HaveYouChangedController.onPageLoad(Internal, NormalMode)
+        case Some(false) => routes.HaveYouChangedController.loadInternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case HaveYouChangedInternalPage => answers =>
       answers.get(HaveYouChangedInternalPage) match {
         case Some(true) => routes.WhichInternalFeatureController.onPageLoad
-        case Some(false) => routes.HaveYouChangedController.onPageLoad(External, NormalMode)
+        case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case WhichInternalFeaturePage => answers =>

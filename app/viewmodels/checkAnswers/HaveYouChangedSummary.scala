@@ -36,11 +36,16 @@ object HaveYouChangedSummary  {
     answers.get(page).map {
       answer =>
         val value = if (answer) "site.yes" else "site.no"
+        val url = use match {
+          case Space => routes.HaveYouChangedController.loadSpace(CheckMode).url
+          case Internal => routes.HaveYouChangedController.loadInternal(CheckMode).url
+          case External => routes.HaveYouChangedController.loadExternal(CheckMode).url
+        }
         SummaryListRowViewModel(
           key     = s"$key.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.HaveYouChangedController.onPageLoad(use, CheckMode).url)
+            ActionItemViewModel("site.change", url)
               .withVisuallyHiddenText(messages(s"$key.change.hidden"))
           )
         )
