@@ -55,18 +55,18 @@ POST       /how-much-of-property-has-air-conditioning             controllers.Ho
 GET        /change-how-much-of-property-has-air-conditioning      controllers.HowMuchOfPropertyController.onPageLoadAirCon(mode: Mode = CheckMode)
 POST       /change-how-much-of-property-has-air-conditioning      controllers.HowMuchOfPropertyController.onSubmitAirCon(mode: Mode = CheckMode)
 
-GET        /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = NormalMode)                  
-POST       /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = NormalMode) 
+GET        /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = NormalMode)
+POST       /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = NormalMode)
 GET        /change-how-much-of-property-has-heating               controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = CheckMode)
 POST       /change-how-much-of-property-has-heating               controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = CheckMode)
 
 GET        /how-much-of-property-has-sprinklers                   controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = NormalMode)
-POST       /how-much-of-property-has-sprinklers                   controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = NormalMode) 
+POST       /how-much-of-property-has-sprinklers                   controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = NormalMode)
 GET        /change-how-much-of-property-has-sprinklers            controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = CheckMode)
 POST       /change-how-much-of-property-has-sprinklers            controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = CheckMode)
 
 GET        /which-floors-of-property-have-goods-lifts             controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = NormalMode)
-POST       /which-floors-of-property-have-goods-lifts             controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = NormalMode) 
+POST       /which-floors-of-property-have-goods-lifts             controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = NormalMode)
 GET        /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = CheckMode)
 POST       /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = CheckMode)
 
@@ -81,7 +81,7 @@ GET        /change-what-happened-to-compressed-air-systems        controllers.Ho
 POST       /change-what-happened-to-compressed-air-systems        controllers.HowMuchOfPropertyController.onSubmitCompressedAir(mode: Mode = CheckMode)
 
 GET        /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = NormalMode)
-POST       /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode) 
+POST       /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode)
 GET        /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)
 POST       /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = CheckMode)
 

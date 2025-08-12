@@ -19,6 +19,8 @@ package models
 import controllers.routes
 import models.InternalFeature.*
 import pages.*
+import controllers.routes
+import pages.{HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, HowMuchOfPropertyHeatingPage, HowMuchOfPropertyPassengerLiftPage, HowMuchOfPropertySprinklersPage, QuestionPage}
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
@@ -48,12 +50,12 @@ object InternalFeature extends Enumerable.Implicits {
 
   def withNameOption(name: String): Option[InternalFeature] =
     values.find(_.toString == name)
-  
+
   def toGroup1(feature: InternalFeature): Option[InternalFeatureGroup1] = feature match {
     case f: InternalFeatureGroup1 => Some(f)
     case _ => None
   }
-  
+
   def options(implicit messages: Messages): Seq[RadioItem] = {
 
     val (firstFive, remaining) = values.splitAt(5)
