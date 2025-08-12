@@ -53,9 +53,9 @@ class AuthActionSpec extends SpecBase {
           val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), appConfig, bodyParsers)
           val controller = new Harness(authAction)
           val result = controller.onPageLoad()(FakeRequest())
-
+          println(appConfig.registrationHost)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must startWith(appConfig.ngrLoginUrl)
+          redirectLocation(result).value must startWith(appConfig.registrationHost)
         }
       }
     }
@@ -75,7 +75,7 @@ class AuthActionSpec extends SpecBase {
           val result = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must startWith(appConfig.ngrLoginUrl)
+          redirectLocation(result).value must startWith(appConfig.registrationHost)
         }
       }
     }
