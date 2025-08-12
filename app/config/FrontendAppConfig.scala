@@ -24,8 +24,8 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
-  val ngrLoginUrl: String
-  val ngrDashboardUrl: String
+  val registrationHost: String
+  val dashboardHost: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
   val features: Features
@@ -59,13 +59,13 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
 
-  override val ngrDashboardUrl: String = sc.baseUrl("ngr-dashboard-frontend")
-  override val ngrLoginUrl: String = sc.baseUrl("ngr-login-register-frontend")
-  override val ngrLogoutUrl: String = s"$ngrDashboardUrl/ngr-dashboard-frontend/signout"
+  override val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  override val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
+  override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
   override val features = new Features()(configuration)
 
-  def getString(key: String): String =
+  private def getString(key: String): String =
     configuration.getOptional[String](key).filter(!_.isBlank).getOrElse(throwConfigNotFoundError(key))
 
   private def throwConfigNotFoundError(key: String): String =

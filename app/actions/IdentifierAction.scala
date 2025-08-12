@@ -57,7 +57,7 @@ class AuthenticatedIdentifierAction @Inject()(
         
     } recover {
       case _: NoActiveSession =>
-        Redirect(s"${config.ngrLoginUrl}/ngr-login-register-frontend/register")
+        Redirect(s"${config.registrationHost}/ngr-login-register-frontend/register")
       case _: AuthorisationException =>
         Redirect(routes.UnauthorisedController.onPageLoad())
     }
