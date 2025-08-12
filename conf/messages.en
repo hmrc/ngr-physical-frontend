@@ -189,3 +189,45 @@ securityCamerasChange.error.required = Enter how many security cameras there are
 securityCamerasChange.error.wholeNumber = How many security cameras there are inside the property must be a number, like 8
 securityCamerasChange.error.outOfRange = How many security cameras there are inside the property must be 9,999 or less
 securityCamerasChange.change.hidden = How many security cameras are there inside the property?
+
+howMuchOfProperty.airConditioning.title = How much of the property has air conditioning
+howMuchOfProperty.airConditioning.hint = Only include systems that cool, or both cool and heat. Do not include central heating or portable air conditioning
+howMuchOfProperty.airConditioning.all = All of the property has air conditioning
+howMuchOfProperty.airConditioning.some = Some of the property has air conditioning
+howMuchOfProperty.airConditioning.none = None of the property has air conditioning
+howMuchOfProperty.airConditioning.error = Select how much of the property has air conditioning
+
+howMuchOfProperty.escalators.title = Escalators
+howMuchOfProperty.escalators.hint =
+howMuchOfProperty.escalators.all = all
+howMuchOfProperty.escalators.some = some
+howMuchOfProperty.escalators.none = none
+howMuchOfProperty.escalators.error = Select which floors of the property have escalators
+
+howMuchOfProperty.goodsLift.title = Goods lifts
+howMuchOfProperty.goodsLift.hint =
+howMuchOfProperty.goodsLift.all = all
+howMuchOfProperty.goodsLift.some = some
+howMuchOfProperty.goodsLift.none = none
+howMuchOfProperty.goodsLift.error = Select which floors of the property have goods lifts
+
+howMuchOfProperty.passengerLift.title = Passenger lift
+howMuchOfProperty.passengerLift.hint =
+howMuchOfProperty.passengerLift.all = all
+howMuchOfProperty.passengerLift.some = some
+howMuchOfProperty.passengerLift.none = none
+howMuchOfProperty.passengerLift.error = Select which floors of the property have passenger lifts
+
+howMuchOfProperty.heating.title = Heating
+howMuchOfProperty.heating.hint =
+howMuchOfProperty.heating.all = all
+howMuchOfProperty.heating.some = some
+howMuchOfProperty.heating.none = none
+howMuchOfProperty.heating.error = Select how much of the property has heating
+
+howMuchOfProperty.sprinklers.title = Sprinklers
+howMuchOfProperty.sprinklers.hint =
+howMuchOfProperty.sprinklers.all = all
+howMuchOfProperty.sprinklers.some = some
+howMuchOfProperty.sprinklers.none = none
+howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers

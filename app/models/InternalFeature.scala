@@ -16,7 +16,10 @@
 
 package models
 
+import controllers.routes
+import pages.{HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, HowMuchOfPropertyHeatingPage, HowMuchOfPropertyPassengerLiftPage, HowMuchOfPropertySprinklersPage, QuestionPage}
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
@@ -24,24 +27,59 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 
 sealed trait InternalFeature
+sealed trait InternalFeatureGroup1 extends InternalFeature
+
+object InternalFeatureGroup1 {
+
+  def pageLoadAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+    feature match {
+      case InternalFeature.AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(mode)
+      case InternalFeature.Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(mode)
+      case InternalFeature.GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(mode)
+      case InternalFeature.PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(mode)
+      case InternalFeature.Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(mode)
+      case InternalFeature.Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(mode)
+    }
+  
+  def submitAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+    feature match {
+      case InternalFeature.AirConditioning => routes.HowMuchOfPropertyController.onSubmitAirCon(mode)
+      case InternalFeature.Escalators => routes.HowMuchOfPropertyController.onSubmitEscalator(mode)
+      case InternalFeature.GoodsLift => routes.HowMuchOfPropertyController.onSubmitGoodsLift(mode)
+      case InternalFeature.PassengerLift => routes.HowMuchOfPropertyController.onSubmitPassengerLift(mode)
+      case InternalFeature.Heating => routes.HowMuchOfPropertyController.onSubmitHeating(mode)
+      case InternalFeature.Sprinklers => routes.HowMuchOfPropertyController.onSubmitSprinklers(mode)
+    }
+    
+  def page(feature: InternalFeatureGroup1): QuestionPage[HowMuchOfProperty] =
+    feature match {
+      case InternalFeature.AirConditioning => HowMuchOfPropertyAirConPage
+      case InternalFeature.Escalators => HowMuchOfPropertyEscalatorsPage
+      case InternalFeature.GoodsLift => HowMuchOfPropertyGoodsLiftPage
+      case InternalFeature.PassengerLift => HowMuchOfPropertyPassengerLiftPage
+      case InternalFeature.Heating => HowMuchOfPropertyHeatingPage
+      case InternalFeature.Sprinklers => HowMuchOfPropertySprinklersPage
+    }
+  
+}
 
 object InternalFeature extends Enumerable.Implicits {
 
-  case object AirConditioning extends WithName("airConditioning") with InternalFeature
+  case object AirConditioning extends WithName("airConditioning") with InternalFeatureGroup1
 
-  case object Escalators extends WithName("escalators") with InternalFeature
+  case object Escalators extends WithName("escalators") with InternalFeatureGroup1
 
-  case object GoodsLift extends WithName("goodsLift") with InternalFeature
+  case object GoodsLift extends WithName("goodsLift") with InternalFeatureGroup1
 
-  case object PassengerLift extends WithName("passengerLift") with InternalFeature
+  case object PassengerLift extends WithName("passengerLift") with InternalFeatureGroup1
 
   case object SecurityCamera extends WithName("securityCamera") with InternalFeature
 
   case object CompressedAir extends WithName("compressedAir") with InternalFeature
 
-  case object Heating extends WithName("heating") with InternalFeature
+  case object Heating extends WithName("heating") with InternalFeatureGroup1
 
-  case object Sprinklers extends WithName("sprinklers") with InternalFeature
+  case object Sprinklers extends WithName("sprinklers") with InternalFeatureGroup1
 
   val values: Seq[InternalFeature] = Seq(
     AirConditioning, Escalators, GoodsLift, PassengerLift, SecurityCamera, CompressedAir, Heating, Sprinklers
@@ -49,7 +87,12 @@ object InternalFeature extends Enumerable.Implicits {
 
   def withNameOption(name: String): Option[InternalFeature] =
     values.find(_.toString == name)
-
+  
+  def toGroup1(feature: InternalFeature): Option[InternalFeatureGroup1] = feature match {
+    case f: InternalFeatureGroup1 => Some(f)
+    case _ => None
+  }
+  
   def options(implicit messages: Messages): Seq[RadioItem] = {
 
     val (firstFive, remaining) = values.splitAt(5)
