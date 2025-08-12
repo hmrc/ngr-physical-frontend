@@ -30,9 +30,10 @@ import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HowMuchOfPropertyView
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class HowMuchOfPropertyController @Inject()(
                                        sessionRepository: SessionRepository,
                                        navigator: Navigator,
