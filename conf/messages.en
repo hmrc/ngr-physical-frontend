@@ -225,6 +225,13 @@ howMuchOfProperty.heating.some = some
 howMuchOfProperty.heating.none = none
 howMuchOfProperty.heating.error = Select how much of the property has heating
 
+howMuchOfProperty.compressedAir.title = Compressed air
+howMuchOfProperty.compressedAir.hint =
+howMuchOfProperty.compressedAir.all = all
+howMuchOfProperty.compressedAir.some = some
+howMuchOfProperty.compressedAir.none = none
+howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
+
 howMuchOfProperty.sprinklers.title = Sprinklers
 howMuchOfProperty.sprinklers.hint =
 howMuchOfProperty.sprinklers.all = all

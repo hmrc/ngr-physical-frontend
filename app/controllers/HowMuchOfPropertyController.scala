@@ -19,7 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.HowMuchOfPropertyFormProvider
-import models.InternalFeature.{AirConditioning, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers}
+import models.InternalFeature.{AirConditioning, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers, CompressedAir}
 import models.NavBarPageContents.createDefaultNavBar
 import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, UserAnswers}
 import navigation.Navigator
@@ -51,6 +51,7 @@ class HowMuchOfPropertyController @Inject()(
   def onPageLoadGoodsLift(mode: Mode): Action[AnyContent] = onPageLoad(GoodsLift, mode)
   def onPageLoadEscalator(mode: Mode): Action[AnyContent] = onPageLoad(Escalators, mode)
   def onPageLoadPassengerLift(mode: Mode): Action[AnyContent] = onPageLoad(PassengerLift, mode)
+  def onPageLoadCompressedAir(mode: Mode): Action[AnyContent] = onPageLoad(CompressedAir, mode)
 
   def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
@@ -74,6 +75,7 @@ class HowMuchOfPropertyController @Inject()(
   def onSubmitGoodsLift(mode: Mode): Action[AnyContent] = onSubmit(GoodsLift, mode)
   def onSubmitEscalator(mode: Mode): Action[AnyContent] = onSubmit(Escalators, mode)
   def onSubmitPassengerLift(mode: Mode): Action[AnyContent] = onSubmit(PassengerLift, mode)
+  def onSubmitCompressedAir(mode: Mode): Action[AnyContent] = onSubmit(CompressedAir, mode)
 
   def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>

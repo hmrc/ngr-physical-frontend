@@ -75,6 +75,11 @@ POST       /where-escalators-in-property                          controllers.Ho
 GET        /change-where-escalators-in-property                   controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = CheckMode)
 POST       /change-where-escalators-in-property                   controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = CheckMode)
 
+GET        /what-happened-to-compressed-air-systems               controllers.HowMuchOfPropertyController.onPageLoadCompressedAir(mode: Mode = NormalMode)
+POST       /what-happened-to-compressed-air-systems               controllers.HowMuchOfPropertyController.onSubmitCompressedAir(mode: Mode = NormalMode)
+GET        /change-what-happened-to-compressed-air-systems        controllers.HowMuchOfPropertyController.onPageLoadCompressedAir(mode: Mode = CheckMode)
+POST       /change-what-happened-to-compressed-air-systems        controllers.HowMuchOfPropertyController.onSubmitCompressedAir(mode: Mode = CheckMode)
+
 GET        /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = NormalMode)
 POST       /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode) 
 GET        /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)

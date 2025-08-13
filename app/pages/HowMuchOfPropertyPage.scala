@@ -48,3 +48,8 @@ case object HowMuchOfPropertyPassengerLiftPage extends QuestionPage[HowMuchOfPro
   override def path: JsPath = JsPath \ toString
   override def toString: String = "howMuchOfPropertyPassengerLift"
 }
+
+case object HowMuchOfPropertyCompressedAirPage extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ toString
+  override def toString: String = "howMuchOfPropertyCompressedAir"
+}

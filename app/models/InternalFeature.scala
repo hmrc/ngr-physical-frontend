@@ -37,7 +37,7 @@ object InternalFeature extends Enumerable.Implicits {
   case object GoodsLift extends WithName("goodsLift") with InternalFeatureGroup1
   case object PassengerLift extends WithName("passengerLift") with InternalFeatureGroup1
   case object SecurityCamera extends WithName("securityCamera") with InternalFeature
-  case object CompressedAir extends WithName("compressedAir") with InternalFeature
+  case object CompressedAir extends WithName("compressedAir") with InternalFeatureGroup1
   case object Heating extends WithName("heating") with InternalFeatureGroup1
   case object Sprinklers extends WithName("sprinklers") with InternalFeatureGroup1
 
@@ -98,6 +98,6 @@ object InternalFeature extends Enumerable.Implicits {
 
 object InternalFeatureGroup1 {
   val values: Seq[InternalFeatureGroup1] = Seq(
-    AirConditioning, Escalators, GoodsLift, PassengerLift, Heating, Sprinklers
+    AirConditioning, Escalators, GoodsLift, PassengerLift, CompressedAir, Heating, Sprinklers
   )
 }

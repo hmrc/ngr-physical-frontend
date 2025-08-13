@@ -59,7 +59,7 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
   private def nextPage(feature: InternalFeature): Future[Result] = {
     val call = feature match {
       case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode) // Group 2
-      case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
+//      case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
 //      case Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
       case _ => HowMuchOfProperty.pageLoadAction(toGroup1(feature).getOrElse(throw new RuntimeException("Could not cast internal feature to group 1")), NormalMode) // Group 1
     }

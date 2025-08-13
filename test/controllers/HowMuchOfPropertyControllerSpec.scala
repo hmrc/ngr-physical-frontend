@@ -61,7 +61,7 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
           status(result) mustBe 400
         }
       }
-      
+
     }
   }
 

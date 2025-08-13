@@ -65,6 +65,7 @@ object HowMuchOfProperty extends Enumerable.Implicits {
       case Escalators => onPageLoadEscalator(mode)
       case GoodsLift => onPageLoadGoodsLift(mode)
       case PassengerLift => onPageLoadPassengerLift(mode)
+      case CompressedAir => onPageLoadCompressedAir(mode)
       case Heating => onPageLoadHeating(mode)
       case Sprinklers => onPageLoadSprinklers(mode)
     }
@@ -75,6 +76,7 @@ object HowMuchOfProperty extends Enumerable.Implicits {
       case Escalators => onSubmitEscalator(mode)
       case GoodsLift => onSubmitGoodsLift(mode)
       case PassengerLift => onSubmitPassengerLift(mode)
+      case CompressedAir => onSubmitCompressedAir(mode)
       case Heating => onSubmitHeating(mode)
       case Sprinklers => onSubmitSprinklers(mode)
     }
@@ -85,6 +87,7 @@ object HowMuchOfProperty extends Enumerable.Implicits {
       case Escalators => HowMuchOfPropertyEscalatorsPage
       case GoodsLift => HowMuchOfPropertyGoodsLiftPage
       case PassengerLift => HowMuchOfPropertyPassengerLiftPage
+      case CompressedAir => HowMuchOfPropertyCompressedAirPage
       case Heating => HowMuchOfPropertyHeatingPage
       case Sprinklers => HowMuchOfPropertySprinklersPage
     }
