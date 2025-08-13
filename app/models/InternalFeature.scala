@@ -17,7 +17,7 @@
 package models
 
 import controllers.routes
-import pages.{HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, HowMuchOfPropertyHeatingPage, HowMuchOfPropertyPassengerLiftPage, HowMuchOfPropertySprinklersPage, QuestionPage}
+import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
@@ -28,40 +28,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 
 sealed trait InternalFeature
 sealed trait InternalFeatureGroup1 extends InternalFeature
-
-object InternalFeatureGroup1 {
-
-  def pageLoadAction(feature: InternalFeatureGroup1, mode: Mode): Call =
-    feature match {
-      case InternalFeature.AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(mode)
-      case InternalFeature.Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(mode)
-      case InternalFeature.GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(mode)
-      case InternalFeature.PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(mode)
-      case InternalFeature.Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(mode)
-      case InternalFeature.Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(mode)
-    }
-  
-  def submitAction(feature: InternalFeatureGroup1, mode: Mode): Call =
-    feature match {
-      case InternalFeature.AirConditioning => routes.HowMuchOfPropertyController.onSubmitAirCon(mode)
-      case InternalFeature.Escalators => routes.HowMuchOfPropertyController.onSubmitEscalator(mode)
-      case InternalFeature.GoodsLift => routes.HowMuchOfPropertyController.onSubmitGoodsLift(mode)
-      case InternalFeature.PassengerLift => routes.HowMuchOfPropertyController.onSubmitPassengerLift(mode)
-      case InternalFeature.Heating => routes.HowMuchOfPropertyController.onSubmitHeating(mode)
-      case InternalFeature.Sprinklers => routes.HowMuchOfPropertyController.onSubmitSprinklers(mode)
-    }
-    
-  def page(feature: InternalFeatureGroup1): QuestionPage[HowMuchOfProperty] =
-    feature match {
-      case InternalFeature.AirConditioning => HowMuchOfPropertyAirConPage
-      case InternalFeature.Escalators => HowMuchOfPropertyEscalatorsPage
-      case InternalFeature.GoodsLift => HowMuchOfPropertyGoodsLiftPage
-      case InternalFeature.PassengerLift => HowMuchOfPropertyPassengerLiftPage
-      case InternalFeature.Heating => HowMuchOfPropertyHeatingPage
-      case InternalFeature.Sprinklers => HowMuchOfPropertySprinklersPage
-    }
-  
-}
 
 object InternalFeature extends Enumerable.Implicits {
 

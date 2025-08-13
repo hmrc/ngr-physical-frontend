@@ -30,6 +30,7 @@ import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HowMuchOfPropertyView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -56,13 +57,13 @@ class HowMuchOfPropertyController @Inject()(
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(InternalFeatureGroup1.page(feature)) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(HowMuchOfProperty.page(feature)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
       val radioItems = HowMuchOfProperty.options(feature)
-      val action = InternalFeatureGroup1.submitAction(feature, mode)
+      val action = HowMuchOfProperty.submitAction(feature, mode)
       val strings = HowMuchOfProperty.messageKeys(feature)
       Ok(view(request.property.addressFull, strings, action, radioItems, preparedForm, mode, createDefaultNavBar()))
   }
@@ -82,15 +83,15 @@ class HowMuchOfPropertyController @Inject()(
       form.bindFromRequest().fold(
         formWithErrors =>
           val radioItems = HowMuchOfProperty.options(feature)
-          val action = InternalFeatureGroup1.submitAction(feature, mode)
+          val action = HowMuchOfProperty.submitAction(feature, mode)
           val strings = HowMuchOfProperty.messageKeys(feature)
           Future.successful(BadRequest(view(request.property.addressFull, strings, action, radioItems, formWithErrors, mode, createDefaultNavBar()))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(InternalFeatureGroup1.page(feature), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(HowMuchOfProperty.page(feature), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(InternalFeatureGroup1.page(feature), mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
       )
   }
 }

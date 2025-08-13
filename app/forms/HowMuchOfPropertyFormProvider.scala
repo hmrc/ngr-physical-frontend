@@ -16,23 +16,16 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
-import play.api.data.Form
 import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1}
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class HowMuchOfPropertyFormProvider @Inject() extends Mappings {
 
-  def errorKey(feature: InternalFeatureGroup1): String = feature match {
-    case InternalFeature.AirConditioning => "howMuchOfProperty.airConditioning.error"
-    case InternalFeature.Escalators => "howMuchOfProperty.escalators.error"
-    case InternalFeature.GoodsLift => "howMuchOfProperty.goodsLift.error"
-    case InternalFeature.PassengerLift => "howMuchOfProperty.passengerLift.error"
-    case InternalFeature.Heating => "howMuchOfProperty.heating.error"
-    case InternalFeature.Sprinklers => "howMuchOfProperty.sprinklers.error"
-  }
   def apply(feature: InternalFeatureGroup1): Form[HowMuchOfProperty] =
     Form(
-      "value" -> enumerable[HowMuchOfProperty](errorKey(feature))
+      "value" -> enumerable[HowMuchOfProperty](HowMuchOfProperty.errorKey(feature))
     )
 }

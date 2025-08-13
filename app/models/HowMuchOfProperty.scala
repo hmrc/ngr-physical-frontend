@@ -16,7 +16,11 @@
 
 package models
 
+import controllers.routes.HowMuchOfPropertyController.*
+import models.InternalFeature.*
+import pages.*
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
@@ -52,6 +56,38 @@ object HowMuchOfProperty extends Enumerable.Implicits {
       "none" -> s"howMuchOfProperty.$key.none"
     )
   }
+
+  def errorKey(feature: InternalFeatureGroup1): String = s"howMuchOfProperty.${feature.toString}.error"
+
+  def pageLoadAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+    feature match {
+      case AirConditioning => onPageLoadAirCon(mode)
+      case Escalators => onPageLoadEscalator(mode)
+      case GoodsLift => onPageLoadGoodsLift(mode)
+      case PassengerLift => onPageLoadPassengerLift(mode)
+      case Heating => onPageLoadHeating(mode)
+      case Sprinklers => onPageLoadSprinklers(mode)
+    }
+
+  def submitAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+    feature match {
+      case AirConditioning => onSubmitAirCon(mode)
+      case Escalators => onSubmitEscalator(mode)
+      case GoodsLift => onSubmitGoodsLift(mode)
+      case PassengerLift => onSubmitPassengerLift(mode)
+      case Heating => onSubmitHeating(mode)
+      case Sprinklers => onSubmitSprinklers(mode)
+    }
+
+  def page(feature: InternalFeatureGroup1): QuestionPage[HowMuchOfProperty] =
+    feature match {
+      case AirConditioning => HowMuchOfPropertyAirConPage
+      case Escalators => HowMuchOfPropertyEscalatorsPage
+      case GoodsLift => HowMuchOfPropertyGoodsLiftPage
+      case PassengerLift => HowMuchOfPropertyPassengerLiftPage
+      case Heating => HowMuchOfPropertyHeatingPage
+      case Sprinklers => HowMuchOfPropertySprinklersPage
+    }
 
   implicit val enumerable: Enumerable[HowMuchOfProperty] =
     Enumerable(values.map(v => v.toString -> v)*)
