@@ -20,7 +20,7 @@ import controllers.routes
 import models.InternalFeature.*
 import pages.*
 import controllers.routes
-import pages.{HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, HowMuchOfPropertyHeatingPage, HowMuchOfPropertyPassengerLiftPage, HowMuchOfPropertySprinklersPage, QuestionPage}
+import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
