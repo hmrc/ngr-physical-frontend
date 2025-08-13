@@ -17,6 +17,7 @@
 package models
 
 import controllers.routes
+import models.InternalFeature.*
 import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -100,4 +101,10 @@ object InternalFeature extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[InternalFeature] =
     Enumerable(values.map(v => v.toString -> v)*)
+}
+
+object InternalFeatureGroup1 {
+  val values: Seq[InternalFeatureGroup1] = Seq(
+    AirConditioning, Escalators, GoodsLift, PassengerLift, Heating, Sprinklers
+  )
 }

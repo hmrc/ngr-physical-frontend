@@ -17,30 +17,33 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.HowMuchOfProperty
 import models.InternalFeature.AirConditioning
+import models.{HowMuchOfProperty, InternalFeatureGroup1}
 import play.api.data.FormError
 
 class HowMuchOfPropertyFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new HowMuchOfPropertyFormProvider()(AirConditioning)
+  InternalFeatureGroup1.values.foreach { feature =>
 
-  ".value" - {
+    val form = new HowMuchOfPropertyFormProvider()(feature)
 
-    val fieldName = "value"
-    val requiredKey = "howMuchOfProperty.airConditioning.error"
+    s".value ${feature.toString}" - {
 
-    behave like optionsField[HowMuchOfProperty](
-      form,
-      fieldName,
-      validValues  = HowMuchOfProperty.values,
-      invalidError = FormError(fieldName, "error.invalid")
-    )
+      val fieldName = "value"
+      val requiredKey = HowMuchOfProperty.errorKey(feature)
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+      behave like optionsField[HowMuchOfProperty](
+        form,
+        fieldName,
+        validValues = HowMuchOfProperty.values,
+        invalidError = FormError(fieldName, "error.invalid")
+      )
+
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
   }
 }
