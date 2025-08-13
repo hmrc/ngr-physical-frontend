@@ -33,19 +33,12 @@ sealed trait InternalFeatureGroup1 extends InternalFeature
 object InternalFeature extends Enumerable.Implicits {
 
   case object AirConditioning extends WithName("airConditioning") with InternalFeatureGroup1
-
   case object Escalators extends WithName("escalators") with InternalFeatureGroup1
-
   case object GoodsLift extends WithName("goodsLift") with InternalFeatureGroup1
-
   case object PassengerLift extends WithName("passengerLift") with InternalFeatureGroup1
-
   case object SecurityCamera extends WithName("securityCamera") with InternalFeature
-
   case object CompressedAir extends WithName("compressedAir") with InternalFeature
-
   case object Heating extends WithName("heating") with InternalFeatureGroup1
-
   case object Sprinklers extends WithName("sprinklers") with InternalFeatureGroup1
 
   val values: Seq[InternalFeature] = Seq(
