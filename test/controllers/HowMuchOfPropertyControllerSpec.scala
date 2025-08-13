@@ -16,3 +16,53 @@
 
 package controllers
 
+import forms.HowMuchOfPropertyFormProvider
+import helpers.ControllerSpecSupport
+import models.{HowMuchOfProperty, InternalFeatureGroup1, NormalMode}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import play.api.test.Helpers.*
+import views.html.HowMuchOfPropertyView
+
+import scala.concurrent.Future
+
+class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
+  lazy val view: HowMuchOfPropertyView = inject[HowMuchOfPropertyView]
+  lazy val formProvider: HowMuchOfPropertyFormProvider = HowMuchOfPropertyFormProvider()
+  private val controller: HowMuchOfPropertyController = new HowMuchOfPropertyController(
+    sessionRepository = mockSessionRepository, navigator = navigator, identify = fakeAuth, getData = fakeData(None), formProvider = formProvider, controllerComponents = mcc, view = view
+  )
+
+  "HowMuchOfPropertyController" should {
+    InternalFeatureGroup1.values.foreach { feature =>
+
+      "onPageLoad" must {
+        s"return 200: ${feature.toString}" in {
+          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          status(result) mustBe 200
+        }
+        s"return HTML: ${feature.toString}" in {
+          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          contentType(result) mustBe Some("text/html")
+          charset(result) mustBe Some("utf-8")
+        }
+      }
+      "onSubmit" must {
+        s"redirect with valid form submission: ${feature.toString}" in {
+          when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+          val formRequest = requestWithForm(Map("value" -> "some"))
+          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          status(result) mustBe 303
+        }
+        s"Bad request with invalid form: ${feature.toString}" in {
+          when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+          val formRequest = requestWithForm(Map("value" -> "wow"))
+          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          status(result) mustBe 400
+        }
+      }
+      
+    }
+  }
+
+}
