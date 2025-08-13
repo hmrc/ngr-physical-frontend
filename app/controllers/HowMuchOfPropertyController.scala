@@ -19,7 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.HowMuchOfPropertyFormProvider
-import models.InternalFeature.{AirConditioning, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers, CompressedAir}
+import models.InternalFeature.{AirConditioning, CompressedAir, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers}
 import models.NavBarPageContents.createDefaultNavBar
 import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, UserAnswers}
 import navigation.Navigator

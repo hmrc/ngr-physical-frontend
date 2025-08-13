@@ -28,7 +28,15 @@
     govukButton: GovukButton
 )
 
-@(address: String, strings: Map[String, String], submitAction: Call, radioItems: Seq[RadioItem], form: Form[HowMuchOfProperty], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(
+    address: String,
+    strings: Map[String, String],
+    submitAction: Call,
+    radioItems: Seq[RadioItem],
+    form: Form[HowMuchOfProperty],
+    mode: Mode,
+    navigationBarContent: NavigationBarContent
+)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages(strings("title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
