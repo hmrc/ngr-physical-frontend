@@ -33,10 +33,10 @@ import scala.concurrent.Future
 
 @Singleton
 class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
-                                                getData: DataRetrievalAction,
-                                                formProvider: WhichInternalFeatureFormProvider,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                view: WhichInternalFeatureView
+                                               getData: DataRetrievalAction,
+                                               formProvider: WhichInternalFeatureFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: WhichInternalFeatureView
                                               )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form: Form[InternalFeature] = formProvider()
@@ -58,10 +58,8 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
 
   private def nextPage(feature: InternalFeature): Future[Result] = {
     val call = feature match {
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode) // Group 2
-//      case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
-//      case Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
-      case _ => HowMuchOfProperty.pageLoadAction(toGroup1(feature).getOrElse(throw new RuntimeException("Could not cast internal feature to group 1")), NormalMode) // Group 1
+      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, NormalMode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode)
     }
     Future.successful(Redirect(call))
   }
