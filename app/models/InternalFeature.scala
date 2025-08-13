@@ -20,6 +20,7 @@ import controllers.routes
 import models.InternalFeature.*
 import pages.*
 import controllers.routes
+import models.InternalFeature.*
 import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.Call

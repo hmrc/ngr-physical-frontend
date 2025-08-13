@@ -17,7 +17,6 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.HowMuchOfProperty
 import models.InternalFeature.AirConditioning
 import models.{HowMuchOfProperty, InternalFeatureGroup1}
 import play.api.data.FormError
