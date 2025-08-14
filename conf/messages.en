@@ -204,25 +204,25 @@ howMuchOfProperty.escalators.some = There are escalators between some floors
 howMuchOfProperty.escalators.none = None of the property has escalators
 howMuchOfProperty.escalators.error = Select which floors of the property have escalators
 
-howMuchOfProperty.goodsLift.title = Goods lifts
+howMuchOfProperty.goodsLift.title = Which floors of the property have goods lifts?
 howMuchOfProperty.goodsLift.hint =
-howMuchOfProperty.goodsLift.all = all
-howMuchOfProperty.goodsLift.some = some
-howMuchOfProperty.goodsLift.none = none
+howMuchOfProperty.goodsLift.all = All floors have goods lifts
+howMuchOfProperty.goodsLift.some = Some floors have goods lifts
+howMuchOfProperty.goodsLift.none = None of the property has goods lifts
 howMuchOfProperty.goodsLift.error = Select which floors of the property have goods lifts
 
-howMuchOfProperty.passengerLift.title = Passenger lift
+howMuchOfProperty.passengerLift.title = Which floors of the property have passenger lifts?
 howMuchOfProperty.passengerLift.hint =
-howMuchOfProperty.passengerLift.all = all
-howMuchOfProperty.passengerLift.some = some
-howMuchOfProperty.passengerLift.none = none
+howMuchOfProperty.passengerLift.all = All floors have passenger lifts
+howMuchOfProperty.passengerLift.some = Some floors have passenger lifts
+howMuchOfProperty.passengerLift.none = None of the property has passenger lifts
 howMuchOfProperty.passengerLift.error = Select which floors of the property have passenger lifts
 
-howMuchOfProperty.heating.title = Heating
-howMuchOfProperty.heating.hint =
-howMuchOfProperty.heating.all = all
-howMuchOfProperty.heating.some = some
-howMuchOfProperty.heating.none = none
+howMuchOfProperty.heating.title = How much of the property has heating?
+howMuchOfProperty.heating.hint = Only include systems that heat, like central heating. Do not include systems that cool and heat or portable heating.
+howMuchOfProperty.heating.all = All of the property has heating
+howMuchOfProperty.heating.some = Some of the property has heating
+howMuchOfProperty.heating.none = None of the property has heating
 howMuchOfProperty.heating.error = Select how much of the property has heating
 
 howMuchOfProperty.compressedAir.title = What has happened to compressed air systems?
@@ -232,9 +232,9 @@ howMuchOfProperty.compressedAir.some = You removed some compressed air systems
 howMuchOfProperty.compressedAir.none = You removed all compressed air systems
 howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
 
-howMuchOfProperty.sprinklers.title = Sprinklers
+howMuchOfProperty.sprinklers.title = How much of the property has sprinklers?
 howMuchOfProperty.sprinklers.hint =
-howMuchOfProperty.sprinklers.all = all
-howMuchOfProperty.sprinklers.some = some
-howMuchOfProperty.sprinklers.none = none
+howMuchOfProperty.sprinklers.all = All of the property has sprinklers
+howMuchOfProperty.sprinklers.some = Some of the property has sprinklers
+howMuchOfProperty.sprinklers.none = None of the property has sprinklers
 howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers
