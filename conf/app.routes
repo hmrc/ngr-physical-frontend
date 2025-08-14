@@ -70,10 +70,10 @@ POST       /which-floors-of-property-have-goods-lifts             controllers.Ho
 GET        /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = CheckMode)
 POST       /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = CheckMode)
 
-GET        /where-escalators-in-property                          controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = NormalMode)
-POST       /where-escalators-in-property                          controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = NormalMode) 
-GET        /change-where-escalators-in-property                   controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = CheckMode)
-POST       /change-where-escalators-in-property                   controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = CheckMode)
+GET        /where-are-the-escalators-in-the-property                          controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = NormalMode)
+POST       /where-are-the-escalators-in-the-property                          controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = NormalMode)
+GET        /change-where-are-the-escalators-in-the-property                   controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = CheckMode)
+POST       /change-where-are-the-escalators-in-the-property                   controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = CheckMode)
 
 GET        /what-happened-to-compressed-air-systems               controllers.HowMuchOfPropertyController.onPageLoadCompressedAir(mode: Mode = NormalMode)
 POST       /what-happened-to-compressed-air-systems               controllers.HowMuchOfPropertyController.onSubmitCompressedAir(mode: Mode = NormalMode)

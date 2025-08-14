@@ -197,11 +197,11 @@ howMuchOfProperty.airConditioning.some = Some of the property has air conditioni
 howMuchOfProperty.airConditioning.none = None of the property has air conditioning
 howMuchOfProperty.airConditioning.error = Select how much of the property has air conditioning
 
-howMuchOfProperty.escalators.title = Escalators
+howMuchOfProperty.escalators.title = Where are escalators in the property?
 howMuchOfProperty.escalators.hint =
-howMuchOfProperty.escalators.all = all
-howMuchOfProperty.escalators.some = some
-howMuchOfProperty.escalators.none = none
+howMuchOfProperty.escalators.all = There are escalators between all floors
+howMuchOfProperty.escalators.some = There are escalators between some floors
+howMuchOfProperty.escalators.none = None of the property has escalators
 howMuchOfProperty.escalators.error = Select which floors of the property have escalators
 
 howMuchOfProperty.goodsLift.title = Goods lifts
@@ -225,11 +225,11 @@ howMuchOfProperty.heating.some = some
 howMuchOfProperty.heating.none = none
 howMuchOfProperty.heating.error = Select how much of the property has heating
 
-howMuchOfProperty.compressedAir.title = Compressed air
-howMuchOfProperty.compressedAir.hint =
-howMuchOfProperty.compressedAir.all = all
-howMuchOfProperty.compressedAir.some = some
-howMuchOfProperty.compressedAir.none = none
+howMuchOfProperty.compressedAir.title = What has happened to compressed air systems?
+howMuchOfProperty.compressedAir.hint = Do not include changes to portable air compressors.
+howMuchOfProperty.compressedAir.all = You added compressed air systems
+howMuchOfProperty.compressedAir.some = You removed some compressed air systems
+howMuchOfProperty.compressedAir.none = You removed all compressed air systems
 howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
 
 howMuchOfProperty.sprinklers.title = Sprinklers
