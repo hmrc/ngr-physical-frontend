@@ -1,74 +1,74 @@
 # microservice specific routes
 
-->         /hmrc-frontend                                         hmrcfrontend.Routes
-GET        /                                                      controllers.IndexController.onPageLoad()
-GET        /assets/*file                                          controllers.Assets.versioned(path="/public", file: Asset)
-GET        /language/:lang                                        controllers.LanguageSwitchController.switchToLanguage(lang: String)
-GET        /refresh-session                                       controllers.KeepAliveController.keepAlive()
-GET        /there-is-a-problem                                    controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
-GET        /check-your-answers                                    controllers.CheckYourAnswersController.onPageLoad()
-GET        /account/sign-out-survey                               controllers.auth.AuthController.signOut()
-GET        /account/sign-out                                      controllers.auth.AuthController.signOutNoSurvey()
-GET        /account/signed-out                                    controllers.auth.SignedOutController.onPageLoad()
-GET        /unauthorised                                          controllers.UnauthorisedController.onPageLoad()
-GET        /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.show
-POST       /tell-us-changed-property-features-or-use-of-space     controllers.ChangedFeaturesOrSpaceController.next
+->         /hmrc-frontend                                                        hmrcfrontend.Routes
+GET        /                                                                     controllers.IndexController.onPageLoad()
+GET        /assets/*file                                                         controllers.Assets.versioned(path="/public", file: Asset)
+GET        /language/:lang                                                       controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /refresh-session                                                      controllers.KeepAliveController.keepAlive()
+GET        /there-is-a-problem                                                   controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET        /check-your-answers                                                   controllers.CheckYourAnswersController.onPageLoad()
+GET        /account/sign-out-survey                                              controllers.auth.AuthController.signOut()
+GET        /account/sign-out                                                     controllers.auth.AuthController.signOutNoSurvey()
+GET        /account/signed-out                                                   controllers.auth.SignedOutController.onPageLoad()
+GET        /unauthorised                                                         controllers.UnauthorisedController.onPageLoad()
+GET        /tell-us-changed-property-features-or-use-of-space                    controllers.ChangedFeaturesOrSpaceController.show
+POST       /tell-us-changed-property-features-or-use-of-space                    controllers.ChangedFeaturesOrSpaceController.next
 
-GET        /information-and-supporting-documents-need             controllers.InfoAndSupportingDocController.show
-POST       /information-and-supporting-documents-need             controllers.InfoAndSupportingDocController.next
+GET        /information-and-supporting-documents-need                            controllers.InfoAndSupportingDocController.show
+POST       /information-and-supporting-documents-need                            controllers.InfoAndSupportingDocController.next
 
-GET        /when-complete-change                                  controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = NormalMode)
-POST       /when-complete-change                                  controllers.WhenCompleteChangeController.onSubmit(mode: Mode = NormalMode)
-GET        /when-complete-change                                  controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = CheckMode)
-POST       /when-complete-change                                  controllers.WhenCompleteChangeController.onSubmit(mode: Mode = CheckMode)
+GET        /when-complete-change                                                 controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = NormalMode)
+POST       /when-complete-change                                                 controllers.WhenCompleteChangeController.onSubmit(mode: Mode = NormalMode)
+GET        /when-complete-change                                                 controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = CheckMode)
+POST       /when-complete-change                                                 controllers.WhenCompleteChangeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /about-change-to-use-of-space                          controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
-POST       /about-change-to-use-of-space                          controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
-GET        /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-about-change-to-use-of-space                   controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
+GET        /about-change-to-use-of-space                                         controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = NormalMode)
+POST       /about-change-to-use-of-space                                         controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = NormalMode)
+GET        /change-about-change-to-use-of-space                                  controllers.ChangeToUseOfSpaceController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-about-change-to-use-of-space                                  controllers.ChangeToUseOfSpaceController.onSubmit(mode: Mode = CheckMode)
 
-GET        /have-you-changed-use-of-space                         controllers.HaveYouChangedController.loadSpace(mode: Mode = NormalMode)
-POST       /have-you-changed-use-of-space                         controllers.HaveYouChangedController.submitSpace(mode: Mode = NormalMode)
-GET        /change-have-you-changed-use-of-space                  controllers.HaveYouChangedController.loadSpace(mode: Mode = CheckMode)
-POST       /change-have-you-changed-use-of-space                  controllers.HaveYouChangedController.submitSpace(mode: Mode = CheckMode)
+GET        /have-you-changed-use-of-space                                        controllers.HaveYouChangedController.loadSpace(mode: Mode = NormalMode)
+POST       /have-you-changed-use-of-space                                        controllers.HaveYouChangedController.submitSpace(mode: Mode = NormalMode)
+GET        /change-have-you-changed-use-of-space                                 controllers.HaveYouChangedController.loadSpace(mode: Mode = CheckMode)
+POST       /change-have-you-changed-use-of-space                                 controllers.HaveYouChangedController.submitSpace(mode: Mode = CheckMode)
 
-GET        /have-you-changed-internal-features                    controllers.HaveYouChangedController.loadInternal(mode: Mode = NormalMode)
-POST       /have-you-changed-internal-features                    controllers.HaveYouChangedController.submitInternal(mode: Mode = NormalMode)
-GET        /change-have-you-changed-internal-features             controllers.HaveYouChangedController.loadInternal(mode: Mode = CheckMode)
-POST       /change-have-you-changed-internal-features             controllers.HaveYouChangedController.submitInternal(mode: Mode = CheckMode)
+GET        /have-you-changed-internal-features                                   controllers.HaveYouChangedController.loadInternal(mode: Mode = NormalMode)
+POST       /have-you-changed-internal-features                                   controllers.HaveYouChangedController.submitInternal(mode: Mode = NormalMode)
+GET        /change-have-you-changed-internal-features                            controllers.HaveYouChangedController.loadInternal(mode: Mode = CheckMode)
+POST       /change-have-you-changed-internal-features                            controllers.HaveYouChangedController.submitInternal(mode: Mode = CheckMode)
 
-GET        /have-you-changed-external-features                    controllers.HaveYouChangedController.loadExternal(mode: Mode = NormalMode)
-POST       /have-you-changed-external-features                    controllers.HaveYouChangedController.submitExternal(mode: Mode = NormalMode)
-GET        /change-have-you-changed-external-features             controllers.HaveYouChangedController.loadExternal(mode: Mode = CheckMode)
-POST       /change-have-you-changed-external-features             controllers.HaveYouChangedController.submitExternal(mode: Mode = CheckMode)
+GET        /have-you-changed-external-features                                   controllers.HaveYouChangedController.loadExternal(mode: Mode = NormalMode)
+POST       /have-you-changed-external-features                                   controllers.HaveYouChangedController.submitExternal(mode: Mode = NormalMode)
+GET        /change-have-you-changed-external-features                            controllers.HaveYouChangedController.loadExternal(mode: Mode = CheckMode)
+POST       /change-have-you-changed-external-features                            controllers.HaveYouChangedController.submitExternal(mode: Mode = CheckMode)
 
-GET        /which-internal-feature-have-changed                   controllers.WhichInternalFeatureController.onPageLoad
-POST       /which-internal-feature-have-changed                   controllers.WhichInternalFeatureController.onSubmit
+GET        /which-internal-feature-have-changed                                  controllers.WhichInternalFeatureController.onPageLoad
+POST       /which-internal-feature-have-changed                                  controllers.WhichInternalFeatureController.onSubmit
 
-GET        /how-many-security-cameras-inside-property             controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-many-security-cameras-inside-property             controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-many-security-cameras-inside-property      controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-many-security-cameras-inside-property      controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = CheckMode)
+GET        /how-many-security-cameras-inside-property                            controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-many-security-cameras-inside-property                            controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-many-security-cameras-inside-property                     controllers.SecurityCamerasChangeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-many-security-cameras-inside-property                     controllers.SecurityCamerasChangeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-of-property-has-air-conditioning             controllers.HowMuchOfPropertyController.onPageLoadAirCon(mode: Mode = NormalMode)
-POST       /how-much-of-property-has-air-conditioning             controllers.HowMuchOfPropertyController.onSubmitAirCon(mode: Mode = NormalMode)
-GET        /change-how-much-of-property-has-air-conditioning      controllers.HowMuchOfPropertyController.onPageLoadAirCon(mode: Mode = CheckMode)
-POST       /change-how-much-of-property-has-air-conditioning      controllers.HowMuchOfPropertyController.onSubmitAirCon(mode: Mode = CheckMode)
+GET        /how-much-of-property-has-air-conditioning                            controllers.HowMuchOfPropertyController.onPageLoadAirCon(mode: Mode = NormalMode)
+POST       /how-much-of-property-has-air-conditioning                            controllers.HowMuchOfPropertyController.onSubmitAirCon(mode: Mode = NormalMode)
+GET        /change-how-much-of-property-has-air-conditioning                     controllers.HowMuchOfPropertyController.onPageLoadAirCon(mode: Mode = CheckMode)
+POST       /change-how-much-of-property-has-air-conditioning                     controllers.HowMuchOfPropertyController.onSubmitAirCon(mode: Mode = CheckMode)
 
-GET        /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = NormalMode)
-POST       /how-much-of-property-has-heating                      controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = NormalMode)
-GET        /change-how-much-of-property-has-heating               controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = CheckMode)
-POST       /change-how-much-of-property-has-heating               controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = CheckMode)
+GET        /how-much-of-property-has-heating                                     controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = NormalMode)
+POST       /how-much-of-property-has-heating                                     controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = NormalMode)
+GET        /change-how-much-of-property-has-heating                              controllers.HowMuchOfPropertyController.onPageLoadHeating(mode: Mode = CheckMode)
+POST       /change-how-much-of-property-has-heating                              controllers.HowMuchOfPropertyController.onSubmitHeating(mode: Mode = CheckMode)
 
-GET        /how-much-of-property-has-sprinklers                   controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = NormalMode)
-POST       /how-much-of-property-has-sprinklers                   controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = NormalMode)
-GET        /change-how-much-of-property-has-sprinklers            controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = CheckMode)
-POST       /change-how-much-of-property-has-sprinklers            controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = CheckMode)
+GET        /how-much-of-property-has-sprinklers                                  controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = NormalMode)
+POST       /how-much-of-property-has-sprinklers                                  controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = NormalMode)
+GET        /change-how-much-of-property-has-sprinklers                           controllers.HowMuchOfPropertyController.onPageLoadSprinklers(mode: Mode = CheckMode)
+POST       /change-how-much-of-property-has-sprinklers                           controllers.HowMuchOfPropertyController.onSubmitSprinklers(mode: Mode = CheckMode)
 
-GET        /which-floors-of-property-have-goods-lifts             controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = NormalMode)
-POST       /which-floors-of-property-have-goods-lifts             controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = NormalMode)
-GET        /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = CheckMode)
-POST       /change-which-floors-of-property-have-goods-lifts      controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = CheckMode)
+GET        /which-floors-of-property-have-goods-lifts                            controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = NormalMode)
+POST       /which-floors-of-property-have-goods-lifts                            controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = NormalMode)
+GET        /change-which-floors-of-property-have-goods-lifts                     controllers.HowMuchOfPropertyController.onPageLoadGoodsLift(mode: Mode = CheckMode)
+POST       /change-which-floors-of-property-have-goods-lifts                     controllers.HowMuchOfPropertyController.onSubmitGoodsLift(mode: Mode = CheckMode)
 
 GET        /where-are-the-escalators-in-the-property                          controllers.HowMuchOfPropertyController.onPageLoadEscalator(mode: Mode = NormalMode)
 POST       /where-are-the-escalators-in-the-property                          controllers.HowMuchOfPropertyController.onSubmitEscalator(mode: Mode = NormalMode)
@@ -177,3 +177,12 @@ POST       /change-what-happened-to-solar-panels                                
 
 GET        /supporting-documents                                   controllers.SupportingDocumentsController.onPageLoad()
 POST       /supporting-documents                                   controllers.SupportingDocumentsController.next()
+
+GET        /which-floors-of-property-have-passenger-lifts                        controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = NormalMode)
+POST       /which-floors-of-property-have-passenger-lifts                        controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode)
+GET        /change-which-floors-of-property-have-passenger-lifts                 controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)
+POST       /change-which-floors-of-property-have-passenger-lifts                 controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = CheckMode)
+
+GET        /check-and-confirm-changes-to-external-features                       controllers.InternalCheckYourAnswersController.onPageLoad
+POST       /check-and-confirm-changes-to-external-features                       controllers.InternalCheckYourAnswersController.onSubmit
+GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.InternalCheckYourAnswersController.remove(featureString: String)

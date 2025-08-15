@@ -31,6 +31,9 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, Govuk
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
 sealed trait InternalFeature
 
@@ -67,31 +70,38 @@ object InternalFeature extends Enumerable.Implicits {
   }
 
   def getAnswers(sessionRepository: SessionRepository)
-                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[Map[String, String]] = {
+                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
     request.userAnswers.toSeq.flatMap { answers =>
       InternalFeature.values.flatMap {
-        case group: InternalFeatureGroup1 =>
-          answers.get(HowMuchOfProperty.page(group)).map { value =>
-            Map(
-              "title" -> messages(s"whichInternalFeature.${group.toString}"),
-              "value" -> value.toString
+        case feature: InternalFeatureGroup1 =>
+          answers.get(HowMuchOfProperty.page(feature)).map { value =>
+            SummaryListRowViewModel(
+              key = s"whichInternalFeature.${feature.toString}",
+              value = ValueViewModel(value.toString),
+              actions = Seq(
+                ActionItemViewModel("site.change", changeLink(feature).url),
+                ActionItemViewModel("site.remove", routes.InternalCheckYourAnswersController.remove(feature.toString).url)
+              )
             )
           }
 
         case SecurityCamera =>
           answers.get(SecurityCamerasChangePage).map { value =>
-            Map(
-              "title" -> messages("whichInternalFeature.securityCamera"),
-              "value" -> value.toString
+            SummaryListRowViewModel(
+              key = "whichInternalFeature.securityCamera",
+              value = ValueViewModel(value.toString),
+              actions = Seq(
+                ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
+                ActionItemViewModel("site.remove", routes.InternalCheckYourAnswersController.remove("securityCamera").url)
+              )
             )
           }
 
-        case _ => None
       }
     }
   }
 
-  def changeLink(feature: InternalFeature): Call =
+  def changeLink(feature: InternalFeature): Call = {
     feature match {
       case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(CheckMode)
       case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(CheckMode)
@@ -102,6 +112,18 @@ object InternalFeature extends Enumerable.Implicits {
       case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(CheckMode)
       case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(CheckMode)
     }
+  }
+
+  val pageSet: Seq[Page] = Seq(
+    HowMuchOfPropertyAirConPage,
+    HowMuchOfPropertyHeatingPage,
+    HowMuchOfPropertySprinklersPage,
+    HowMuchOfPropertyGoodsLiftPage,
+    HowMuchOfPropertyEscalatorsPage,
+    HowMuchOfPropertyPassengerLiftPage,
+    HowMuchOfPropertyCompressedAirPage,
+    SecurityCamerasChangePage
+  )
 
 
   def options(implicit messages: Messages): Seq[RadioItem] = {

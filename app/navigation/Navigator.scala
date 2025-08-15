@@ -59,6 +59,7 @@ class Navigator @Inject()() {
           routes.WhichExternalFeatureController.onPageLoad
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case page if InternalFeature.pageSet.contains(page) => _ => routes.InternalCheckYourAnswersController.onPageLoad
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
