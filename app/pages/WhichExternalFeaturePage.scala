@@ -23,6 +23,5 @@ case object WhichExternalFeaturePage extends QuestionPage[ExternalFeature] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "whichExternal" +
-    "Feature"
+  override def toString: String = "whichExternalFeature"
 }
