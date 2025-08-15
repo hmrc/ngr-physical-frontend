@@ -47,6 +47,12 @@ class Navigator @Inject()() {
         case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case HaveYouChangedExternalPage => answers =>
+      answers.get(HaveYouChangedExternalPage) match {
+        case Some(true) => routes.WhichExternalFeatureController.onPageLoad
+        case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
+        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      }
     case WhichInternalFeaturePage => answers =>
       answers.get(WhichInternalFeaturePage) match {
         case Some(feature) =>
@@ -61,7 +67,7 @@ class Navigator @Inject()() {
       }
     case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad
     case WhichExternalFeaturePage => answers =>
-      answers.get(WhichInternalFeaturePage) match {
+      answers.get(WhichExternalFeaturePage) match {
         case Some(feature) =>
           routes.WhichExternalFeatureController.onPageLoad
         case None => throw new RuntimeException("No selection - should be caught by form validation")
