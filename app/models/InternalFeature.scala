@@ -18,9 +18,11 @@ package models
 
 import controllers.routes
 import models.InternalFeature.*
+import models.requests.OptionalDataRequest
 import pages.*
 import play.api.i18n.Messages
-import play.api.mvc.Call
+import play.api.mvc.{AnyContent, Call}
+import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
@@ -47,12 +49,56 @@ object InternalFeature extends Enumerable.Implicits {
 
   def withNameOption(name: String): Option[InternalFeature] =
     values.find(_.toString == name)
-  
+
   def toGroup1(feature: InternalFeature): Option[InternalFeatureGroup1] = feature match {
     case f: InternalFeatureGroup1 => Some(f)
     case _ => None
   }
+
+  def getPage(feature: InternalFeature): QuestionPage[?] = {
+    feature match {
+      case group: InternalFeatureGroup1 => HowMuchOfProperty.page(group)
+      case SecurityCamera => SecurityCamerasChangePage
+    }
+  }
   
+  def getAnswers(sessionRepository: SessionRepository)
+                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[Map[String, String]] = {
+    request.userAnswers.toSeq.flatMap { answers =>
+      InternalFeature.values.flatMap {
+        case group: InternalFeatureGroup1 =>
+          answers.get(HowMuchOfProperty.page(group)).map { value =>
+            Map(
+              "title" -> messages(s"whichInternalFeature.${group.toString}"),
+              "value" -> value.toString
+            )
+          }
+
+        case SecurityCamera =>
+          answers.get(SecurityCamerasChangePage).map { value =>
+            Map(
+              "title" -> messages("whichInternalFeature.securityCamera"),
+              "value" -> value.toString
+            )
+          }
+
+        case _ => None
+      }
+    }
+  }
+  
+  def changeLink(feature: InternalFeature): Call =
+    feature match {
+      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(CheckMode)
+      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(CheckMode)
+      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(CheckMode)
+      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(CheckMode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(CheckMode)
+      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(CheckMode)
+      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(CheckMode)
+      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(CheckMode)
+    }
+
   def options(implicit messages: Messages): Seq[RadioItem] = {
 
     val (firstFive, remaining) = values.splitAt(5)
@@ -71,8 +117,8 @@ object InternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichInternalFeature.chooseOther")) +:
         remaining.map { value =>
-         SelectItem(value = Some(value.toString), text = messages(s"whichInternalFeature.${value.toString}"))
-      }
+          SelectItem(value = Some(value.toString), text = messages(s"whichInternalFeature.${value.toString}"))
+        }
     )
 
     val govukSelectComponent: GovukSelect = new GovukSelect(
