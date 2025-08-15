@@ -186,3 +186,9 @@ POST       /change-which-floors-of-property-have-passenger-lifts                
 GET        /check-and-confirm-changes-to-internal-features                       controllers.SmallCheckYourAnswersController.onPageLoad
 POST       /check-and-confirm-changes-to-internal-features                       controllers.SmallCheckYourAnswersController.onSubmit
 GET        /check-and-confirm-changes-to-internal-features/:featureString        controllers.SmallCheckYourAnswersController.remove(featureString: String)
+POST       /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode)
+GET        /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)
+POST       /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = CheckMode)
+
+GET        /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onPageLoad
+POST       /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onSubmit
