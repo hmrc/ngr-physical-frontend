@@ -190,7 +190,7 @@ securityCamerasChange.error.wholeNumber = How many security cameras there are in
 securityCamerasChange.error.outOfRange = How many security cameras there are inside the property must be 9,999 or less
 securityCamerasChange.change.hidden = How many security cameras are there inside the property?
 
-howMuchOfProperty.airConditioning.title = How much of the property has air conditioning
+howMuchOfProperty.airConditioning.title = How much of the property has air conditioning?
 howMuchOfProperty.airConditioning.hint = Only include systems that cool, or both cool and heat. Do not include central heating or portable air conditioning
 howMuchOfProperty.airConditioning.all = All of the property has air conditioning
 howMuchOfProperty.airConditioning.some = Some of the property has air conditioning
