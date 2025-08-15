@@ -18,7 +18,7 @@
 @import config.AppConfig
 @import views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
-@import models.HaveYouChangedControllerUse
+@import models.HowMuchOfProperty
 
 @this(
     layout: Layout,
@@ -29,37 +29,35 @@
 )
 
 @(
-    address: String, 
-    titleKey: String, 
-    hintKey: String, 
-    form: Form[Boolean],
-    use: HaveYouChangedControllerUse, 
-    mode: Mode, 
-    submitAction: Call, 
+    address: String,
+    strings: Map[String, String],
+    submitAction: Call,
+    radioItems: Seq[RadioItem],
+    form: Form[HowMuchOfProperty],
+    mode: Mode,
     navigationBarContent: NavigationBarContent
 )(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(title(form, messages(titleKey))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(messages(strings("title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
         <span class="govuk-caption-m">@address</span>
         @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = Legend(content = messages(titleKey), classes = "govuk-fieldset__legend--l")
+            RadiosViewModel(
+                field  = form("value"),
+                legend = Legend(content = messages(strings("title")), classes = "govuk-fieldset__legend--l"),
+                items  = radioItems
             )
-            .withHint(
-                HintViewModel(messages(hintKey))
-            )
+            .withHint(HintViewModel(messages(strings("hint"))))
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.saveAndContinue"))
+            ButtonViewModel(messages("site.continue"))
         )
     }
 }

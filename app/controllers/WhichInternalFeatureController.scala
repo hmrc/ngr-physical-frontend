@@ -21,21 +21,22 @@ import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{InternalFeature, NormalMode}
+import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, NormalMode}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhichInternalFeatureView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
 class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
-                                                getData: DataRetrievalAction,
-                                                formProvider: WhichInternalFeatureFormProvider,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                view: WhichInternalFeatureView
+                                               getData: DataRetrievalAction,
+                                               formProvider: WhichInternalFeatureFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: WhichInternalFeatureView
                                               )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   val form: Form[InternalFeature] = formProvider()
@@ -57,10 +58,8 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
 
   private def nextPage(feature: InternalFeature): Future[Result] = {
     val call = feature match {
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode) // Group 2
-      case CompressedAir => routes.WhichInternalFeatureController.onPageLoad // Group 3
-      case Escalators => routes.WhichInternalFeatureController.onPageLoad // Group 4
-      case _ => routes.WhichInternalFeatureController.onPageLoad // Group 1
+      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, NormalMode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode)
     }
     Future.successful(Redirect(call))
   }

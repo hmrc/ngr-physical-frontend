@@ -22,6 +22,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryHowMuchOfProperty: Arbitrary[HowMuchOfProperty] =
+    Arbitrary {
+      Gen.oneOf(HowMuchOfProperty.values)
+    }
+
   implicit lazy val arbitraryWhichInternalFeature: Arbitrary[InternalFeature] =
     Arbitrary {
       Gen.oneOf(InternalFeature.values)

@@ -20,9 +20,10 @@ import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class KeepAliveController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
                                      authenticate: IdentifierAction,

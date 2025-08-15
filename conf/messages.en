@@ -189,3 +189,52 @@ securityCamerasChange.error.required = Enter how many security cameras there are
 securityCamerasChange.error.wholeNumber = How many security cameras there are inside the property must be a number, like 8
 securityCamerasChange.error.outOfRange = How many security cameras there are inside the property must be 9,999 or less
 securityCamerasChange.change.hidden = How many security cameras are there inside the property?
+
+howMuchOfProperty.airConditioning.title = How much of the property has air conditioning?
+howMuchOfProperty.airConditioning.hint = Only include systems that cool, or both cool and heat. Do not include central heating or portable air conditioning
+howMuchOfProperty.airConditioning.all = All of the property has air conditioning
+howMuchOfProperty.airConditioning.some = Some of the property has air conditioning
+howMuchOfProperty.airConditioning.none = None of the property has air conditioning
+howMuchOfProperty.airConditioning.error = Select how much of the property has air conditioning
+
+howMuchOfProperty.escalators.title = Where are escalators in the property?
+howMuchOfProperty.escalators.hint =
+howMuchOfProperty.escalators.all = There are escalators between all floors
+howMuchOfProperty.escalators.some = There are escalators between some floors
+howMuchOfProperty.escalators.none = None of the property has escalators
+howMuchOfProperty.escalators.error = Select which floors of the property have escalators
+
+howMuchOfProperty.goodsLift.title = Which floors of the property have goods lifts?
+howMuchOfProperty.goodsLift.hint =
+howMuchOfProperty.goodsLift.all = All floors have goods lifts
+howMuchOfProperty.goodsLift.some = Some floors have goods lifts
+howMuchOfProperty.goodsLift.none = None of the property has goods lifts
+howMuchOfProperty.goodsLift.error = Select which floors of the property have goods lifts
+
+howMuchOfProperty.passengerLift.title = Which floors of the property have passenger lifts?
+howMuchOfProperty.passengerLift.hint =
+howMuchOfProperty.passengerLift.all = All floors have passenger lifts
+howMuchOfProperty.passengerLift.some = Some floors have passenger lifts
+howMuchOfProperty.passengerLift.none = None of the property has passenger lifts
+howMuchOfProperty.passengerLift.error = Select which floors of the property have passenger lifts
+
+howMuchOfProperty.heating.title = How much of the property has heating?
+howMuchOfProperty.heating.hint = Only include systems that heat, like central heating. Do not include systems that cool and heat or portable heating.
+howMuchOfProperty.heating.all = All of the property has heating
+howMuchOfProperty.heating.some = Some of the property has heating
+howMuchOfProperty.heating.none = None of the property has heating
+howMuchOfProperty.heating.error = Select how much of the property has heating
+
+howMuchOfProperty.compressedAir.title = What has happened to compressed air systems?
+howMuchOfProperty.compressedAir.hint = Do not include changes to portable air compressors.
+howMuchOfProperty.compressedAir.all = You added compressed air systems
+howMuchOfProperty.compressedAir.some = You removed some compressed air systems
+howMuchOfProperty.compressedAir.none = You removed all compressed air systems
+howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
+
+howMuchOfProperty.sprinklers.title = How much of the property has sprinklers?
+howMuchOfProperty.sprinklers.hint =
+howMuchOfProperty.sprinklers.all = All of the property has sprinklers
+howMuchOfProperty.sprinklers.some = Some of the property has sprinklers
+howMuchOfProperty.sprinklers.none = None of the property has sprinklers
+howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers

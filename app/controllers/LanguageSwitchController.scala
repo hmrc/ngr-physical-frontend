@@ -16,12 +16,13 @@
 
 package controllers
 
-import com.google.inject.Inject
+import javax.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import play.api.i18n.Lang
 import play.api.mvc.*
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
+@Singleton
 class LanguageSwitchController @Inject()(
                                           languageUtils: LanguageUtils,
                                           cc: ControllerComponents

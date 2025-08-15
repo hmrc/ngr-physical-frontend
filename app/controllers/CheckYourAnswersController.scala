@@ -17,7 +17,7 @@
 package controllers
 
 import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.govuk.summarylist.*
 import views.html.CheckYourAnswersView
 
+@Singleton
 class CheckYourAnswersController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             authenticate: IdentifierAction,
