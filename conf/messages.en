@@ -172,14 +172,24 @@ whichInternalFeature.error.required = Select which internal feature you have cha
 whichInternalFeature.error.dropdown = Select an internal feature
 whichInternalFeature.change.hidden = WhichInternalFeature
 
-whichInternalFeature.airConditioning = Air conditioning
-whichInternalFeature.escalators = Escalators
-whichInternalFeature.goodsLift = Goods lifts
-whichInternalFeature.passengerLift = Passenger lifts
-whichInternalFeature.securityCamera = Security cameras
-whichInternalFeature.compressedAir = Compressed air systems
-whichInternalFeature.heating = Heating
-whichInternalFeature.sprinklers = Sprinklers
+internalFeature.airConditioning = Air conditioning
+internalFeature.escalators = Escalators
+internalFeature.goodsLift = Goods lifts
+internalFeature.passengerLift = Passenger lifts
+internalFeature.securityCamera = Security cameras
+internalFeature.compressedAir = Compressed air systems
+internalFeature.heating = Heating
+internalFeature.sprinklers = Sprinklers
+
+internalFeature.airConditioning.value = In {0} of the property
+internalFeature.escalators.value = Between {0} floors
+internalFeature.goodsLift.value = on {0} floors
+internalFeature.passengerLift.value = on {0} floors
+internalFeature.compressedAir.value = Removed {0}
+internalFeature.heating.value = In {0} of the property
+internalFeature.sprinklers.value = In {0} of the property
+internalFeature.none = None
+internalFeature.compressedAir.none = Removed all
 
 securityCamerasChange.title = How many security cameras are there inside the property?
 securityCamerasChange.heading = How many security cameras are there inside the property?
@@ -423,3 +433,6 @@ howMuchOfProperty.sprinklers.all = All of the property has sprinklers
 howMuchOfProperty.sprinklers.some = Some of the property has sprinklers
 howMuchOfProperty.sprinklers.none = None of the property has sprinklers
 howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers
+
+internalCheckYourAnswers.title = Check and confirm changes to internal features
+internalCheckYourAnswers.another = Do you want to tell us about another internal feature?

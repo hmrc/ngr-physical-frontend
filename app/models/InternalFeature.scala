@@ -76,8 +76,8 @@ object InternalFeature extends Enumerable.Implicits {
         case feature: InternalFeatureGroup1 =>
           answers.get(HowMuchOfProperty.page(feature)).map { value =>
             SummaryListRowViewModel(
-              key = s"whichInternalFeature.${feature.toString}",
-              value = ValueViewModel(value.toString),
+              key = s"internalFeature.${feature.toString}",
+              value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
                 ActionItemViewModel("site.remove", routes.InternalCheckYourAnswersController.remove(feature.toString).url)
@@ -88,7 +88,7 @@ object InternalFeature extends Enumerable.Implicits {
         case SecurityCamera =>
           answers.get(SecurityCamerasChangePage).map { value =>
             SummaryListRowViewModel(
-              key = "whichInternalFeature.securityCamera",
+              key = "internalFeature.securityCamera",
               value = ValueViewModel(value.toString),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
@@ -126,6 +126,17 @@ object InternalFeature extends Enumerable.Implicits {
   )
 
 
+  def valueString(feature: InternalFeatureGroup1, value: String)(implicit messages: Messages): String = {
+    if (value == "none") {
+      feature match {
+        case CompressedAir => messages("internalFeature.compressedAir.none")
+        case _ => messages("internalFeature.none")
+      }
+    } else {
+      messages(s"internalFeature.${feature.toString}.value", value)
+    }
+  }
+
   def options(implicit messages: Messages): Seq[RadioItem] = {
 
     val (firstFive, remaining) = values.splitAt(5)
@@ -133,7 +144,7 @@ object InternalFeature extends Enumerable.Implicits {
     val hardcodedItems = firstFive.zipWithIndex.map {
       case (value, index) =>
         RadioItem(
-          content = Text(messages(s"whichInternalFeature.${value.toString}")),
+          content = Text(messages(s"internalFeature.${value.toString}")),
           value = Some(value.toString),
           id = Some(s"value_$index")
         )
@@ -144,7 +155,7 @@ object InternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichInternalFeature.chooseOther")) +:
         remaining.map { value =>
-         SelectItem(value = Some(value.toString), text = messages(s"whichInternalFeature.${value.toString}"))
+         SelectItem(value = Some(value.toString), text = messages(s"internalFeature.${value.toString}"))
       }
     )
 
