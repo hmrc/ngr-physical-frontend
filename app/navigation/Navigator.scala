@@ -20,6 +20,7 @@ import controllers.routes
 import models.*
 import pages.*
 import play.api.mvc.Call
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -33,15 +34,10 @@ class Navigator @Inject()() {
         case Some(false) => routes.HaveYouChangedController.loadInternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case ChangeToUseOfSpacePage => _ => routes.HaveYouChangedController.loadInternal(NormalMode)
     case HaveYouChangedInternalPage => answers =>
       answers.get(HaveYouChangedInternalPage) match {
         case Some(true) => routes.WhichInternalFeatureController.onPageLoad
-        case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
-        case _ => throw new RuntimeException("No selection - should be caught by form validation")
-      }
-    case HaveYouChangedExternalPage => answers =>
-      answers.get(HaveYouChangedExternalPage) match {
-        case Some(true) => routes.WhichExternalFeatureController.onPageLoad
         case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
@@ -50,6 +46,12 @@ class Navigator @Inject()() {
         case Some(feature) =>
           routes.WhichInternalFeatureController.onPageLoad
         case None => throw new RuntimeException("No selection - should be caught by form validation")
+      }
+    case HaveYouChangedExternalPage => answers =>
+      answers.get(HaveYouChangedExternalPage) match {
+        case Some(true) => routes.WhichExternalFeatureController.onPageLoad
+        case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
+        case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case WhichExternalFeaturePage => answers =>
       answers.get(WhichExternalFeaturePage) match {
