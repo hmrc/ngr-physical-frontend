@@ -29,17 +29,17 @@ import repositories.SessionRepository
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.govuk.all.SummaryListViewModel
-import views.html.InternalCheckYourAnswersView
+import views.html.SmallCheckYourAnswersView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class InternalCheckYourAnswersController @Inject()(identify: IdentifierAction,
-                                                   getData: DataRetrievalAction,
-                                                   sessionRepository: SessionRepository,
-                                                   formProvider: InternalCheckYourAnswersFormProvider,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   view: InternalCheckYourAnswersView
+class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
+                                                getData: DataRetrievalAction,
+                                                sessionRepository: SessionRepository,
+                                                formProvider: InternalCheckYourAnswersFormProvider,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: SmallCheckYourAnswersView
                                                   )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
   val form: Form[Boolean] = formProvider()
 
@@ -57,7 +57,7 @@ class InternalCheckYourAnswersController @Inject()(identify: IdentifierAction,
           Future.successful(BadRequest(view(request.property.addressFull, rows, formWithErrors, createDefaultNavBar()))),
         {
           case true => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad))
-          case false => Future.successful(Redirect(routes.InternalCheckYourAnswersController.onPageLoad))
+          case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad))
         }
       )
   }
@@ -73,7 +73,7 @@ class InternalCheckYourAnswersController @Inject()(identify: IdentifierAction,
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
         _ <- sessionRepository.set(updatedAnswers)
-      } yield Redirect(routes.InternalCheckYourAnswersController.onPageLoad)
+      } yield Redirect(routes.SmallCheckYourAnswersController.onPageLoad)
 
   }
 
