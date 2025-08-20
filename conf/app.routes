@@ -183,6 +183,6 @@ POST       /which-floors-of-property-have-passenger-lifts                       
 GET        /change-which-floors-of-property-have-passenger-lifts                 controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)
 POST       /change-which-floors-of-property-have-passenger-lifts                 controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = CheckMode)
 
-GET        /check-and-confirm-changes-to-external-features                       controllers.InternalCheckYourAnswersController.onPageLoad
-POST       /check-and-confirm-changes-to-external-features                       controllers.InternalCheckYourAnswersController.onSubmit
-GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.InternalCheckYourAnswersController.remove(featureString: String)
+GET        /check-and-confirm-changes-to-internal-features                       controllers.InternalCheckYourAnswersController.onPageLoad
+POST       /check-and-confirm-changes-to-internal-features                       controllers.InternalCheckYourAnswersController.onSubmit
+GET        /check-and-confirm-changes-to-internal-features/:featureString        controllers.InternalCheckYourAnswersController.remove(featureString: String)
