@@ -84,3 +84,6 @@ GET        /which-floors-of-property-have-passenger-lifts         controllers.Ho
 POST       /which-floors-of-property-have-passenger-lifts         controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = NormalMode) 
 GET        /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onPageLoadPassengerLift(mode: Mode = CheckMode)
 POST       /change-which-floors-of-property-have-passenger-lifts  controllers.HowMuchOfPropertyController.onSubmitPassengerLift(mode: Mode = CheckMode)
+
+GET        /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onPageLoad
+POST       /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onSubmit
