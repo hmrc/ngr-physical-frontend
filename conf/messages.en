@@ -247,3 +247,30 @@ howMuchOfProperty.sprinklers.error = Select how much of the property has sprinkl
 
 smallCheckYourAnswersController.title = Check and confirm changes to internal features
 smallCheckYourAnswersController.another = Do you want to tell us about another internal feature?
+
+whichExternalFeature.title = Which external feature have you changed?
+whichExternalFeature.heading = Which external feature have you changed?
+whichExternalFeature.other = Other external feature
+whichExternalFeature.selectOther = Select other external feature
+whichExternalFeature.chooseOther = Choose external feature
+whichExternalFeature.checkYourAnswersLabel = Which external feature have you changed?
+whichExternalFeature.error.required = Select which external feature you have changed
+whichExternalFeature.error.dropdown = Select an external feature
+whichExternalFeature.change.hidden = WhichExternalFeature
+
+whichExternalFeature.loadingBays = Loading bays
+whichExternalFeature.lockupGarages = Lockup garages
+whichExternalFeature.outdoorSeating = Outdoor seating
+whichExternalFeature.parking = Parking
+whichExternalFeature.solarPanels = Solar panels
+whichExternalFeature.advertisingDisplays = Advertising displays on your property
+whichExternalFeature.bikeSheds = Bike sheds
+whichExternalFeature.canopies = Canopies
+whichExternalFeature.landHardSurfacedFenced = Land - hard-surfaced, fenced
+whichExternalFeature.landHardSurfacedOpen = Land - hard-surfaced, open
+whichExternalFeature.landGravelledFenced = Land - gravelled, fenced
+whichExternalFeature.landGravelledOpen = Land - gravelled, open
+whichExternalFeature.landUnsurfacedFenced = Land - unsurfaced, fenced
+whichExternalFeature.landUnSurfacedOpen = Land - unsurfaced, open
+whichExternalFeature.portableBuildings = Portable buildings
+whichExternalFeature.shippingContainers = Shipping containers
