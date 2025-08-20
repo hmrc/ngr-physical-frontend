@@ -98,7 +98,7 @@ object ExternalFeature extends Enumerable.Implicits {
 
   def getAnswers(sessionRepository: SessionRepository)
                 (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
-    Seq()
+    Seq() // To do: once the external journey is complete
   }
 
   implicit val enumerable: Enumerable[ExternalFeature] =

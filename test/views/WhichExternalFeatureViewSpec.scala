@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package views
 
 import forms.WhichExternalFeatureFormProvider
@@ -31,7 +47,7 @@ class WhichExternalFeatureViewSpec extends ViewBaseSpec {
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Which external feature have you changed?"
       elementText(Selectors.loadingBays)(document) mustBe "Loading bays"
-      elementText(Selectors.lockupGarages)(document) mustBe "Lockup garages"
+      elementText(Selectors.lockupGarages)(document) mustBe "Lock-up garages"
       elementText(Selectors.outdoorSeating)(document) mustBe "Outdoor seating"
       elementText(Selectors.parking)(document) mustBe "Parking"
       elementText(Selectors.solarPanels)(document) mustBe "Solar panels"
