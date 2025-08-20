@@ -80,7 +80,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
-                ActionItemViewModel("site.remove", routes.InternalCheckYourAnswersController.remove(feature.toString).url)
+                ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.remove(feature.toString).url)
               )
             )
           }
@@ -92,7 +92,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(value.toString),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
-                ActionItemViewModel("site.remove", routes.InternalCheckYourAnswersController.remove("securityCamera").url)
+                ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.remove("securityCamera").url)
               )
             )
           }

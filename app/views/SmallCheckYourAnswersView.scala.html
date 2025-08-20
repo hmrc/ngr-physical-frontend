@@ -31,9 +31,9 @@
 
 @(address: String, rows: SummaryList, form: Form[Boolean], navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("internalCheckYourAnswers.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(messages("smallCheckYourAnswers.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.InternalCheckYourAnswersController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SmallCheckYourAnswersController.onSubmit, Symbol("autoComplete") -> "off") {
     
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
