@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.*
+import models.{CYAViewType, *}
 import pages.*
 import play.api.mvc.Call
 
@@ -72,6 +72,7 @@ class Navigator @Inject()() {
           routes.WhichExternalFeatureController.onPageLoad
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal)
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
