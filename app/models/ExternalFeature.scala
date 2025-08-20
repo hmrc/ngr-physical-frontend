@@ -16,16 +16,12 @@
 
 package models
 
-import models.requests.OptionalDataRequest
 import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 sealed trait ExternalFeature
 

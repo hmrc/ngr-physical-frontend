@@ -137,13 +137,17 @@ whenCompleteChange.title = When did you complete the change? - Manage your busin
 whenCompleteChange.heading = When did you complete the change?
 whenCompleteChange.hint = For example, 27 6 2026.
 
+
 whenCompleteChange.checkYourAnswersLabel = WhenCompleteChange
+
 
 whenCompleteChange.error.required.all = Enter when you completed the change.
 whenCompleteChange.error.required.two =  When you completed the change must include {0} and {1}.
 whenCompleteChange.error.required =  When you completed the change must include {0}.
 whenCompleteChange.error.invalid = When you completed the change must be a real date.
 whenCompleteChange.change.hidden = WhenCompleteChange
+
+
 
 haveYouChangedSpace.title = Have you changed use of space?
 haveYouChangedSpace.hint = For example, you increased the size of the retail area by building an extension.
@@ -208,7 +212,7 @@ howMuchOfProperty.escalators.hint =
 howMuchOfProperty.escalators.all = There are escalators between all floors
 howMuchOfProperty.escalators.some = There are escalators between some floors
 howMuchOfProperty.escalators.none = None of the property has escalators
-howMuchOfProperty.escalators.error = Select which floors of the property have escalators
+howMuchOfProperty.escalators.error = Select how much of the property has escalators
 
 howMuchOfProperty.goodsLift.title = Which floors of the property have goods lifts?
 howMuchOfProperty.goodsLift.hint =
@@ -236,7 +240,7 @@ howMuchOfProperty.compressedAir.hint = Do not include changes to portable air co
 howMuchOfProperty.compressedAir.all = You added compressed air systems
 howMuchOfProperty.compressedAir.some = You removed some compressed air systems
 howMuchOfProperty.compressedAir.none = You removed all compressed air systems
-howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
+howMuchOfProperty.compressedAir.error = Select what has happened to compressed air systems
 
 howMuchOfProperty.sprinklers.title = How much of the property has sprinklers?
 howMuchOfProperty.sprinklers.hint =
