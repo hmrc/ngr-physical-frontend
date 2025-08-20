@@ -167,6 +167,7 @@ whichInternalFeature.checkYourAnswersLabel = Which internal feature have you cha
 whichInternalFeature.error.required = Select which internal feature you have changed
 whichInternalFeature.error.dropdown = Select an internal feature
 whichInternalFeature.change.hidden = WhichInternalFeature
+whichInternalFeature.hint = You can tell us about one feature at a time.
 
 internalFeature.airConditioning = Air conditioning
 internalFeature.escalators = Escalators
@@ -443,9 +444,10 @@ whichExternalFeature.checkYourAnswersLabel = Which external feature have you cha
 whichExternalFeature.error.required = Select which external feature you have changed
 whichExternalFeature.error.dropdown = Select an external feature
 whichExternalFeature.change.hidden = WhichExternalFeature
+whichExternalFeature.hint = You can tell us about one feature at a time.
 
 whichExternalFeature.loadingBays = Loading bays
-whichExternalFeature.lockupGarages = Lockup garages
+whichExternalFeature.lockupGarages = Lock-up garages
 whichExternalFeature.outdoorSeating = Outdoor seating
 whichExternalFeature.parking = Parking
 whichExternalFeature.solarPanels = Solar panels
