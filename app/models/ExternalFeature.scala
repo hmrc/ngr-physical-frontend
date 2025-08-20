@@ -50,8 +50,7 @@ object ExternalFeature extends Enumerable.Implicits {
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
-    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
+    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
   )
 
   def withNameOption(name: String): Option[ExternalFeature] =
