@@ -245,8 +245,9 @@ howMuchOfProperty.sprinklers.some = Some of the property has sprinklers
 howMuchOfProperty.sprinklers.none = None of the property has sprinklers
 howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers
 
-smallCheckYourAnswersController.title = Check and confirm changes to internal features
-smallCheckYourAnswersController.another = Do you want to tell us about another internal feature?
+internalCheckYourAnswers.title = Check and confirm changes to internal features
+internalCheckYourAnswers.another = Do you want to tell us about another internal feature?
+smallCheckYourAnswers.error.required = error
 
 whichExternalFeature.title = Which external feature have you changed?
 whichExternalFeature.heading = Which external feature have you changed?
@@ -274,3 +275,6 @@ whichExternalFeature.landUnsurfacedFenced = Land - unsurfaced, fenced
 whichExternalFeature.landUnSurfacedOpen = Land - unsurfaced, open
 whichExternalFeature.portableBuildings = Portable buildings
 whichExternalFeature.shippingContainers = Shipping containers
+
+externalCheckYourAnswers.title = Check and confirm changes to external features
+externalCheckYourAnswers.another = Do you want to tell us about another external feature?

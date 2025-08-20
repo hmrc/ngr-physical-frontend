@@ -22,10 +22,10 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class InternalCheckYourAnswersFormProvider @Inject() extends Mappings {
+class SmallCheckYourAnswersFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean(requiredKey = "internalCheckYourAnswers.error.required")
+      "value" -> boolean(requiredKey = "smallCheckYourAnswers.error.required")
     )
 }

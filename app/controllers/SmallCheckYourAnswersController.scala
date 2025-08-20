@@ -18,14 +18,16 @@ package controllers
 
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
-import forms.InternalCheckYourAnswersFormProvider
+import forms.SmallCheckYourAnswersFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1}
+import models.requests.OptionalDataRequest
+import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, NormalMode}
 import pages.{QuestionPage, SecurityCamerasChangePage}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.govuk.all.SummaryListViewModel
@@ -37,32 +39,45 @@ import scala.concurrent.{ExecutionContext, Future}
 class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
                                                 getData: DataRetrievalAction,
                                                 sessionRepository: SessionRepository,
-                                                formProvider: InternalCheckYourAnswersFormProvider,
+                                                formProvider: SmallCheckYourAnswersFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: SmallCheckYourAnswersView
-                                                  )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
-      val rows = SummaryListViewModel(InternalFeature.getAnswers(sessionRepository))
-      Ok(view(request.property.addressFull, rows, form, createDefaultNavBar()))
+  private def getRows(viewType: CYAViewType)(implicit request: OptionalDataRequest[AnyContent]): SummaryList = {
+    viewType match {
+      case CYAInternal => SummaryListViewModel(InternalFeature.getAnswers(sessionRepository))
+      case CYAExternal => SummaryListViewModel(ExternalFeature.getAnswers(sessionRepository))
+    }
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData).async {
+  def onPageLoad(viewType: CYAViewType): Action[AnyContent] = (identify andThen getData) {
+    implicit request =>
+      val rows = getRows(viewType)
+      Ok(view(viewType, request.property.addressFull, rows, form, createDefaultNavBar()))
+  }
+
+  def onSubmit(viewType: CYAViewType): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          val rows = SummaryListViewModel(InternalFeature.getAnswers(sessionRepository))
-          Future.successful(BadRequest(view(request.property.addressFull, rows, formWithErrors, createDefaultNavBar()))),
+          val rows = getRows(viewType)
+          Future.successful(BadRequest(view(viewType, request.property.addressFull, rows, formWithErrors, createDefaultNavBar()))),
         {
-          case true => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad))
-          case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad))
+          case true => viewType match {
+            case CYAInternal => Future.successful(Redirect(routes.HaveYouChangedController.loadInternal(NormalMode)))
+            case CYAExternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
+          }
+          case false => viewType match {
+            case CYAInternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
+            case CYAExternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
+          }
         }
       )
   }
 
-  def remove(featureString: String): Action[AnyContent] = (identify andThen getData).async {
+  def removeInternal(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val feature = InternalFeature.withNameOption(featureString)
       val page: QuestionPage[?] = feature match {
@@ -73,7 +88,22 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
         _ <- sessionRepository.set(updatedAnswers)
-      } yield Redirect(routes.SmallCheckYourAnswersController.onPageLoad)
+      } yield Redirect(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal))
+
+  }
+
+  def removeExternal(featureString: String): Action[AnyContent] = (identify andThen getData).async {
+    implicit request =>
+      val feature = InternalFeature.withNameOption(featureString)
+      val page: QuestionPage[?] = feature match {
+        case Some(group1: InternalFeatureGroup1) => HowMuchOfProperty.page(group1)
+        case Some(InternalFeature.SecurityCamera) => SecurityCamerasChangePage
+        case None => throw new RuntimeException("no feature chosen to remove")
+      }
+      for {
+        updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
+        _ <- sessionRepository.set(updatedAnswers)
+      } yield Redirect(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal))
 
   }
 

@@ -16,12 +16,16 @@
 
 package models
 
+import models.requests.OptionalDataRequest
 import play.api.i18n.Messages
+import play.api.mvc.AnyContent
+import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 sealed trait ExternalFeature
 
@@ -71,8 +75,8 @@ object ExternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichExternalFeature.chooseOther")) +:
         remaining.map { value =>
-         SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
-      }
+          SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
+        }
     )
 
     val govukSelectComponent: GovukSelect = new GovukSelect(
@@ -90,6 +94,11 @@ object ExternalFeature extends Enumerable.Implicits {
 
     hardcodedItems :+ extraItem
 
+  }
+
+  def getAnswers(sessionRepository: SessionRepository)
+                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
+    Seq()
   }
 
   implicit val enumerable: Enumerable[ExternalFeature] =
