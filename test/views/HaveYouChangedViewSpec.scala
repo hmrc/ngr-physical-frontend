@@ -57,7 +57,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.hint)(document) mustBe "For example, you increased the size of the retail area by building an extension."
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
-        elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.button)(document) mustBe "Continue"
         elementText(Selectors.topError)(document) mustBe "Select yes if you have changed use of space"
         elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed use of space"
       }
@@ -69,7 +69,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.hint)(document) mustBe "For example you added air conditioning and removed sprinklers."
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
-        elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.button)(document) mustBe "Continue"
         elementText(Selectors.topError)(document) mustBe "Select yes if you have changed internal features"
         elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed internal features"
       }
@@ -81,7 +81,7 @@ class HaveYouChangedViewSpec extends ViewBaseSpec {
         elementText(Selectors.hint)(document) mustBe "For example you added parking and removed lock-up garages."
         elementText(Selectors.yes)(document) mustBe "Yes"
         elementText(Selectors.no)(document) mustBe "No"
-        elementText(Selectors.button)(document) mustBe "Save and continue"
+        elementText(Selectors.button)(document) mustBe "Continue"
         elementText(Selectors.topError)(document) mustBe "Select yes if you have changed external features"
         elementText(Selectors.bottomError)(document) mustBe "Error: Select yes if you have changed external features"
       }
