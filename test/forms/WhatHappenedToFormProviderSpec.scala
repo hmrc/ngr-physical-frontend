@@ -17,12 +17,12 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.{ExternalFeatureGroup1, WhatHappenedTo}
+import models.{ExternalFeature, WhatHappenedTo}
 import play.api.data.FormError
 
 class WhatHappenedToFormProviderSpec extends OptionFieldBehaviours {
 
-  ExternalFeatureGroup1.values.foreach { feature =>
+  ExternalFeature.values.foreach { feature =>
 
     val form = new WhatHappenedToFormProvider()(feature)
 

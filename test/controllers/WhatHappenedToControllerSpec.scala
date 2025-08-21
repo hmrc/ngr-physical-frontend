@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import forms.WhatHappenedToFormProvider
 import helpers.ControllerSpecSupport
-import models.{ExternalFeatureGroup1, NormalMode, UserAnswers, WhatHappenedTo}
+import models.{ExternalFeature, NormalMode, UserAnswers, WhatHappenedTo}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -41,7 +41,7 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport {
   )
 
   "WhatHappenedToController" should {
-    ExternalFeatureGroup1.values.foreach { feature =>
+    ExternalFeature.values.foreach { feature =>
 
       "onPageLoad" must {
         s"return 200: ${feature.toString}" in {

@@ -16,7 +16,7 @@
 
 package pages
 
-import models.{ExternalFeatureGroup1, HowMuchOfProperty, WhatHappenedTo, WithName}
+import models.{ExternalFeature, HowMuchOfProperty, WhatHappenedTo, WithName}
 import play.api.libs.json.JsPath
 
 case object WhatHappenedToLoadingBaysPage extends QuestionPage[WhatHappenedTo] {

@@ -20,11 +20,11 @@ import javax.inject.Inject
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import models.{WhatHappenedTo, ExternalFeatureGroup1}
+import models.{WhatHappenedTo, ExternalFeature}
 
 class WhatHappenedToFormProvider @Inject() extends Mappings {
 
-  def apply(feature: ExternalFeatureGroup1): Form[WhatHappenedTo] =
+  def apply(feature: ExternalFeature): Form[WhatHappenedTo] =
     Form(
       "value" -> enumerable[WhatHappenedTo](WhatHappenedTo.errorKey(feature))
     )

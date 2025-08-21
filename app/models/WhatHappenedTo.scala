@@ -36,7 +36,7 @@ object WhatHappenedTo extends Enumerable.Implicits {
     Added, RemovedSome, RemovedAll
   )
 
-  def messageKeys(feature: ExternalFeatureGroup1): Map[String, String] = {
+  def messageKeys(feature: ExternalFeature): Map[String, String] = {
     val key = feature.toString
     Map(
       "title" -> s"whatHappenedTo.$key.title",
@@ -47,7 +47,7 @@ object WhatHappenedTo extends Enumerable.Implicits {
     )
   }
 
-  def options(feature: ExternalFeatureGroup1)(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
+  def options(feature: ExternalFeature)(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       val strings = messageKeys(feature)
       val content = strings(value.toString)
@@ -58,9 +58,9 @@ object WhatHappenedTo extends Enumerable.Implicits {
       )
   }
 
-  def errorKey(feature: ExternalFeatureGroup1): String = s"whatHappenedTo.${feature.toString}.error"
+  def errorKey(feature: ExternalFeature): String = s"whatHappenedTo.${feature.toString}.error"
 
-  def submitAction(feature: ExternalFeatureGroup1, mode: Mode): Call =
+  def submitAction(feature: ExternalFeature, mode: Mode): Call =
     feature match {
       case LoadingBays => onPageSubmitLoadLoadingBays(mode: Mode)
       case LockupGarages => onPageSubmitLockupGarage(mode: Mode)
@@ -80,7 +80,7 @@ object WhatHappenedTo extends Enumerable.Implicits {
       case ShippingContainers => onPageSubmitShippingContainers(mode: Mode)
     }
   
-  def page(feature: ExternalFeatureGroup1): QuestionPage[WhatHappenedTo] =
+  def page(feature: ExternalFeature): QuestionPage[WhatHappenedTo] =
     feature match {
       case LoadingBays => WhatHappenedToLoadingBaysPage
       case LockupGarages => WhatHappenedToLockupGaragesPage
@@ -101,5 +101,5 @@ object WhatHappenedTo extends Enumerable.Implicits {
     }
 
   implicit val enumerable: Enumerable[WhatHappenedTo] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }

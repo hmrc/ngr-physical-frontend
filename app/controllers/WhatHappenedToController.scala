@@ -24,7 +24,7 @@ import models.NavBarPageContents.createDefaultNavBar
 import pages.*
 
 import javax.inject.Inject
-import models.{ExternalFeatureGroup1, InternalFeatureGroup1, Mode, UserAnswers, WhatHappenedTo}
+import models.{ExternalFeature, Mode, UserAnswers, WhatHappenedTo}
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -45,13 +45,6 @@ class WhatHappenedToController @Inject()(
                                        view: WhatHappenedToView
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-
-  val values: Seq[ExternalFeatureGroup1] = Seq(
-    LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
-    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
-  )
-
   def onPageLoadLoadingBays(mode: Mode): Action[AnyContent] = onPageLoad(LoadingBays, mode)
   def onPageLoadLockupGarage(mode: Mode): Action[AnyContent] = onPageLoad(LockupGarages, mode)
   def onPageLoadOutdoorSeating(mode: Mode): Action[AnyContent] = onPageLoad(OutdoorSeating, mode)
@@ -68,11 +61,8 @@ class WhatHappenedToController @Inject()(
   def onPageLoadLandUnsurfacedOpen(mode: Mode): Action[AnyContent] = onPageLoad(LandUnsurfacedOpen, mode)
   def onPageLoadPortableBuildings(mode: Mode): Action[AnyContent] = onPageLoad(PortableBuildings, mode)
   def onPageLoadShippingContainers(mode: Mode): Action[AnyContent] = onPageLoad(ShippingContainers, mode)
-  
-  
-  
 
-  def onPageLoad(feature: ExternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       
       val form: Form[WhatHappenedTo] = formProvider(feature)
@@ -106,7 +96,7 @@ class WhatHappenedToController @Inject()(
   def onPageSubmitShippingContainers(mode: Mode): Action[AnyContent] = onSubmit(ShippingContainers, mode)
   
 
-  def onSubmit(feature: ExternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form: Form[WhatHappenedTo] = formProvider(feature)
 

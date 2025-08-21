@@ -18,7 +18,7 @@ package views
 
 import forms.WhatHappenedToFormProvider
 import helpers.ViewBaseSpec
-import models.{ExternalFeatureGroup1, WhatHappenedTo, NormalMode}
+import models.{ExternalFeature, WhatHappenedTo, NormalMode}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.html.WhatHappenedToView
@@ -39,7 +39,7 @@ class WhatHappenedToViewSpec extends ViewBaseSpec {
 
   "WhatHappenedToView" must {
 
-    ExternalFeatureGroup1.values.foreach { feature =>
+    ExternalFeature.values.foreach { feature =>
 
       val strings = WhatHappenedTo.messageKeys(feature)
       val action = WhatHappenedTo.submitAction(feature, NormalMode)
