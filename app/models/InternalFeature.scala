@@ -81,7 +81,8 @@ object InternalFeature extends Enumerable.Implicits {
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
                 ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.removeInternal(feature.toString).url)
-              )
+              ),
+              actionClasses = "govuk-!-width-one-third"
             )
           }
 
@@ -93,7 +94,8 @@ object InternalFeature extends Enumerable.Implicits {
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
                 ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.removeInternal("securityCamera").url)
-              )
+              ),
+              actionClasses = "govuk-!-width-one-third"
             )
           }
 
