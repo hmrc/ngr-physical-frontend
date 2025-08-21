@@ -79,7 +79,7 @@ object WhatHappenedTo extends Enumerable.Implicits {
       case ExternalFeature.PortableBuildings => onPageLoadPortableBuildings(mode)
       case ExternalFeature.ShippingContainers => onPageLoadShippingContainers(mode)
     }
-  
+
   def submitAction(feature: ExternalFeature, mode: Mode): Call =
     feature match {
       case LoadingBays => onPageSubmitLoadLoadingBays(mode: Mode)
