@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.SmallCheckYourAnswersFormProvider
 import models.NavBarPageContents.createDefaultNavBar
 import models.requests.OptionalDataRequest
-import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, NormalMode}
+import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, NormalMode, WhatHappenedTo}
 import pages.{QuestionPage, SecurityCamerasChangePage}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -67,7 +67,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
         {
           case true => viewType match {
             case CYAInternal => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad))
-            case CYAExternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
+            case CYAExternal => Future.successful(Redirect(routes.WhichExternalFeatureController.onPageLoad))
           }
           case false => viewType match {
             case CYAInternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
@@ -94,12 +94,8 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
 
   def removeExternal(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val feature = InternalFeature.withNameOption(featureString)
-      val page: QuestionPage[?] = feature match {
-        case Some(group1: InternalFeatureGroup1) => HowMuchOfProperty.page(group1)
-        case Some(InternalFeature.SecurityCamera) => SecurityCamerasChangePage
-        case None => throw new RuntimeException("no feature chosen to remove")
-      }
+      val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("feature not found"))
+      val page: QuestionPage[?] = WhatHappenedTo.page(feature)
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
         _ <- sessionRepository.set(updatedAnswers)
