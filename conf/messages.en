@@ -184,8 +184,8 @@ internalFeature.sprinklers = Sprinklers
 
 internalFeature.airConditioning.value = In {0} of the property
 internalFeature.escalators.value = Between {0} floors
-internalFeature.goodsLift.value = on {0} floors
-internalFeature.passengerLift.value = on {0} floors
+internalFeature.goodsLift.value = On {0} floors
+internalFeature.passengerLift.value = On {0} floors
 internalFeature.compressedAir.value = Removed {0}
 internalFeature.heating.value = In {0} of the property
 internalFeature.sprinklers.value = In {0} of the property
