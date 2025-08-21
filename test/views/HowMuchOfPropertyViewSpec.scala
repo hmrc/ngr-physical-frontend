@@ -39,6 +39,7 @@ class HowMuchOfPropertyViewSpec extends ViewBaseSpec {
   }
 
 
+
   "HowMuchOfPropertyView" must {
     
     InternalFeatureGroup1.values.foreach { feature =>

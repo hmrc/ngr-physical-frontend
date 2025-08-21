@@ -465,3 +465,99 @@ whichExternalFeature.shippingContainers = Shipping containers
 
 externalCheckYourAnswers.title = Check and confirm changes to external features
 externalCheckYourAnswers.another = Do you want to tell us about another external feature?
+
+whatHappenedTo.loadingBays.title = What has happened to loading Bays?
+whatHappenedTo.loadingBays.added = You added loading Bays
+whatHappenedTo.loadingBays.remove.some =  You removed some loading Bays
+whatHappenedTo.loadingBays.remove.all = You removed all loading Bays
+whatHappenedTo.loadingBays.error = Select what has happened to loading bays
+
+whatHappenedTo.lockupGarages.title = What has happened to lockup garages?
+whatHappenedTo.lockupGarages.added = You added lockup garages
+whatHappenedTo.lockupGarages.remove.some = You removed some lockup garages
+whatHappenedTo.lockupGarages.remove.all = You removed all lockup garages
+whatHappenedTo.lockupGarages.error = Select what has happened to lock-up garages
+
+whatHappenedTo.outdoorSeating.title = What has happened to outdoor seating?
+whatHappenedTo.outdoorSeating.added = You added outdoor seating
+whatHappenedTo.outdoorSeating.remove.some = You removed some outdoor seating
+whatHappenedTo.outdoorSeating.remove.all = You removed all outdoor seating
+whatHappenedTo.outdoorSeating.error = Select what has happened to outdoor seating
+
+whatHappenedTo.parking.title = What has happened to parking?
+whatHappenedTo.parking.added = You added parking
+whatHappenedTo.parking.remove.some = You removed some parking
+whatHappenedTo.parking.remove.all = You removed all parking
+whatHappenedTo.parking.error = Select what has happened to parking
+
+whatHappenedTo.solarPanels.title = What has happened to solar panels?
+whatHappenedTo.solarPanels.added = You added solar panels
+whatHappenedTo.solarPanels.remove.some = You removed some solar panels
+whatHappenedTo.solarPanels.remove.all = You removed all solar panels
+whatHappenedTo.solarPanels.error = Select what has happened to solar panels
+
+whatHappenedTo.advertisingDisplays.title = What has happened to advertising displays?
+whatHappenedTo.advertisingDisplays.added = You added advertising displays
+whatHappenedTo.advertisingDisplays.remove.some = You removed some advertising displays
+whatHappenedTo.advertisingDisplays.remove.all = You removed all advertising displays
+whatHappenedTo.advertisingDisplays.error = Select what has happened to advertising displays on your property
+
+whatHappenedTo.bikeSheds.title = What has happened to bike sheds?
+whatHappenedTo.bikeSheds.added = You added bike sheds
+whatHappenedTo.bikeSheds.remove.some = You removed some bike sheds
+whatHappenedTo.bikeSheds.remove.all = You removed all bike sheds
+whatHappenedTo.bikeSheds.error = Select what has happened to bike sheds
+
+whatHappenedTo.canopies.title = What has happened to canopies?
+whatHappenedTo.canopies.added = You added canopies
+whatHappenedTo.canopies.remove.some = You removed some canopies
+whatHappenedTo.canopies.remove.all = You removed all canopies
+whatHappenedTo.canopies.error = Select what has happened to canopies
+
+whatHappenedTo.landHardSurfacedFenced.title = What has happened to land hard surfaced fenced?
+whatHappenedTo.landHardSurfacedFenced.added = You added land hard surfaced fenced
+whatHappenedTo.landHardSurfacedFenced.remove.some = You removed some land hard surfaced fenced
+whatHappenedTo.landHardSurfacedFenced.remove.all = You removed all land hard surfaced fenced
+whatHappenedTo.landHardSurfacedFenced.error = Select what has happened to hard-surfaced, fenced land
+
+whatHappenedTo.landHardSurfacedOpen.title = What has happened to land hard surfaced open?
+whatHappenedTo.landHardSurfacedOpen.added = You added land hard surfaced open
+whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some land hard surfaced open
+whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all land hard surfaced open
+whatHappenedTo.landHardSurfacedOpen.error = Select what has happened to hard surfaced, open land
+
+whatHappenedTo.landGravelledFenced.title = What has happened to land gravelled fenced?
+whatHappenedTo.landGravelledFenced.added = You added land gravelled fenced
+whatHappenedTo.landGravelledFenced.remove.some = You removed some land gravelled fenced
+whatHappenedTo.landGravelledFenced.remove.all = You removed all land gravelled fenced
+whatHappenedTo.landGravelledFenced.error = Select what has happened to gravelled, fenced land
+
+whatHappenedTo.landGravelledOpen.title = What has happened to land gravelled open?
+whatHappenedTo.landGravelledOpen.added = You added land gravelled open
+whatHappenedTo.landGravelledOpen.remove.some = You removed some land gravelled open
+whatHappenedTo.landGravelledOpen.remove.all = You removed all land gravelled open
+whatHappenedTo.landGravelledOpen.error = Select what has happened to gravelled, open land
+
+whatHappenedTo.landUnsurfacedFenced.title = What has happened to land un-surfaced fenced?
+whatHappenedTo.landUnsurfacedFenced.added = You added land un-surfaced fenced
+whatHappenedTo.landUnsurfacedFenced.remove.some = You removed some land un-surfaced fenced
+whatHappenedTo.landUnsurfacedFenced.remove.all = You removed all land un-surfaced fenced
+whatHappenedTo.landUnsurfacedFenced.error = Select what has happened to unsurfaced, fenced land
+
+whatHappenedTo.landUnSurfacedOpen.title = What has happened to land un-surfaced open?
+whatHappenedTo.landUnSurfacedOpen.added = You added land un-surfaced open
+whatHappenedTo.landUnSurfacedOpen.remove.some = You removed some land un-surfaced open
+whatHappenedTo.landUnSurfacedOpen.remove.all = You removed all land un-surfaced open
+whatHappenedTo.landUnSurfacedOpen.error = Select what has happened to unsurfaced, open land
+
+whatHappenedTo.portableBuildings.title = What has happened to portable buildings?
+whatHappenedTo.portableBuildings.added = You added portable buildings
+whatHappenedTo.portableBuildings.remove.some = You removed some portable buildings
+whatHappenedTo.portableBuildings.remove.all = You removed all portable buildings
+whatHappenedTo.portableBuildings.error = Select what has happened to portable buildings
+
+whatHappenedTo.shippingContainers.title = What has happened to shipping containers?
+whatHappenedTo.shippingContainers.added = You added shipping containers
+whatHappenedTo.shippingContainers.remove.some = You removed some shipping containers
+whatHappenedTo.shippingContainers.remove.all = You removed all shipping containers
+whatHappenedTo.shippingContainers.error = Select what has happened to shipping containers

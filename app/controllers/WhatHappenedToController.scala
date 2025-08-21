@@ -45,6 +45,13 @@ class WhatHappenedToController @Inject()(
                                        view: WhatHappenedToView
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
+
+  val values: Seq[ExternalFeatureGroup1] = Seq(
+    LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
+    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
+    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
+  )
+
   def onPageLoadLoadingBays(mode: Mode): Action[AnyContent] = onPageLoad(LoadingBays, mode)
   def onPageLoadLockupGarage(mode: Mode): Action[AnyContent] = onPageLoad(LockupGarages, mode)
   def onPageLoadOutdoorSeating(mode: Mode): Action[AnyContent] = onPageLoad(OutdoorSeating, mode)
