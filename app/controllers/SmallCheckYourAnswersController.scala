@@ -66,7 +66,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
           Future.successful(BadRequest(view(viewType, request.property.addressFull, rows, formWithErrors, createDefaultNavBar()))),
         {
           case true => viewType match {
-            case CYAInternal => Future.successful(Redirect(routes.HaveYouChangedController.loadInternal(NormalMode)))
+            case CYAInternal => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad))
             case CYAExternal => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
           }
           case false => viewType match {

@@ -48,7 +48,7 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
       "redirect to have you changed Internal" in {
         val formRequest = requestWithForm(Map("value" -> "true"))
         val result = controller.onSubmit(CYAInternal)(formRequest)
-        redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadInternal(NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.WhichInternalFeatureController.onPageLoad.url)
       }
       "redirect to have you changed External" in {
         val formRequest = requestWithForm(Map("value" -> "false"))
