@@ -16,6 +16,7 @@
 
 package models
 
+import models.ExternalFeature.*
 import models.requests.OptionalDataRequest
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
@@ -50,7 +51,8 @@ object ExternalFeature extends Enumerable.Implicits {
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
+    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
+    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
   )
 
   def withNameOption(name: String): Option[ExternalFeature] =
@@ -74,8 +76,8 @@ object ExternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichExternalFeature.chooseOther")) +:
         remaining.map { value =>
-          SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
-        }
+         SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
+      }
     )
 
     val govukSelectComponent: GovukSelect = new GovukSelect(

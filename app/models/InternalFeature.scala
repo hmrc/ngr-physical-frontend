@@ -33,6 +33,7 @@ import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
 
 sealed trait InternalFeature
+
 sealed trait InternalFeatureGroup1 extends InternalFeature
 
 object InternalFeature extends Enumerable.Implicits {

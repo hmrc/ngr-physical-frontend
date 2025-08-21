@@ -284,3 +284,15 @@ whichExternalFeature.shippingContainers = Shipping containers
 
 externalCheckYourAnswers.title = Check and confirm changes to external features
 externalCheckYourAnswers.another = Do you want to tell us about another external feature?
+
+whatHappenedTo.loadingBays.title = What has happened to loading Bays?
+whatHappenedTo.loadingBays.added = You added loading Bays
+whatHappenedTo.loadingBays.remove.some =  You removed some loading Bays
+whatHappenedTo.loadingBays.remove.all = You removed all loading Bays
+whatHappenedTo.loadingBays.error = Select what has happened to loading bays
+
+whatHappenedTo.lockupGarages.title = What has happened to lockup garages?
+whatHappenedTo.lockupGarages.added = You added lockup garages
+whatHappenedTo.lockupGarages.remove.some = You removed some lockup garages
+whatHappenedTo.lockupGarages.remove.all = You removed all lockup garages
+whatHappenedTo.lockupGarages.error = Select what has happened to lock-up garages

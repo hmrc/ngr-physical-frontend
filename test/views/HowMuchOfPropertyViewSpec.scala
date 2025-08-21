@@ -38,6 +38,7 @@ class HowMuchOfPropertyViewSpec extends ViewBaseSpec {
     val button = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
   }
 
+  
   "HowMuchOfPropertyView" must {
     
     InternalFeatureGroup1.values.foreach { feature =>
