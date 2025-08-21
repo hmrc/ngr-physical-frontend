@@ -36,22 +36,22 @@ sealed trait  ExternalFeatureGroup1 extends ExternalFeature
 
 object ExternalFeature extends Enumerable.Implicits {
 
-  case object LoadingBays extends WithName("loadingBays") with ExternalFeatureGroup1
-  case object LockupGarages extends WithName("lockupGarages") with ExternalFeatureGroup1
-  case object OutdoorSeating extends WithName("outdoorSeating") with ExternalFeatureGroup1
-  case object Parking extends WithName("parking") with ExternalFeatureGroup1
-  case object SolarPanels extends WithName("solarPanels") with ExternalFeatureGroup1
-  case object AdvertisingDisplays extends WithName("advertisingDisplays") with ExternalFeatureGroup1
-  case object BikeSheds extends WithName("bikeSheds") with ExternalFeatureGroup1
-  case object Canopies extends WithName("canopies") with ExternalFeatureGroup1
-  case object LandHardSurfacedFenced extends WithName("landHardSurfacedFenced") with ExternalFeatureGroup1
-  case object LandHardSurfacedOpen extends WithName("landHardSurfacedOpen") with ExternalFeatureGroup1
-  case object LandGravelledFenced extends WithName("landGravelledFenced") with ExternalFeatureGroup1
-  case object LandGravelledOpen extends WithName("landGravelledOpen") with ExternalFeatureGroup1
-  case object LandUnsurfacedFenced extends WithName("landUnsurfacedFenced") with ExternalFeatureGroup1
-  case object LandUnsurfacedOpen extends WithName("landUnSurfacedOpen") with ExternalFeatureGroup1
-  case object PortableBuildings extends WithName("portableBuildings") with ExternalFeatureGroup1
-  case object ShippingContainers extends WithName("shippingContainers") with ExternalFeatureGroup1
+  case object LoadingBays extends WithName("loadingBays") with ExternalFeature
+  case object LockupGarages extends WithName("lockupGarages") with ExternalFeature
+  case object OutdoorSeating extends WithName("outdoorSeating") with ExternalFeature
+  case object Parking extends WithName("parking") with ExternalFeature
+  case object SolarPanels extends WithName("solarPanels") with ExternalFeature
+  case object AdvertisingDisplays extends WithName("advertisingDisplays") with ExternalFeature
+  case object BikeSheds extends WithName("bikeSheds") with ExternalFeature
+  case object Canopies extends WithName("canopies") with ExternalFeature
+  case object LandHardSurfacedFenced extends WithName("landHardSurfacedFenced") with ExternalFeature
+  case object LandHardSurfacedOpen extends WithName("landHardSurfacedOpen") with ExternalFeature
+  case object LandGravelledFenced extends WithName("landGravelledFenced") with ExternalFeature
+  case object LandGravelledOpen extends WithName("landGravelledOpen") with ExternalFeature
+  case object LandUnsurfacedFenced extends WithName("landUnsurfacedFenced") with ExternalFeature
+  case object LandUnsurfacedOpen extends WithName("landUnSurfacedOpen") with ExternalFeature
+  case object PortableBuildings extends WithName("portableBuildings") with ExternalFeature
+  case object ShippingContainers extends WithName("shippingContainers") with ExternalFeature
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
@@ -107,12 +107,4 @@ object ExternalFeature extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[ExternalFeature] =
     Enumerable(values.map(v => v.toString -> v)*)
-}
-
-object ExternalFeatureGroup1 {
-  val values: Seq[ExternalFeatureGroup1] = Seq(
-    LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
-    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
-  )
 }
