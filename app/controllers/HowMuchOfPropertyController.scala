@@ -45,6 +45,7 @@ class HowMuchOfPropertyController @Inject()(
                                        view: HowMuchOfPropertyView
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
+  
   def onPageLoadAirCon(mode: Mode): Action[AnyContent] = onPageLoad(AirConditioning, mode)
   def onPageLoadHeating(mode: Mode): Action[AnyContent] = onPageLoad(Heating, mode)
   def onPageLoadSprinklers(mode: Mode): Action[AnyContent] = onPageLoad(Sprinklers, mode)
