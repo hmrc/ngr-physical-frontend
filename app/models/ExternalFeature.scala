@@ -16,6 +16,7 @@
 
 package models
 
+import models.ExternalFeature.*
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
@@ -24,6 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 
 sealed trait ExternalFeature
+
 
 object ExternalFeature extends Enumerable.Implicits {
 

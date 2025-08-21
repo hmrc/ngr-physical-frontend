@@ -87,3 +87,83 @@ POST       /change-which-floors-of-property-have-passenger-lifts  controllers.Ho
 
 GET        /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onPageLoad
 POST       /which-external-feature-have-changed                   controllers.WhichExternalFeatureController.onSubmit
+
+GET        /what-happened-to-loading-bays                                         controllers.WhatHappenedToController.onPageLoadLoadingBays(mode: Mode = NormalMode)
+POST       /what-happened-to-loading-bays                                         controllers.WhatHappenedToController.onPageSubmitLoadLoadingBays(mode: Mode = NormalMode)
+GET        /change-what-happened-to-loading-bays                                  controllers.WhatHappenedToController.onPageLoadLoadingBays(mode: Mode = CheckMode)
+POST       /change-what-happened-to-loading-bays                                  controllers.WhatHappenedToController.onPageSubmitLoadLoadingBays(mode: Mode = CheckMode)
+
+GET        /what-happened-to-advertising-displays-on-property                     controllers.WhatHappenedToController.onPageLoadAdvertisingDisplays(mode: Mode = NormalMode)
+POST       /what-happened-to-advertising-displays-on-property                     controllers.WhatHappenedToController.onPageSubmitAdvertisingDisplays(mode: Mode = NormalMode)
+GET        /change-what-happened-to-advertising-displays-on-property              controllers.WhatHappenedToController.onPageLoadAdvertisingDisplays(mode: Mode = CheckMode)
+POST       /change-what-happened-to-advertising-displays-on-property              controllers.WhatHappenedToController.onPageSubmitAdvertisingDisplays(mode: Mode = CheckMode)
+
+GET        /what-happened-to-bike-sheds                                           controllers.WhatHappenedToController.onPageLoadBikeSheds(mode: Mode = NormalMode)
+POST       /what-happened-to-bike-sheds                                           controllers.WhatHappenedToController.onPageSubmitBikeSheds(mode: Mode = NormalMode)
+GET        /change-what-happened-to-bike-sheds                                    controllers.WhatHappenedToController.onPageLoadBikeSheds(mode: Mode = CheckMode)
+POST       /change-what-happened-to-bike-sheds                                    controllers.WhatHappenedToController.onPageSubmitBikeSheds(mode: Mode = CheckMode)
+
+GET        /what-happened-to-canopies                                             controllers.WhatHappenedToController.onPageLoadCanopies(mode: Mode = NormalMode)
+POST       /what-happened-to-canopies                                             controllers.WhatHappenedToController.onPageSubmitCanopies(mode: Mode = NormalMode)
+GET        /change-what-happened-to-canopies                                      controllers.WhatHappenedToController.onPageLoadCanopies(mode: Mode = CheckMode)
+POST       /change-what-happened-to-canopies                                      controllers.WhatHappenedToController.onPageSubmitCanopies(mode: Mode = CheckMode)
+
+GET        /what-happened-to-hard-surfaced-fenced-land                            controllers.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(mode: Mode = NormalMode)
+POST       /what-happened-to-hard-surfaced-fenced-land                            controllers.WhatHappenedToController.onPageSubmitLandHardSurfacedFenced(mode: Mode = NormalMode)
+GET        /change-what-happened-to-hard-surfaced-fenced-land                     controllers.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(mode: Mode = CheckMode)
+POST       /change-what-happened-to-hard-surfaced-fenced-land                     controllers.WhatHappenedToController.onPageSubmitLandHardSurfacedFenced(mode: Mode = CheckMode)
+
+GET        /what-happened-to-hard-surfaced-open-land                              controllers.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(mode: Mode = NormalMode)
+POST       /what-happened-to-hard-surfaced-open-land                              controllers.WhatHappenedToController.onPageSubmitLandHardSurfacedOpen(mode: Mode = NormalMode)
+GET        /change-what-happened-to-hard-surfaced-open-land                       controllers.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(mode: Mode = CheckMode)
+POST       /change-what-happened-to-hard-surfaced-open-land                       controllers.WhatHappenedToController.onPageSubmitLandHardSurfacedOpen(mode: Mode = CheckMode)
+
+GET        /what-happened-to-gravelled-fenced-land                                 controllers.WhatHappenedToController.onPageLoadLandGravelledFenced(mode: Mode = NormalMode)
+POST       /what-happened-to-gravelled-fenced-land                                 controllers.WhatHappenedToController.onPageSubmitLandGravelledFenced(mode: Mode = NormalMode)
+GET        /change-what-happened-to-gravelled-fenced-land                          controllers.WhatHappenedToController.onPageLoadLandGravelledFenced(mode: Mode = CheckMode)
+POST       /change-what-happened-to-gravelled-fenced-land                          controllers.WhatHappenedToController.onPageSubmitLandGravelledFenced(mode: Mode = CheckMode)
+
+GET        /what-happened-to-gravelled-open-land                                   controllers.WhatHappenedToController.onPageLoadLandGravelledOpen(mode: Mode = NormalMode)
+POST       /what-happened-to-gravelled-open-land                                   controllers.WhatHappenedToController.onPageSubmitLandGravelledOpen(mode: Mode = NormalMode)
+GET        /change-what-happened-to-gravelled-open-land                            controllers.WhatHappenedToController.onPageLoadLandGravelledOpen(mode: Mode = CheckMode)
+POST       /change-what-happened-to-gravelled-open-land                            controllers.WhatHappenedToController.onPageSubmitLandGravelledOpen(mode: Mode = CheckMode)
+
+GET        /what-happened-to-unsurfaced-fenced-land                                controllers.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(mode: Mode = NormalMode)
+POST       /what-happened-to-unsurfaced-fenced-land                                controllers.WhatHappenedToController.onPageSubmitLandUnsurfacedFenced(mode: Mode = NormalMode)
+GET        /change-what-happened-to-unsurfaced-fenced-land                         controllers.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(mode: Mode = CheckMode)
+POST       /change-what-happened-to-unsurfaced-fenced-land                         controllers.WhatHappenedToController.onPageSubmitLandUnsurfacedFenced(mode: Mode = CheckMode)
+
+GET        /what-happened-to-unsurfaced-open-land                                  controllers.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(mode: Mode = NormalMode)
+POST       /what-happened-to-unsurfaced-open-land                                  controllers.WhatHappenedToController.onPageSubmitLandUnsurfacedOpen(mode: Mode = NormalMode)
+GET        /change-what-happened-to-unsurfaced-open-land                           controllers.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(mode: Mode = CheckMode)
+POST       /change-what-happened-to-unsurfaced-open-land                           controllers.WhatHappenedToController.onPageSubmitLandUnsurfacedOpen(mode: Mode = CheckMode)
+
+GET        /what-happened-to-lock-up-garages                                       controllers.WhatHappenedToController.onPageLoadLockupGarage(mode: Mode = NormalMode)
+POST       /what-happened-to-lock-up-garages                                       controllers.WhatHappenedToController.onPageSubmitLockupGarage(mode: Mode = NormalMode)
+GET        /change-what-happened-to-lock-up-garages                                controllers.WhatHappenedToController.onPageLoadLockupGarage(mode: Mode = CheckMode)
+POST       /change-what-happened-to-lock-up-garages                                controllers.WhatHappenedToController.onPageSubmitLockupGarage(mode: Mode = CheckMode)
+
+GET        /what-happened-to-outdoor-seating                                       controllers.WhatHappenedToController.onPageLoadOutdoorSeating(mode: Mode = NormalMode)
+POST       /what-happened-to-outdoor-seating                                       controllers.WhatHappenedToController.onPageSubmitOutdoorSeating(mode: Mode = NormalMode)
+GET        /change-what-happened-to-outdoor-seating                                controllers.WhatHappenedToController.onPageLoadOutdoorSeating(mode: Mode = CheckMode)
+POST       /change-what-happened-to-outdoor-seating                                controllers.WhatHappenedToController.onPageSubmitOutdoorSeating(mode: Mode = CheckMode)
+
+GET        /what-happened-to-parking                                               controllers.WhatHappenedToController.onPageLoadParking(mode: Mode = NormalMode)
+POST       /what-happened-to-parking                                               controllers.WhatHappenedToController.onPageSubmitParking(mode: Mode = NormalMode)
+GET        /change-what-happened-to-parking                                        controllers.WhatHappenedToController.onPageLoadParking(mode: Mode = CheckMode)
+POST       /change-what-happened-to-parking                                        controllers.WhatHappenedToController.onPageSubmitParking(mode: Mode = CheckMode)
+
+GET        /what-happened-to-portable-buildings                                    controllers.WhatHappenedToController.onPageLoadPortableBuildings(mode: Mode = NormalMode)
+POST       /what-happened-to-portable-buildings                                    controllers.WhatHappenedToController.onPageSubmitPortableBuildings(mode: Mode = NormalMode)
+GET        /change-what-happened-to-portable-buildings                             controllers.WhatHappenedToController.onPageLoadPortableBuildings(mode: Mode = CheckMode)
+POST       /change-what-happened-to-portable-buildings                             controllers.WhatHappenedToController.onPageSubmitPortableBuildings(mode: Mode = CheckMode)
+
+GET        /what-happened-to-shipping-containers                                   controllers.WhatHappenedToController.onPageLoadShippingContainers(mode: Mode = NormalMode)
+POST       /what-happened-to-shipping-containers                                   controllers.WhatHappenedToController.onPageSubmitShippingContainers(mode: Mode = NormalMode)
+GET        /change-what-happened-to-shipping-containers                            controllers.WhatHappenedToController.onPageLoadShippingContainers(mode: Mode = CheckMode)
+POST       /change-what-happened-to-shipping-containers                            controllers.WhatHappenedToController.onPageSubmitShippingContainers(mode: Mode = CheckMode)
+
+GET        /what-happened-to-solar-panels                                          controllers.WhatHappenedToController.onPageLoadSolarPanels(mode: Mode = NormalMode)
+POST       /what-happened-to-solar-panels                                          controllers.WhatHappenedToController.onPageSubmitSolarPanels(mode: Mode = NormalMode)
+GET        /change-what-happened-to-solar-panels                                   controllers.WhatHappenedToController.onPageLoadSolarPanels(mode: Mode = CheckMode)
+POST       /change-what-happened-to-solar-panels                                   controllers.WhatHappenedToController.onPageSubmitSolarPanels(mode: Mode = CheckMode)

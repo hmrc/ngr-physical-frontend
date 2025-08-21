@@ -28,6 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 
 sealed trait InternalFeature
+
 sealed trait InternalFeatureGroup1 extends InternalFeature
 
 object InternalFeature extends Enumerable.Implicits {
