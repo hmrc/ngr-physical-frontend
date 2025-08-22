@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.WhichExternalFeatureFormProvider
 import models.ExternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{ExternalFeature, NormalMode}
+import models.{ExternalFeature, NormalMode, WhatHappenedTo}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -57,10 +57,7 @@ class WhichExternalFeatureController @Inject()(identify: IdentifierAction,
   }
 
   private def nextPage(feature: ExternalFeature): Future[Result] = {
-    val call = feature match {
-      case _ => routes.WhichExternalFeatureController.onPageLoad // Group 1
-    }
-    Future.successful(Redirect(call))
+    Future.successful(Redirect(WhatHappenedTo.pageLoadAction(feature, NormalMode)))
   }
 
 }

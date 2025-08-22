@@ -20,7 +20,6 @@ import controllers.routes
 import models.*
 import pages.*
 import play.api.mvc.Call
-
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -59,6 +58,8 @@ class Navigator @Inject()() {
           routes.WhichExternalFeatureController.onPageLoad
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
+    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal)
+    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal)
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
