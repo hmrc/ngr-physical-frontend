@@ -266,10 +266,10 @@ whichExternalFeature.landUnSurfacedOpen = Land - unsurfaced, open
 whichExternalFeature.portableBuildings = Portable buildings
 whichExternalFeature.shippingContainers = Shipping containers
 
-whatHappenedTo.loadingBays.title = What has happened to loading Bays?
-whatHappenedTo.loadingBays.added = You added loading Bays
-whatHappenedTo.loadingBays.remove.some =  You removed some loading Bays
-whatHappenedTo.loadingBays.remove.all = You removed all loading Bays
+whatHappenedTo.loadingBays.title = What has happened to loading bays?
+whatHappenedTo.loadingBays.added = You added loading bays
+whatHappenedTo.loadingBays.remove.some =  You removed some loading bays
+whatHappenedTo.loadingBays.remove.all = You removed all loading bays
 whatHappenedTo.loadingBays.error = Select what has happened to loading bays
 
 whatHappenedTo.lockupGarages.title = What has happened to lockup garages?
@@ -296,10 +296,10 @@ whatHappenedTo.solarPanels.remove.some = You removed some solar panels
 whatHappenedTo.solarPanels.remove.all = You removed all solar panels
 whatHappenedTo.solarPanels.error = Select what has happened to solar panels
 
-whatHappenedTo.advertisingDisplays.title = What has happened to advertising displays?
-whatHappenedTo.advertisingDisplays.added = You added advertising displays
-whatHappenedTo.advertisingDisplays.remove.some = You removed some advertising displays
-whatHappenedTo.advertisingDisplays.remove.all = You removed all advertising displays
+whatHappenedTo.advertisingDisplays.title = What has happened to advertising displays on your property?
+whatHappenedTo.advertisingDisplays.added = You added advertising displays on your property
+whatHappenedTo.advertisingDisplays.remove.some = You removed some advertising displays on your property
+whatHappenedTo.advertisingDisplays.remove.all = You removed all advertising displays on your property
 whatHappenedTo.advertisingDisplays.error = Select what has happened to advertising displays on your property
 
 whatHappenedTo.bikeSheds.title = What has happened to bike sheds?
@@ -314,40 +314,40 @@ whatHappenedTo.canopies.remove.some = You removed some canopies
 whatHappenedTo.canopies.remove.all = You removed all canopies
 whatHappenedTo.canopies.error = Select what has happened to canopies
 
-whatHappenedTo.landHardSurfacedFenced.title = What has happened to land hard surfaced fenced?
-whatHappenedTo.landHardSurfacedFenced.added = You added land hard surfaced fenced
-whatHappenedTo.landHardSurfacedFenced.remove.some = You removed some land hard surfaced fenced
-whatHappenedTo.landHardSurfacedFenced.remove.all = You removed all land hard surfaced fenced
+whatHappenedTo.landHardSurfacedFenced.title = What has happened to hard-surfaced, fenced land?
+whatHappenedTo.landHardSurfacedFenced.added = You added hard-surfaced, fenced land
+whatHappenedTo.landHardSurfacedFenced.remove.some = You removed some hard-surfaced, fenced land
+whatHappenedTo.landHardSurfacedFenced.remove.all = You removed all hard-surfaced, fenced land
 whatHappenedTo.landHardSurfacedFenced.error = Select what has happened to hard-surfaced, fenced land
 
-whatHappenedTo.landHardSurfacedOpen.title = What has happened to land hard surfaced open?
-whatHappenedTo.landHardSurfacedOpen.added = You added land hard surfaced open
-whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some land hard surfaced open
-whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all land hard surfaced open
+whatHappenedTo.landHardSurfacedOpen.title = What has happened to hard surfaced, open land?
+whatHappenedTo.landHardSurfacedOpen.added = You added hard surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some hard surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all hard surfaced, open land
 whatHappenedTo.landHardSurfacedOpen.error = Select what has happened to hard surfaced, open land
 
-whatHappenedTo.landGravelledFenced.title = What has happened to land gravelled fenced?
-whatHappenedTo.landGravelledFenced.added = You added land gravelled fenced
-whatHappenedTo.landGravelledFenced.remove.some = You removed some land gravelled fenced
-whatHappenedTo.landGravelledFenced.remove.all = You removed all land gravelled fenced
+whatHappenedTo.landGravelledFenced.title = What has happened to gravelled, fenced land?
+whatHappenedTo.landGravelledFenced.added = You added gravelled, fenced land
+whatHappenedTo.landGravelledFenced.remove.some = You removed some gravelled, fenced land
+whatHappenedTo.landGravelledFenced.remove.all = You removed all gravelled, fenced land
 whatHappenedTo.landGravelledFenced.error = Select what has happened to gravelled, fenced land
 
-whatHappenedTo.landGravelledOpen.title = What has happened to land gravelled open?
-whatHappenedTo.landGravelledOpen.added = You added land gravelled open
-whatHappenedTo.landGravelledOpen.remove.some = You removed some land gravelled open
-whatHappenedTo.landGravelledOpen.remove.all = You removed all land gravelled open
+whatHappenedTo.landGravelledOpen.title = What has happened to gravelled, open land?
+whatHappenedTo.landGravelledOpen.added = You added gravelled, open land
+whatHappenedTo.landGravelledOpen.remove.some = You removed some gravelled, open land
+whatHappenedTo.landGravelledOpen.remove.all = You removed all gravelled, open land
 whatHappenedTo.landGravelledOpen.error = Select what has happened to gravelled, open land
 
-whatHappenedTo.landUnsurfacedFenced.title = What has happened to land un-surfaced fenced?
-whatHappenedTo.landUnsurfacedFenced.added = You added land un-surfaced fenced
-whatHappenedTo.landUnsurfacedFenced.remove.some = You removed some land un-surfaced fenced
-whatHappenedTo.landUnsurfacedFenced.remove.all = You removed all land un-surfaced fenced
+whatHappenedTo.landUnsurfacedFenced.title = What has happened to unsurfaced, fenced land?
+whatHappenedTo.landUnsurfacedFenced.added = You added unsurfaced, fenced land
+whatHappenedTo.landUnsurfacedFenced.remove.some = You removed some unsurfaced, fenced land
+whatHappenedTo.landUnsurfacedFenced.remove.all = You removed all unsurfaced, fenced land
 whatHappenedTo.landUnsurfacedFenced.error = Select what has happened to unsurfaced, fenced land
 
-whatHappenedTo.landUnSurfacedOpen.title = What has happened to land un-surfaced open?
-whatHappenedTo.landUnSurfacedOpen.added = You added land un-surfaced open
-whatHappenedTo.landUnSurfacedOpen.remove.some = You removed some land un-surfaced open
-whatHappenedTo.landUnSurfacedOpen.remove.all = You removed all land un-surfaced open
+whatHappenedTo.landUnSurfacedOpen.title = What has happened to unsurfaced, open land?
+whatHappenedTo.landUnSurfacedOpen.added = You added unsurfaced, open land
+whatHappenedTo.landUnSurfacedOpen.remove.some = You removed some unsurfaced, open land
+whatHappenedTo.landUnSurfacedOpen.remove.all = You removed all unsurfaced, open land
 whatHappenedTo.landUnSurfacedOpen.error = Select what has happened to unsurfaced, open land
 
 whatHappenedTo.portableBuildings.title = What has happened to portable buildings?
