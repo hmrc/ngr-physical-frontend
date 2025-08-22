@@ -167,3 +167,8 @@ GET        /what-happened-to-solar-panels                                       
 POST       /what-happened-to-solar-panels                                          controllers.WhatHappenedToController.onPageSubmitSolarPanels(mode: Mode = NormalMode)
 GET        /change-what-happened-to-solar-panels                                   controllers.WhatHappenedToController.onPageLoadSolarPanels(mode: Mode = CheckMode)
 POST       /change-what-happened-to-solar-panels                                   controllers.WhatHappenedToController.onPageSubmitSolarPanels(mode: Mode = CheckMode)
+
+
+
+GET        /supporting-documents                                   controllers.SupportingDocumentsController.onPageLoad()
+POST       /supporting-documents                                   controllers.SupportingDocumentsController.next()
