@@ -320,11 +320,11 @@ whatHappenedTo.landHardSurfacedFenced.remove.some = You removed some hard-surfac
 whatHappenedTo.landHardSurfacedFenced.remove.all = You removed all hard-surfaced, fenced land
 whatHappenedTo.landHardSurfacedFenced.error = Select what has happened to hard-surfaced, fenced land
 
-whatHappenedTo.landHardSurfacedOpen.title = What has happened to hard surfaced, open land?
-whatHappenedTo.landHardSurfacedOpen.added = You added hard surfaced, open land
-whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some hard surfaced, open land
-whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all hard surfaced, open land
-whatHappenedTo.landHardSurfacedOpen.error = Select what has happened to hard surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.title = What has happened to hard-surfaced, open land?
+whatHappenedTo.landHardSurfacedOpen.added = You added hard-surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some hard-surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all hard-surfaced, open land
+whatHappenedTo.landHardSurfacedOpen.error = Select what has happened to hard-surfaced, open land
 
 whatHappenedTo.landGravelledFenced.title = What has happened to gravelled, fenced land?
 whatHappenedTo.landGravelledFenced.added = You added gravelled, fenced land
