@@ -123,7 +123,7 @@ object ExternalFeature extends Enumerable.Implicits {
     if (value == "none") {
       messages("externalFeature.none")
     } else {
-      messages(s"externalFeature.${feature.toString}.value", value)
+      messages(s"externalFeature.$value", value)
     }
   }
 

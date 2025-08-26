@@ -192,6 +192,27 @@ internalFeature.sprinklers.value = In {0} of the property
 internalFeature.none = None
 internalFeature.compressedAir.none = Removed all
 
+externalFeature.loadingBays = Loading bays
+externalFeature.lockupGarages = Lock-up garages
+externalFeature.outdoorSeating = Outdoor seating
+externalFeature.parking = Parking
+externalFeature.solarPanels = Solar panels
+externalFeature.advertisingDisplays = Advertising displays on your property
+externalFeature.bikeSheds = Bike sheds
+externalFeature.canopies = Canopies
+externalFeature.landHardSurfacedFenced = Hard-surfaced, fenced land
+externalFeature.landHardSurfacedOpen = Hard-surfaced, open land
+externalFeature.landGravelledFenced = Gravelled, fenced land
+externalFeature.landGravelledOpen = Gravelled, open land
+externalFeature.landUnsurfacedFenced = Unsurfaced, fenced land
+externalFeature.landUnSurfacedOpen = Unsurfaced, open land
+externalFeature.portableBuildings = Portable buildings
+externalFeature.shippingContainers = Shipping containers
+
+externalFeature.removedSome = Removed Some
+externalFeature.removedAll = Removed all
+externalFeature.added = Added
+
 securityCamerasChange.title = How many security cameras are there inside the property?
 securityCamerasChange.heading = How many security cameras are there inside the property?
 securityCamerasChange.checkYourAnswersLabel = SecurityCamerasChange
