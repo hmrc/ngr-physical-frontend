@@ -43,7 +43,6 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: SmallCheckYourAnswersView
                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-  val form: Form[Boolean] = formProvider()
 
   private def getRows(viewType: CYAViewType)(implicit request: OptionalDataRequest[AnyContent]): SummaryList = {
     viewType match {
@@ -54,12 +53,15 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
 
   def onPageLoad(viewType: CYAViewType): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
+      val form: Form[Boolean] = formProvider(viewType)
       val rows = getRows(viewType)
       Ok(view(viewType, request.property.addressFull, rows, form, createDefaultNavBar()))
   }
 
   def onSubmit(viewType: CYAViewType): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
+      val form: Form[Boolean] = formProvider(viewType)
+      
       form.bindFromRequest().fold(
         formWithErrors =>
           val rows = getRows(viewType)

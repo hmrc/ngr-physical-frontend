@@ -406,7 +406,8 @@ supporting.help.details4 = Project plans or a schedule of works need to show wha
 
 internalCheckYourAnswers.title = Check and confirm changes to internal features
 internalCheckYourAnswers.another = Do you want to tell us about another internal feature?
-smallCheckYourAnswers.error.required = error
+smallCheckYourAnswers.internal.error.required = Select yes if you want to tell us about another internal feature
+smallCheckYourAnswers.external.error.required = Select yes if you want to tell us about another external feature
 
 whichExternalFeature.hint = You can tell us about one feature at a time.
 

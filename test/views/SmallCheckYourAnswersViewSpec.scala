@@ -54,7 +54,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
 
   "SmallCheckYourAnswersView" must {
     "show correct text" in {
-      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, rows = SummaryList(Seq(summaryListRow)), form = formProvider(), navigationBarContent = navBarContent()).body)
+      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, rows = SummaryList(Seq(summaryListRow)), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Check and confirm changes to internal features"
       elementText(Selectors.another)(document) mustBe "Do you want to tell us about another internal feature?"

@@ -17,15 +17,20 @@
 package forms
 
 import forms.mappings.Mappings
-import models.{External, HaveYouChangedControllerUse, Internal, Space}
+import models.{CYAExternal, CYAInternal, External, HaveYouChangedControllerUse, Internal, Space, CYAViewType}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class SmallCheckYourAnswersFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(viewType: CYAViewType): Form[Boolean] =
+    val errorKey = viewType match {
+      case CYAInternal => "smallCheckYourAnswers.internal.error.required"
+      case CYAExternal => "smallCheckYourAnswers.external.error.required"
+    }
+    
     Form(
-      "value" -> boolean(requiredKey = "smallCheckYourAnswers.error.required")
+      "value" -> boolean(requiredKey = errorKey)
     )
 }
