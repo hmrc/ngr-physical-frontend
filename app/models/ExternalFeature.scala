@@ -34,9 +34,6 @@ import viewmodels.govuk.all.{ActionItemViewModel, SummaryListRowViewModel, Value
 
 sealed trait ExternalFeature
 
-
-sealed trait  ExternalFeatureGroup1 extends ExternalFeature
-
 object ExternalFeature extends Enumerable.Implicits {
 
   case object LoadingBays extends WithName("loadingBays") with ExternalFeature
@@ -58,7 +55,8 @@ object ExternalFeature extends Enumerable.Implicits {
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
+    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen,
+    LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
   )
 
   def withNameOption(name: String): Option[ExternalFeature] =

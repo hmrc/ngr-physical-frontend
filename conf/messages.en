@@ -278,7 +278,7 @@ whichExternalFeature.error.dropdown = Select an external feature
 whichExternalFeature.change.hidden = WhichExternalFeature
 
 whichExternalFeature.loadingBays = Loading bays
-whichExternalFeature.lockupGarages = Lockup garages
+whichExternalFeature.lockupGarages = Lock-up garages
 whichExternalFeature.outdoorSeating = Outdoor seating
 whichExternalFeature.parking = Parking
 whichExternalFeature.solarPanels = Solar panels
@@ -403,182 +403,13 @@ supporting.help.details1 = Plans can be drawings with measurements, plans drawn 
 supporting.help.details2 = Photos must show what the property was like after the changes.
 supporting.help.details3 = Letters or emails must be about the changes. For example, receipts from suppliers or confirmation from your builder about the work they have done.
 supporting.help.details4 = Project plans or a schedule of works need to show what work was done when.
-howMuchOfProperty.airConditioning.title = How much of the property has air conditioning
-howMuchOfProperty.airConditioning.hint = Only include systems that cool, or both cool and heat. Do not include central heating or portable air conditioning
-howMuchOfProperty.airConditioning.all = All of the property has air conditioning
-howMuchOfProperty.airConditioning.some = Some of the property has air conditioning
-howMuchOfProperty.airConditioning.none = None of the property has air conditioning
-howMuchOfProperty.airConditioning.error = Select how much of the property has air conditioning
-
-howMuchOfProperty.escalators.title = Where are escalators in the property?
-howMuchOfProperty.escalators.hint =
-howMuchOfProperty.escalators.all = There are escalators between all floors
-howMuchOfProperty.escalators.some = There are escalators between some floors
-howMuchOfProperty.escalators.none = None of the property has escalators
-howMuchOfProperty.escalators.error = Select which floors of the property have escalators
-
-howMuchOfProperty.goodsLift.title = Which floors of the property have goods lifts?
-howMuchOfProperty.goodsLift.hint =
-howMuchOfProperty.goodsLift.all = All floors have goods lifts
-howMuchOfProperty.goodsLift.some = Some floors have goods lifts
-howMuchOfProperty.goodsLift.none = None of the property has goods lifts
-howMuchOfProperty.goodsLift.error = Select which floors of the property have goods lifts
-
-howMuchOfProperty.passengerLift.title = Which floors of the property have passenger lifts?
-howMuchOfProperty.passengerLift.hint =
-howMuchOfProperty.passengerLift.all = All floors have passenger lifts
-howMuchOfProperty.passengerLift.some = Some floors have passenger lifts
-howMuchOfProperty.passengerLift.none = None of the property has passenger lifts
-howMuchOfProperty.passengerLift.error = Select which floors of the property have passenger lifts
-
-howMuchOfProperty.heating.title = How much of the property has heating?
-howMuchOfProperty.heating.hint = Only include systems that heat, like central heating. Do not include systems that cool and heat or portable heating.
-howMuchOfProperty.heating.all = All of the property has heating
-howMuchOfProperty.heating.some = Some of the property has heating
-howMuchOfProperty.heating.none = None of the property has heating
-howMuchOfProperty.heating.error = Select how much of the property has heating
-
-howMuchOfProperty.compressedAir.title = What has happened to compressed air systems?
-howMuchOfProperty.compressedAir.hint = Do not include changes to portable air compressors.
-howMuchOfProperty.compressedAir.all = You added compressed air systems
-howMuchOfProperty.compressedAir.some = You removed some compressed air systems
-howMuchOfProperty.compressedAir.none = You removed all compressed air systems
-howMuchOfProperty.compressedAir.error = Select how much of the property has air compressors
-
-howMuchOfProperty.sprinklers.title = How much of the property has sprinklers?
-howMuchOfProperty.sprinklers.hint =
-howMuchOfProperty.sprinklers.all = All of the property has sprinklers
-howMuchOfProperty.sprinklers.some = Some of the property has sprinklers
-howMuchOfProperty.sprinklers.none = None of the property has sprinklers
-howMuchOfProperty.sprinklers.error = Select how much of the property has sprinklers
 
 internalCheckYourAnswers.title = Check and confirm changes to internal features
 internalCheckYourAnswers.another = Do you want to tell us about another internal feature?
 smallCheckYourAnswers.error.required = error
 
-whichExternalFeature.title = Which external feature have you changed?
-whichExternalFeature.heading = Which external feature have you changed?
-whichExternalFeature.other = Other external feature
-whichExternalFeature.selectOther = Select other external feature
-whichExternalFeature.chooseOther = Choose external feature
-whichExternalFeature.checkYourAnswersLabel = Which external feature have you changed?
-whichExternalFeature.error.required = Select which external feature you have changed
-whichExternalFeature.error.dropdown = Select an external feature
-whichExternalFeature.change.hidden = WhichExternalFeature
 whichExternalFeature.hint = You can tell us about one feature at a time.
-
-whichExternalFeature.loadingBays = Loading bays
-whichExternalFeature.lockupGarages = Lock-up garages
-whichExternalFeature.outdoorSeating = Outdoor seating
-whichExternalFeature.parking = Parking
-whichExternalFeature.solarPanels = Solar panels
-whichExternalFeature.advertisingDisplays = Advertising displays on your property
-whichExternalFeature.bikeSheds = Bike sheds
-whichExternalFeature.canopies = Canopies
-whichExternalFeature.landHardSurfacedFenced = Land - hard-surfaced, fenced
-whichExternalFeature.landHardSurfacedOpen = Land - hard-surfaced, open
-whichExternalFeature.landGravelledFenced = Land - gravelled, fenced
-whichExternalFeature.landGravelledOpen = Land - gravelled, open
-whichExternalFeature.landUnsurfacedFenced = Land - unsurfaced, fenced
-whichExternalFeature.landUnSurfacedOpen = Land - unsurfaced, open
-whichExternalFeature.portableBuildings = Portable buildings
-whichExternalFeature.shippingContainers = Shipping containers
 
 externalCheckYourAnswers.title = Check and confirm changes to external features
 externalCheckYourAnswers.another = Do you want to tell us about another external feature?
 
-whatHappenedTo.loadingBays.title = What has happened to loading Bays?
-whatHappenedTo.loadingBays.added = You added loading Bays
-whatHappenedTo.loadingBays.remove.some =  You removed some loading Bays
-whatHappenedTo.loadingBays.remove.all = You removed all loading Bays
-whatHappenedTo.loadingBays.error = Select what has happened to loading bays
-
-whatHappenedTo.lockupGarages.title = What has happened to lockup garages?
-whatHappenedTo.lockupGarages.added = You added lockup garages
-whatHappenedTo.lockupGarages.remove.some = You removed some lockup garages
-whatHappenedTo.lockupGarages.remove.all = You removed all lockup garages
-whatHappenedTo.lockupGarages.error = Select what has happened to lock-up garages
-
-whatHappenedTo.outdoorSeating.title = What has happened to outdoor seating?
-whatHappenedTo.outdoorSeating.added = You added outdoor seating
-whatHappenedTo.outdoorSeating.remove.some = You removed some outdoor seating
-whatHappenedTo.outdoorSeating.remove.all = You removed all outdoor seating
-whatHappenedTo.outdoorSeating.error = Select what has happened to outdoor seating
-
-whatHappenedTo.parking.title = What has happened to parking?
-whatHappenedTo.parking.added = You added parking
-whatHappenedTo.parking.remove.some = You removed some parking
-whatHappenedTo.parking.remove.all = You removed all parking
-whatHappenedTo.parking.error = Select what has happened to parking
-
-whatHappenedTo.solarPanels.title = What has happened to solar panels?
-whatHappenedTo.solarPanels.added = You added solar panels
-whatHappenedTo.solarPanels.remove.some = You removed some solar panels
-whatHappenedTo.solarPanels.remove.all = You removed all solar panels
-whatHappenedTo.solarPanels.error = Select what has happened to solar panels
-
-whatHappenedTo.advertisingDisplays.title = What has happened to advertising displays?
-whatHappenedTo.advertisingDisplays.added = You added advertising displays
-whatHappenedTo.advertisingDisplays.remove.some = You removed some advertising displays
-whatHappenedTo.advertisingDisplays.remove.all = You removed all advertising displays
-whatHappenedTo.advertisingDisplays.error = Select what has happened to advertising displays on your property
-
-whatHappenedTo.bikeSheds.title = What has happened to bike sheds?
-whatHappenedTo.bikeSheds.added = You added bike sheds
-whatHappenedTo.bikeSheds.remove.some = You removed some bike sheds
-whatHappenedTo.bikeSheds.remove.all = You removed all bike sheds
-whatHappenedTo.bikeSheds.error = Select what has happened to bike sheds
-
-whatHappenedTo.canopies.title = What has happened to canopies?
-whatHappenedTo.canopies.added = You added canopies
-whatHappenedTo.canopies.remove.some = You removed some canopies
-whatHappenedTo.canopies.remove.all = You removed all canopies
-whatHappenedTo.canopies.error = Select what has happened to canopies
-
-whatHappenedTo.landHardSurfacedFenced.title = What has happened to land hard surfaced fenced?
-whatHappenedTo.landHardSurfacedFenced.added = You added land hard surfaced fenced
-whatHappenedTo.landHardSurfacedFenced.remove.some = You removed some land hard surfaced fenced
-whatHappenedTo.landHardSurfacedFenced.remove.all = You removed all land hard surfaced fenced
-whatHappenedTo.landHardSurfacedFenced.error = Select what has happened to hard-surfaced, fenced land
-
-whatHappenedTo.landHardSurfacedOpen.title = What has happened to land hard surfaced open?
-whatHappenedTo.landHardSurfacedOpen.added = You added land hard surfaced open
-whatHappenedTo.landHardSurfacedOpen.remove.some = You removed some land hard surfaced open
-whatHappenedTo.landHardSurfacedOpen.remove.all = You removed all land hard surfaced open
-whatHappenedTo.landHardSurfacedOpen.error = Select what has happened to hard surfaced, open land
-
-whatHappenedTo.landGravelledFenced.title = What has happened to land gravelled fenced?
-whatHappenedTo.landGravelledFenced.added = You added land gravelled fenced
-whatHappenedTo.landGravelledFenced.remove.some = You removed some land gravelled fenced
-whatHappenedTo.landGravelledFenced.remove.all = You removed all land gravelled fenced
-whatHappenedTo.landGravelledFenced.error = Select what has happened to gravelled, fenced land
-
-whatHappenedTo.landGravelledOpen.title = What has happened to land gravelled open?
-whatHappenedTo.landGravelledOpen.added = You added land gravelled open
-whatHappenedTo.landGravelledOpen.remove.some = You removed some land gravelled open
-whatHappenedTo.landGravelledOpen.remove.all = You removed all land gravelled open
-whatHappenedTo.landGravelledOpen.error = Select what has happened to gravelled, open land
-
-whatHappenedTo.landUnsurfacedFenced.title = What has happened to land un-surfaced fenced?
-whatHappenedTo.landUnsurfacedFenced.added = You added land un-surfaced fenced
-whatHappenedTo.landUnsurfacedFenced.remove.some = You removed some land un-surfaced fenced
-whatHappenedTo.landUnsurfacedFenced.remove.all = You removed all land un-surfaced fenced
-whatHappenedTo.landUnsurfacedFenced.error = Select what has happened to unsurfaced, fenced land
-
-whatHappenedTo.landUnSurfacedOpen.title = What has happened to land un-surfaced open?
-whatHappenedTo.landUnSurfacedOpen.added = You added land un-surfaced open
-whatHappenedTo.landUnSurfacedOpen.remove.some = You removed some land un-surfaced open
-whatHappenedTo.landUnSurfacedOpen.remove.all = You removed all land un-surfaced open
-whatHappenedTo.landUnSurfacedOpen.error = Select what has happened to unsurfaced, open land
-
-whatHappenedTo.portableBuildings.title = What has happened to portable buildings?
-whatHappenedTo.portableBuildings.added = You added portable buildings
-whatHappenedTo.portableBuildings.remove.some = You removed some portable buildings
-whatHappenedTo.portableBuildings.remove.all = You removed all portable buildings
-whatHappenedTo.portableBuildings.error = Select what has happened to portable buildings
-
-whatHappenedTo.shippingContainers.title = What has happened to shipping containers?
-whatHappenedTo.shippingContainers.added = You added shipping containers
-whatHappenedTo.shippingContainers.remove.some = You removed some shipping containers
-whatHappenedTo.shippingContainers.remove.all = You removed all shipping containers
-whatHappenedTo.shippingContainers.error = Select what has happened to shipping containers

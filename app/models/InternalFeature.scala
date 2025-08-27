@@ -62,13 +62,6 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getPage(feature: InternalFeature): QuestionPage[?] = {
-    feature match {
-      case group: InternalFeatureGroup1 => HowMuchOfProperty.page(group)
-      case SecurityCamera => SecurityCamerasChangePage
-    }
-  }
-
   def getAnswers(sessionRepository: SessionRepository)
                 (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
     request.userAnswers.toSeq.flatMap { answers =>
