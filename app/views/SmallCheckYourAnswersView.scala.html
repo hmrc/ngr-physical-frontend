@@ -18,37 +18,39 @@
 @import config.AppConfig
 @import views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
-@import models.InternalFeature
+@import models.CYAViewType
 
 @this(
     layout: Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukSummarySummaryList: GovukSummaryList
 )
 
-@(address: String, form: Form[InternalFeature], navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(viewType: CYAViewType, address: String, rows: SummaryList, form: Form[Boolean], navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("whichInternalFeature.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(messages("smallCheckYourAnswers.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.WhichInternalFeatureController.onSubmit, Symbol("autoComplete") -> "off") {
-
+    @formHelper(action = routes.SmallCheckYourAnswersController.onSubmit(viewType), Symbol("autoComplete") -> "off") {
+    
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
-
+        
         <span class="govuk-caption-m">@address</span>
-        <h1 class="govuk-heading-l">@messages("whichInternalFeature.title")</h1>
-        <p class="govuk-body">@messages("whichInternalFeature.hint")</p>
+        <h1 class="govuk-heading-l">@messages(CYAViewType.titleKey(viewType))</h1>
+
+        @govukSummarySummaryList(rows)
+
         @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = Legend(),
-                items  = InternalFeature.options
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(messages(CYAViewType.anotherKey(viewType)), classes = "govuk-fieldset__legend--m")
             )
         )
-
+        
         @govukButton(
             ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
         )

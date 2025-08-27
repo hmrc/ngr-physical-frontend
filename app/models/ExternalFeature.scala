@@ -16,16 +16,23 @@
 
 package models
 
+import controllers.routes
 import models.ExternalFeature.*
+import models.requests.OptionalDataRequest
+import models.ExternalFeature.*
+import pages.*
 import play.api.i18n.Messages
+import play.api.mvc.{AnyContent, Call}
+import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.govuk.all.{ActionItemViewModel, SummaryListRowViewModel, ValueViewModel, stringToKey, stringToText}
 
 sealed trait ExternalFeature
-
 
 object ExternalFeature extends Enumerable.Implicits {
 
@@ -48,8 +55,8 @@ object ExternalFeature extends Enumerable.Implicits {
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced,
-    LandGravelledOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
+    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen,
+    LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
   )
 
   def withNameOption(name: String): Option[ExternalFeature] =
@@ -73,8 +80,8 @@ object ExternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichExternalFeature.chooseOther")) +:
         remaining.map { value =>
-         SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
-      }
+          SelectItem(value = Some(value.toString), text = messages(s"whichExternalFeature.${value.toString}"))
+        }
     )
 
     val govukSelectComponent: GovukSelect = new GovukSelect(
@@ -92,6 +99,73 @@ object ExternalFeature extends Enumerable.Implicits {
 
     hardcodedItems :+ extraItem
 
+  }
+
+  val pageSet: Seq[QuestionPage[WhatHappenedTo]] = Seq(
+    WhatHappenedToLoadingBaysPage,
+    WhatHappenedToLockupGaragesPage,
+    WhatHappenedToOutdoorSeatingPage,
+    WhatHappenedToParkingPage,
+    WhatHappenedToSolarPanelsPage,
+    WhatHappenedToAdvertisingDisplaysPage,
+    WhatHappenedToBikeShedsPage,
+    WhatHappenedToCanopiesPage,
+    WhatHappenedToLandHardSurfacedFencedPage,
+    WhatHappenedToLandHardSurfacedOpenPage,
+    WhatHappenedToLandGravelledFencedPage,
+    WhatHappenedToLandHardSurfacedOpenPage,
+    WhatHappenedToLandUnsurfacedFencedPage,
+    WhatHappenedToLandUnsurfacedOpenPage,
+    WhatHappenedToPortableBuildingsPage,
+    WhatHappenedToShippingContainersPage
+  )
+
+  def valueString(feature: ExternalFeature, value: String)(implicit messages: Messages): String = {
+    if (value == "none") {
+      messages("externalFeature.none")
+    } else {
+      messages(s"externalFeature.$value", value)
+    }
+  }
+
+  def changeLink(feature: ExternalFeature): Call = {
+    feature match {
+      case LoadingBays => routes.WhatHappenedToController.onPageLoadLoadingBays(CheckMode)
+      case LockupGarages => routes.WhatHappenedToController.onPageLoadLockupGarage(CheckMode)
+      case OutdoorSeating => routes.WhatHappenedToController.onPageLoadOutdoorSeating(CheckMode)
+      case Parking => routes.WhatHappenedToController.onPageLoadParking(CheckMode)
+      case SolarPanels => routes.WhatHappenedToController.onPageLoadSolarPanels(CheckMode)
+      case AdvertisingDisplays => routes.WhatHappenedToController.onPageLoadAdvertisingDisplays(CheckMode)
+      case BikeSheds => routes.WhatHappenedToController.onPageLoadBikeSheds(CheckMode)
+      case Canopies => routes.WhatHappenedToController.onPageLoadCanopies(CheckMode)
+      case LandHardSurfacedFenced => routes.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(CheckMode)
+      case LandHardSurfacedOpen => routes.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(CheckMode)
+      case LandGravelledFenced => routes.WhatHappenedToController.onPageLoadLandGravelledFenced(CheckMode)
+      case LandGravelledOpen => routes.WhatHappenedToController.onPageLoadLandGravelledOpen(CheckMode)
+      case LandUnsurfacedFenced => routes.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(CheckMode)
+      case LandUnsurfacedOpen => routes.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(CheckMode)
+      case PortableBuildings => routes.WhatHappenedToController.onPageLoadPortableBuildings(CheckMode)
+      case ShippingContainers => routes.WhatHappenedToController.onPageLoadShippingContainers(CheckMode)
+    }
+  }
+
+  def getAnswers(sessionRepository: SessionRepository)
+                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
+    request.userAnswers.toSeq.flatMap { answers =>
+      ExternalFeature.values.flatMap { feature =>
+        answers.get(WhatHappenedTo.page(feature)).map { value =>
+          SummaryListRowViewModel(
+            key = s"externalFeature.${feature.toString}",
+            value = ValueViewModel(valueString(feature, value.toString)),
+            actions = Seq(
+              ActionItemViewModel("site.change", changeLink(feature).url),
+              ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.removeExternal(feature.toString).url)
+            ),
+            actionClasses = "govuk-!-width-one-third"
+          )
+        }
+      }
+    }
   }
 
   implicit val enumerable: Enumerable[ExternalFeature] =

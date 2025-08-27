@@ -47,7 +47,7 @@ class WhichExternalFeatureViewSpec extends ViewBaseSpec {
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Which external feature have you changed?"
       elementText(Selectors.loadingBays)(document) mustBe "Loading bays"
-      elementText(Selectors.lockupGarages)(document) mustBe "Lockup garages"
+      elementText(Selectors.lockupGarages)(document) mustBe "Lock-up garages"
       elementText(Selectors.outdoorSeating)(document) mustBe "Outdoor seating"
       elementText(Selectors.parking)(document) mustBe "Parking"
       elementText(Selectors.solarPanels)(document) mustBe "Solar panels"

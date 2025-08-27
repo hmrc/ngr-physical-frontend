@@ -60,6 +60,26 @@ object WhatHappenedTo extends Enumerable.Implicits {
 
   def errorKey(feature: ExternalFeature): String = s"whatHappenedTo.${feature.toString}.error"
 
+  def pageLoadAction(feature: ExternalFeature, mode: Mode): Call =
+    feature match {
+      case ExternalFeature.LoadingBays => onPageLoadLoadingBays(mode)
+      case ExternalFeature.LockupGarages => onPageLoadLockupGarage(mode)
+      case ExternalFeature.OutdoorSeating => onPageLoadOutdoorSeating(mode)
+      case ExternalFeature.Parking => onPageLoadParking(mode)
+      case ExternalFeature.SolarPanels => onPageLoadSolarPanels(mode)
+      case ExternalFeature.AdvertisingDisplays => onPageLoadAdvertisingDisplays(mode)
+      case ExternalFeature.BikeSheds => onPageLoadBikeSheds(mode)
+      case ExternalFeature.Canopies => onPageLoadCanopies(mode)
+      case ExternalFeature.LandHardSurfacedFenced => onPageLoadLandHardSurfacedFenced(mode)
+      case ExternalFeature.LandHardSurfacedOpen => onPageLoadLandHardSurfacedOpen(mode)
+      case ExternalFeature.LandGravelledFenced => onPageLoadLandGravelledFenced(mode)
+      case ExternalFeature.LandGravelledOpen => onPageLoadLandGravelledOpen(mode)
+      case ExternalFeature.LandUnsurfacedFenced => onPageLoadLandUnsurfacedFenced(mode)
+      case ExternalFeature.LandUnsurfacedOpen => onPageLoadLandUnsurfacedOpen(mode)
+      case ExternalFeature.PortableBuildings => onPageLoadPortableBuildings(mode)
+      case ExternalFeature.ShippingContainers => onPageLoadShippingContainers(mode)
+    }
+  
   def submitAction(feature: ExternalFeature, mode: Mode): Call =
     feature match {
       case LoadingBays => onPageSubmitLoadLoadingBays(mode: Mode)

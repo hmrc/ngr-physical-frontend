@@ -19,13 +19,21 @@ package models
 import controllers.routes
 import models.InternalFeature.*
 import pages.*
+import controllers.routes
+import models.InternalFeature.*
+import models.requests.OptionalDataRequest
+import pages.*
 import play.api.i18n.Messages
-import play.api.mvc.Call
+import play.api.mvc.{AnyContent, Call}
+import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SelectItem, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukLabel, GovukSelect}
 import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAndErrorMessage}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
 sealed trait InternalFeature
 
@@ -48,12 +56,82 @@ object InternalFeature extends Enumerable.Implicits {
 
   def withNameOption(name: String): Option[InternalFeature] =
     values.find(_.toString == name)
-  
+
   def toGroup1(feature: InternalFeature): Option[InternalFeatureGroup1] = feature match {
     case f: InternalFeatureGroup1 => Some(f)
     case _ => None
   }
-  
+
+  def getAnswers(sessionRepository: SessionRepository)
+                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
+    request.userAnswers.toSeq.flatMap { answers =>
+      InternalFeature.values.flatMap {
+        case feature: InternalFeatureGroup1 =>
+          answers.get(HowMuchOfProperty.page(feature)).map { value =>
+            SummaryListRowViewModel(
+              key = s"internalFeature.${feature.toString}",
+              value = ValueViewModel(valueString(feature, value.toString)),
+              actions = Seq(
+                ActionItemViewModel("site.change", changeLink(feature).url),
+                ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.removeInternal(feature.toString).url)
+              ),
+              actionClasses = "govuk-!-width-one-third"
+            )
+          }
+
+        case SecurityCamera =>
+          answers.get(SecurityCamerasChangePage).map { value =>
+            SummaryListRowViewModel(
+              key = "internalFeature.securityCamera",
+              value = ValueViewModel(value.toString),
+              actions = Seq(
+                ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
+                ActionItemViewModel("site.remove", routes.SmallCheckYourAnswersController.removeInternal("securityCamera").url)
+              ),
+              actionClasses = "govuk-!-width-one-third"
+            )
+          }
+
+      }
+    }
+  }
+
+  def changeLink(feature: InternalFeature): Call = {
+    feature match {
+      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(CheckMode)
+      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(CheckMode)
+      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(CheckMode)
+      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(CheckMode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(CheckMode)
+      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(CheckMode)
+      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(CheckMode)
+      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(CheckMode)
+    }
+  }
+
+  val pageSet: Seq[Page] = Seq(
+    HowMuchOfPropertyAirConPage,
+    HowMuchOfPropertyHeatingPage,
+    HowMuchOfPropertySprinklersPage,
+    HowMuchOfPropertyGoodsLiftPage,
+    HowMuchOfPropertyEscalatorsPage,
+    HowMuchOfPropertyPassengerLiftPage,
+    HowMuchOfPropertyCompressedAirPage,
+    SecurityCamerasChangePage
+  )
+
+
+  def valueString(feature: InternalFeatureGroup1, value: String)(implicit messages: Messages): String = {
+    if (value == "none") {
+      feature match {
+        case CompressedAir => messages("internalFeature.compressedAir.none")
+        case _ => messages("internalFeature.none")
+      }
+    } else {
+      messages(s"internalFeature.${feature.toString}.value", value)
+    }
+  }
+
   def options(implicit messages: Messages): Seq[RadioItem] = {
 
     val (firstFive, remaining) = values.splitAt(5)
@@ -61,7 +139,7 @@ object InternalFeature extends Enumerable.Implicits {
     val hardcodedItems = firstFive.zipWithIndex.map {
       case (value, index) =>
         RadioItem(
-          content = Text(messages(s"whichInternalFeature.${value.toString}")),
+          content = Text(messages(s"internalFeature.${value.toString}")),
           value = Some(value.toString),
           id = Some(s"value_$index")
         )
@@ -72,7 +150,7 @@ object InternalFeature extends Enumerable.Implicits {
       name = "otherSelect",
       items = SelectItem(value = None, text = messages("whichInternalFeature.chooseOther")) +:
         remaining.map { value =>
-         SelectItem(value = Some(value.toString), text = messages(s"whichInternalFeature.${value.toString}"))
+         SelectItem(value = Some(value.toString), text = messages(s"internalFeature.${value.toString}"))
       }
     )
 

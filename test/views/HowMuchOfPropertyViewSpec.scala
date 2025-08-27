@@ -37,7 +37,6 @@ class HowMuchOfPropertyViewSpec extends ViewBaseSpec {
     val noneOf = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(3) > label"
     val button = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
   }
-
   
   "HowMuchOfPropertyView" must {
     
