@@ -414,3 +414,6 @@ whichExternalFeature.hint = You can tell us about one feature at a time.
 externalCheckYourAnswers.title = Check and confirm changes to external features
 externalCheckYourAnswers.another = Do you want to tell us about another external feature?
 
+sureWantRemoveChange.title = Are you sure you want to remove the change to Internal/External feature?
+sureWantRemoveChange.error.required = Select yes if you want to remove changes to Internal/External feature
+
