@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import forms.mappings.Mappings
-import models.{External, HaveYouChangedControllerUse, Internal, Space}
-import play.api.data.Form
+import play.api.i18n.Messages
 
-import javax.inject.Inject
-
-class SureWantRemoveChangeFormProvider @Inject() extends Mappings {
-
-  def apply(featureString: String): Form[Boolean] =
-    Form(
-      "value" -> boolean("sureWantRemoveChange.error.required", "", Seq(featureString))
-    )
+object Sure {
+  def message(featureString: String)(implicit messages: Messages): String = {
+    messages("sureWantRemoveChange.title", messages(featureString))
+  }
 }

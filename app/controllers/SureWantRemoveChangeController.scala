@@ -20,6 +20,7 @@ import actions.*
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
 import models.NavBarPageContents.createDefaultNavBar
+import models.Sure
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -45,8 +46,8 @@ class SureWantRemoveChangeController @Inject()(
   def onPageLoad(featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        val form: Form[Boolean] = formProvider()
-        Ok(view(request.property.addressFull, "sureWantRemoveChange.title", featureString, form, createDefaultNavBar()))
+        val form: Form[Boolean] = formProvider(featureString)
+        Ok(view(request.property.addressFull, Sure.message(featureString), featureString, form, createDefaultNavBar()))
     }
 
   def next(): Action[AnyContent] =
@@ -56,11 +57,11 @@ class SureWantRemoveChangeController @Inject()(
 
   def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val form: Form[Boolean] = formProvider()
+      val form: Form[Boolean] = formProvider(featureString)
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, "sureWantRemoveChange.title", featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, Sure.message(featureString), featureString, formWithErrors, createDefaultNavBar()))),
         {
           case true => Future.successful(Redirect(routes.IndexController.onPageLoad()))
           case false => Future.successful(Redirect(routes.IndexController.onPageLoad()))
