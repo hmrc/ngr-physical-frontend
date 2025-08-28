@@ -185,5 +185,5 @@ GET        /check-and-confirm-changes-to-external-features                      
 POST       /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal)
 GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.SmallCheckYourAnswersController.removeExternal(featureString: String)
 
-GET        /are-you-sure-want-remove-change-to                                   controllers.SureWantRemoveChangeController.onPageLoad()
-POST       /are-you-sure-want-remove-change-to                                   controllers.SureWantRemoveChangeController.onSubmit()
+GET        /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onPageLoad(featureString: String)
+POST       /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onSubmit(featureString: String)

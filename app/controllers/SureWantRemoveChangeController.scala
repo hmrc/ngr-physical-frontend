@@ -19,9 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
-import models.HaveYouChangedControllerUse.{getMessageKeys, pageType}
 import models.NavBarPageContents.createDefaultNavBar
-import models.{External, HaveYouChangedControllerUse, Internal, Mode, Space, UserAnswers}
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -44,11 +42,11 @@ class SureWantRemoveChangeController @Inject()(
                                           view: SureWantRemoveChangeView
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] =
+  def onPageLoad(featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
         val form: Form[Boolean] = formProvider()
-        Ok(view(request.property.addressFull, "sureWantRemoveChange.title", form, createDefaultNavBar()))
+        Ok(view(request.property.addressFull, "sureWantRemoveChange.title", featureString, form, createDefaultNavBar()))
     }
 
   def next(): Action[AnyContent] =
@@ -56,13 +54,13 @@ class SureWantRemoveChangeController @Inject()(
       Redirect(routes.IndexController.onPageLoad())
     }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider()
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, "sureWantRemoveChange.title", formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, "sureWantRemoveChange.title", featureString, formWithErrors, createDefaultNavBar()))),
         {
           case true => Future.successful(Redirect(routes.IndexController.onPageLoad()))
           case false => Future.successful(Redirect(routes.IndexController.onPageLoad()))

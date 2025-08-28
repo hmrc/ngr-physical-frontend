@@ -30,19 +30,20 @@
 @(
     address: String,
     titleKey: String,
+    featureString: String,
     form: Form[Boolean],
     navigationBarContent: NavigationBarContent
 )(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(title(form, messages(titleKey))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages(titleKey, messages(featureString)))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString), Symbol("autoComplete") -> "off") {
 
         <span class="govuk-caption-m">@address</span>
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(content = messages(titleKey), classes = "govuk-fieldset__legend--l")
+                legend = Legend(content = messages(titleKey, messages(featureString)), classes = "govuk-fieldset__legend--l")
             )
         )
         @saveAndContinueButton(msg=messages("site.continue"))
