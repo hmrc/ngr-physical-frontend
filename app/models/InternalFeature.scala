@@ -73,7 +73,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(feature.toString).url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(CYAInternal, feature.toString).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
@@ -86,7 +86,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(value.toString),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad("securityCamera").url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(CYAInternal, "securityCamera").url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )

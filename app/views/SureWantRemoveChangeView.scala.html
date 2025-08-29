@@ -18,6 +18,7 @@
 @import config.AppConfig
 @import views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import models.CYAViewType
 
 @this(
     layout: Layout,
@@ -30,6 +31,7 @@
 @(
     address: String,
     titleKey: String,
+    viewType: CYAViewType,
     featureString: String,
     form: Form[Boolean],
     navigationBarContent: NavigationBarContent
@@ -37,7 +39,11 @@
 
 @layout(pageTitle = Some(title(form, titleKey)), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(viewType, featureString), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
         <span class="govuk-caption-m">@address</span>
         @govukRadios(

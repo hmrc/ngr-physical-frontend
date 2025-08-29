@@ -19,6 +19,7 @@ package controllers
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
+import models.{CYAExternal, CYAInternal, CYAViewType}
 import models.SureWantRemoveChange.getFeatureLabel
 import navigation.Navigator
 import play.api.data.Form
@@ -34,41 +35,39 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SureWantRemoveChangeController @Inject()(
-                                          sessionRepository: SessionRepository,
-                                          navigator: Navigator,
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
                                           formProvider: SureWantRemoveChangeFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: SureWantRemoveChangeView
-                                        )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
+                                        )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(featureString: String): Action[AnyContent] =
+  def onPageLoad(viewType: CYAViewType, featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
         val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
-        Ok(view(request.property.addressFull, getTitle(featureString), featureString, form, createDefaultNavBar()))
+        Ok(view(request.property.addressFull, getTitle(featureString), viewType, featureString, form, createDefaultNavBar()))
     }
 
-  def next(): Action[AnyContent] =
-    (identify andThen getData) {
-      Redirect(routes.IndexController.onPageLoad())
-    }
-
-  def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(viewType: CYAViewType, featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, getTitle(featureString), featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(featureString), viewType, featureString, formWithErrors, createDefaultNavBar()))),
         {
-          case true => Future.successful(Redirect(routes.IndexController.onPageLoad()))
-          case false => Future.successful(Redirect(routes.IndexController.onPageLoad()))
+          case true => {
+            viewType match {
+              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(featureString).url))
+              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(featureString).url))
+            }
+          }
+          case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType)))
         }
       )
   }
-  
+
   private def getTitle(featureString: String)(implicit messages: Messages): String = {
 
     val featureLabel = getFeatureLabel(featureString)
@@ -78,5 +77,5 @@ class SureWantRemoveChangeController @Inject()(
       case None => messages("sureWantRemoveChange.title", featureString)
     }
   }
-  
+
 }
