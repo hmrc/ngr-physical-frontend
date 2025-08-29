@@ -20,14 +20,14 @@ import play.api.i18n.Messages
 
 object SureWantRemoveChange {
   
-  def getFeatureLabel(featureKey: String)(implicit messages: Messages): Option[String] = {
-    val internalKey = s"internalFeature.$featureKey"
-    val externalKey = s"externalFeature.$featureKey"
-
-    if (messages.isDefinedAt(internalKey)) {
-      Some(messages(internalKey).toLowerCase)
-    } else if (messages.isDefinedAt(externalKey)) {
-      Some(messages(externalKey).toLowerCase)
+  def getFeatureValue(viewType: CYAViewType, featureKey: String)(implicit messages: Messages): Option[String] = {
+    val key = viewType match {
+      case CYAInternal => s"internalFeature.$featureKey"
+      case CYAExternal => s"externalFeature.$featureKey"
+    } 
+    
+    if (messages.isDefinedAt(key)) {
+      Some(messages(key).toLowerCase)
     } else {
       None
     }

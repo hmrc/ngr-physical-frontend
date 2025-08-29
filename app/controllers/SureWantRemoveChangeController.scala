@@ -20,7 +20,7 @@ import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
 import models.{CYAExternal, CYAInternal, CYAViewType}
-import models.SureWantRemoveChange.getFeatureLabel
+import models.SureWantRemoveChange.getFeatureValue
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
@@ -45,32 +45,30 @@ class SureWantRemoveChangeController @Inject()(
   def onPageLoad(viewType: CYAViewType, featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
-        Ok(view(request.property.addressFull, getTitle(featureString), viewType, featureString, form, createDefaultNavBar()))
+        val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
+        Ok(view(request.property.addressFull, getTitle(viewType, featureString), viewType, featureString, form, createDefaultNavBar()))
     }
 
   def onSubmit(viewType: CYAViewType, featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
+      val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, getTitle(featureString), viewType, featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, featureString), viewType, featureString, formWithErrors, createDefaultNavBar()))),
         {
-          case true => {
-            viewType match {
+          case true =>
+            viewType match 
               case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(featureString).url))
               case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(featureString).url))
-            }
-          }
           case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType)))
         }
       )
   }
 
-  private def getTitle(featureString: String)(implicit messages: Messages): String = {
+  private def getTitle(viewType: CYAViewType, featureString: String)(implicit messages: Messages): String = {
 
-    val featureLabel = getFeatureLabel(featureString)
+    val featureLabel = getFeatureValue(viewType, featureString)
 
     featureLabel match {
       case Some(label) => messages("sureWantRemoveChange.title", label)
