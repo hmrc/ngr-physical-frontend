@@ -19,7 +19,7 @@ package controllers
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
-import models.{CYAExternal, CYAInternal, CYAViewType}
+import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, InternalFeature}
 import models.SureWantRemoveChange.getFeatureValue
 import navigation.Navigator
 import play.api.data.Form
@@ -29,6 +29,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SureWantRemoveChangeView
 import models.NavBarPageContents.createDefaultNavBar
+import uk.gov.hmrc.http.NotFoundException
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,20 +43,22 @@ class SureWantRemoveChangeController @Inject()(
                                           view: SureWantRemoveChangeView
                                         )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(viewType: CYAViewType, featureString: String): Action[AnyContent] =
+  def onPageLoad(featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
+        val viewType = determineViewType(featureString)
         val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
-        Ok(view(request.property.addressFull, getTitle(viewType, featureString), viewType, featureString, form, createDefaultNavBar()))
+        Ok(view(request.property.addressFull, getTitle(viewType, featureString), featureString, form, createDefaultNavBar()))
     }
 
-  def onSubmit(viewType: CYAViewType, featureString: String): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
+      val viewType = determineViewType(featureString)
       val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, featureString), viewType, featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, featureString), featureString, formWithErrors, createDefaultNavBar()))),
         {
           case true =>
             viewType match 
@@ -65,7 +68,18 @@ class SureWantRemoveChangeController @Inject()(
         }
       )
   }
-
+  
+  private def determineViewType(feature: String): CYAViewType = {
+    val internalFeature = InternalFeature.withNameOption(feature)
+    internalFeature match
+      case Some(feature) => CYAInternal
+      case None =>
+        val externalFeature = ExternalFeature.withNameOption(feature)
+        externalFeature match
+          case Some(feature) => CYAExternal
+          case None => throw new NotFoundException("unable to determine CYAViewType")
+  }
+  
   private def getTitle(viewType: CYAViewType, featureString: String)(implicit messages: Messages): String = {
 
     val featureLabel = getFeatureValue(viewType, featureString)

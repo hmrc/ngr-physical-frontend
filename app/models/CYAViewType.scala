@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.mvc.{JavascriptLiteral, QueryStringBindable}
+import play.api.mvc.JavascriptLiteral
 
 sealed trait CYAViewType
 case object CYAInternal extends CYAViewType
@@ -35,25 +35,4 @@ object CYAViewType {
     case CYAInternal => "internalCheckYourAnswers.another"
     case CYAExternal => "externalCheckYourAnswers.another"
   }
-
-
-  implicit def queryStringBindable(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[CYAViewType] =
-    new QueryStringBindable[CYAViewType] {
-      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, CYAViewType]] =
-        stringBinder.bind(key, params).map {
-          case Right("CYAInternal") => Right(CYAInternal)
-          case Right("CYAExternal") => Right(CYAExternal)
-          case Right(other) => Left(s"Unknown CYAViewType: $other")
-          case Left(error) => Left(error)
-        }
-
-      override def unbind(key: String, value: CYAViewType): String = {
-        val stringValue = value match {
-          case CYAInternal => "CYAInternal"
-          case CYAExternal => "CYAExternal"
-        }
-        stringBinder.unbind(key, stringValue)
-      }
-    }
-
 }
