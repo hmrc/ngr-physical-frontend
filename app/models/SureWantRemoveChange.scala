@@ -18,8 +18,18 @@ package models
 
 import play.api.i18n.Messages
 
-object Sure {
-  def message(featureString: String)(implicit messages: Messages): String = {
-    messages("sureWantRemoveChange.title", messages(featureString))
+object SureWantRemoveChange {
+  
+  def getFeatureLabel(featureKey: String)(implicit messages: Messages): Option[String] = {
+    val internalKey = s"internalFeature.$featureKey"
+    val externalKey = s"externalFeature.$featureKey"
+
+    if (messages.isDefinedAt(internalKey)) {
+      Some(messages(internalKey).toLowerCase)
+    } else if (messages.isDefinedAt(externalKey)) {
+      Some(messages(externalKey).toLowerCase)
+    } else {
+      None
+    }
   }
 }

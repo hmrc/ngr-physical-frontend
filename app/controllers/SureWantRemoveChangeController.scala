@@ -16,18 +16,18 @@
 
 package controllers
 
-import actions.*
+import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
-import models.NavBarPageContents.createDefaultNavBar
-import models.Sure
+import models.SureWantRemoveChange.getFeatureLabel
 import navigation.Navigator
 import play.api.data.Form
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SureWantRemoveChangeView
+import models.NavBarPageContents.createDefaultNavBar
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,8 +46,8 @@ class SureWantRemoveChangeController @Inject()(
   def onPageLoad(featureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        val form: Form[Boolean] = formProvider(featureString)
-        Ok(view(request.property.addressFull, Sure.message(featureString), featureString, form, createDefaultNavBar()))
+        val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
+        Ok(view(request.property.addressFull, getTitle(featureString), featureString, form, createDefaultNavBar()))
     }
 
   def next(): Action[AnyContent] =
@@ -57,15 +57,26 @@ class SureWantRemoveChangeController @Inject()(
 
   def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val form: Form[Boolean] = formProvider(featureString)
+      val form: Form[Boolean] = formProvider(getFeatureLabel(featureString).getOrElse(featureString))
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, Sure.message(featureString), featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(featureString), featureString, formWithErrors, createDefaultNavBar()))),
         {
           case true => Future.successful(Redirect(routes.IndexController.onPageLoad()))
           case false => Future.successful(Redirect(routes.IndexController.onPageLoad()))
         }
       )
   }
+  
+  private def getTitle(featureString: String)(implicit messages: Messages): String = {
+
+    val featureLabel = getFeatureLabel(featureString)
+
+    featureLabel match {
+      case Some(label) => messages("sureWantRemoveChange.title", label)
+      case None => messages("sureWantRemoveChange.title", featureString)
+    }
+  }
+  
 }

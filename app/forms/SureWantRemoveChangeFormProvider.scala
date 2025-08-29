@@ -17,15 +17,15 @@
 package forms
 
 import forms.mappings.Mappings
-import models.{External, HaveYouChangedControllerUse, Internal, Space}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class SureWantRemoveChangeFormProvider @Inject() extends Mappings {
 
-  def apply(featureString: String): Form[Boolean] =
+  def apply(featureLabel: String): Form[Boolean] =
+    
     Form(
-      "value" -> boolean("sureWantRemoveChange.error.required", "", Seq(featureString))
+      "value" -> boolean("sureWantRemoveChange.error.required", "", Seq(featureLabel))
     )
 }
