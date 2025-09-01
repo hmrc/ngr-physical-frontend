@@ -18,12 +18,12 @@ package controllers
 
 import forms.SureWantRemoveChangeFormProvider
 import helpers.ControllerSpecSupport
-import models.{ExternalFeature, InternalFeatureGroup1}
-import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
+import models.ExternalFeature.SolarPanels
+import models.InternalFeature.{AirConditioning, PassengerLift, SecurityCamera}
 import play.api.test.Helpers.*
+import uk.gov.hmrc.http.NotFoundException
 import views.html.SureWantRemoveChangeView
 
-import scala.util.Random
 
 class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
   lazy val view: SureWantRemoveChangeView = inject[SureWantRemoveChangeView]
@@ -33,37 +33,42 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
   )
 
   "SureWantRemoveChangeController" should {
-    val randomFeature = InternalFeatureGroup1.values(Random.nextInt(InternalFeatureGroup1.values.length))
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(randomFeature.toString)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(PassengerLift.toString)(authenticatedFakeRequest)
         status(result) mustBe OK
       }
-
       "return HTML" in {
-        val result = controller.onPageLoad(randomFeature.toString)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(PassengerLift.toString)(authenticatedFakeRequest)
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
+      }
+      "throw an exception for an unknown feature" in {
+        val ex = intercept[NotFoundException] {
+          await(controller.onPageLoad ("unknown feature") (authenticatedFakeRequest) )
+        }
+        ex.getMessage must include("unable to determine CYAViewType")
       }
     }
 
     "onSubmit" must {
-      "redirect to removeInternal" in {
-        val formRequest = requestWithForm(Map("value" -> "true"))
-        val randomInternalFeature = InternalFeatureGroup1.values(Random.nextInt(InternalFeatureGroup1.values.length))
-        val result = controller.onSubmit(randomInternalFeature.toString)(formRequest)
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(randomInternalFeature.toString).url)
+      "redirect to remove an internal feature" in {
+        val internalFeature = AirConditioning
+        val result = controller.onSubmit(internalFeature.toString)(requestWithForm(Map("value" -> "true")))
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(internalFeature.toString).url)
       }
-      "redirect to removeExternal" in {
-        val formRequest = requestWithForm(Map("value" -> "true"))
-        val randomExternalFeature = ExternalFeature.values(Random.nextInt(ExternalFeature.values.length))
-        val result = controller.onSubmit(randomExternalFeature.toString)(formRequest)
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeExternal(randomExternalFeature.toString).url)
+      "redirect to remove an external feature" in {
+        val externalFeature = SolarPanels
+        val result = controller.onSubmit(externalFeature.toString)(requestWithForm(Map("value" -> "true")))
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeExternal(externalFeature.toString).url)
       }
       "bad request when no selection" in {
-        val randomFeature = InternalFeatureGroup1.values(Random.nextInt(InternalFeatureGroup1.values.length))
-        val result = controller.onSubmit(randomFeature.toString)(authenticatedFakeRequest)
-        status(result) mustBe 400
+        val result = controller.onSubmit(SecurityCamera.toString)(authenticatedFakeRequest)
+        status(result) mustBe BAD_REQUEST
+      }
+      "bad request with an invalid form" in {
+        val result = controller.onSubmit(SolarPanels.toString)(requestWithForm(Map("value" -> "invalid")))
+        status(result) mustBe BAD_REQUEST
       }
     }
   }
