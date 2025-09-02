@@ -32,4 +32,13 @@ object SureWantRemoveChange {
       None
     }
   }
+
+  def camelCaseToHyphen(input: String): String = {
+    input.replaceAll("([A-Z])", "-$1").toLowerCase
+  }
+
+  def hyphenToCamelCase(input: String): String = {
+    val parts = input.split("-")
+    parts.headOption.getOrElse("") + parts.drop(1).map(_.capitalize).mkString
+  }
 }
