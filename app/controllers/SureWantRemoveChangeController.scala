@@ -68,18 +68,13 @@ class SureWantRemoveChangeController @Inject()(
         }
       )
   }
-  
+
   private def determineViewType(feature: String): CYAViewType = {
-    val internalFeature = InternalFeature.withNameOption(feature)
-    internalFeature match
-      case Some(feature) => CYAInternal
-      case None =>
-        val externalFeature = ExternalFeature.withNameOption(feature)
-        externalFeature match
-          case Some(feature) => CYAExternal
-          case None => throw new NotFoundException("unable to determine CYAViewType")
+    InternalFeature.withNameOption(feature).map(_ => CYAInternal)
+      .orElse(ExternalFeature.withNameOption(feature).map(_ => CYAExternal))
+      .getOrElse(throw new NotFoundException("unable to determine CYAViewType"))
   }
-  
+
   private def getTitle(viewType: CYAViewType, featureString: String)(implicit messages: Messages): String = {
 
     val featureLabel = getFeatureValue(viewType, featureString)
