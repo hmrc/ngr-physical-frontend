@@ -418,3 +418,8 @@ externalCheckYourAnswers.another = Do you want to tell us about another external
 sureWantRemoveChange.title = Are you sure you want to remove the change to {0}?
 sureWantRemoveChange.error.required = Select yes if you want to remove changes to {0}
 
+anythingElse.title = anythingElse
+anythingElse.heading = anythingElse
+anythingElse.checkYourAnswersLabel = anythingElse
+anythingElse.error.required = Select yes if anythingElse
+anythingElse.change.hidden = AnythingElse
