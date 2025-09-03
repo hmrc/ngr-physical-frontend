@@ -21,6 +21,7 @@ import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
 import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, InternalFeature}
 import models.SureWantRemoveChange.getFeatureValue
+import utils.StringUtils.hyphenToCamelCase
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
@@ -43,27 +44,29 @@ class SureWantRemoveChangeController @Inject()(
                                           view: SureWantRemoveChangeView
                                         )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(featureString: String): Action[AnyContent] =
+  def onPageLoad(hyphenFeatureString: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        val viewType = determineViewType(featureString)
-        val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
-        Ok(view(request.property.addressFull, getTitle(viewType, featureString), featureString, form, createDefaultNavBar()))
+        val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
+        val viewType = determineViewType(camelCaseFeatureString)
+        val form: Form[Boolean] = formProvider(getFeatureValue(viewType, camelCaseFeatureString).getOrElse(hyphenFeatureString))
+        Ok(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, form, createDefaultNavBar()))
     }
 
-  def onSubmit(featureString: String): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(hyphenFeatureString: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      val viewType = determineViewType(featureString)
-      val form: Form[Boolean] = formProvider(getFeatureValue(viewType, featureString).getOrElse(featureString))
+      val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
+      val viewType = determineViewType(camelCaseFeatureString)
+      val form: Form[Boolean] = formProvider(getFeatureValue(viewType, camelCaseFeatureString).getOrElse(hyphenFeatureString))
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, featureString), featureString, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, formWithErrors, createDefaultNavBar()))),
         {
           case true =>
             viewType match 
-              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(featureString).url))
-              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(featureString).url))
+              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString).url))
+              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString).url))
           case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType)))
         }
       )

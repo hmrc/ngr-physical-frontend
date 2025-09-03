@@ -20,6 +20,7 @@ import controllers.routes
 import models.ExternalFeature.*
 import models.requests.OptionalDataRequest
 import models.ExternalFeature.*
+import utils.StringUtils.camelCaseToHyphen
 import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
@@ -159,7 +160,7 @@ object ExternalFeature extends Enumerable.Implicits {
             value = ValueViewModel(valueString(feature, value.toString)),
             actions = Seq(
               ActionItemViewModel("site.change", changeLink(feature).url),
-              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(feature.toString).url)
+              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString)).url)
             ),
             actionClasses = "govuk-!-width-one-third"
           )

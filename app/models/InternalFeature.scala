@@ -21,6 +21,7 @@ import models.InternalFeature.*
 import pages.*
 import controllers.routes
 import models.InternalFeature.*
+import utils.StringUtils.camelCaseToHyphen
 import models.requests.OptionalDataRequest
 import pages.*
 import play.api.i18n.Messages
@@ -73,7 +74,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(feature.toString).url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString)).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
@@ -86,7 +87,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(value.toString),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad("securityCamera").url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString)).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
