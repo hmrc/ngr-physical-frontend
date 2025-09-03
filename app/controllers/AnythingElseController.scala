@@ -21,6 +21,7 @@ import config.AppConfig
 import connectors.NGRConnector
 import forms.{AnythingElseData, AnythingElseFormProvider}
 import models.Mode
+import models.NavBarPageContents.createDefaultNavBar
 import navigation.Navigator
 import pages.AnythingElsePage
 import play.api.data.Form
@@ -54,7 +55,7 @@ class AnythingElseController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(request.property.addressFull, preparedForm, mode))
+      Ok(view(request.property.addressFull, preparedForm, createDefaultNavBar(), mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
@@ -62,7 +63,7 @@ class AnythingElseController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, mode))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
 
         value =>
           for {

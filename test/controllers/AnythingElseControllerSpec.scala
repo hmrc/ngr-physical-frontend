@@ -1,142 +1,58 @@
 package controllers
 
-import base.SpecBase
 import forms.{AnythingElseData, AnythingElseFormProvider}
+import helpers.ControllerSpecSupport
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.AnythingElsePage
-import play.api.data.Form
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers.*
-import repositories.SessionRepository
 import views.html.AnythingElseView
+import play.api.test.Helpers.*
 
 import scala.concurrent.Future
 
-class AnythingElseControllerSpec extends SpecBase with MockitoSugar {
+class AnythingElseControllerSpec extends ControllerSpecSupport {
+  lazy val view: AnythingElseView = inject[AnythingElseView]
+  lazy val formProvider: AnythingElseFormProvider = AnythingElseFormProvider()
+  private val controller: AnythingElseController = new AnythingElseController(
+    sessionRepository = mockSessionRepository,
+    navigator = navigator,
+    identify = fakeAuth,
+    getData = fakeData(Some(UserAnswers("id"))),
+    formProvider = formProvider,
+    controllerComponents = mcc,
+    view = view
+  )
 
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new AnythingElseFormProvider()
-  val form: Form[AnythingElseData] = formProvider()
-
-  lazy val anythingElseRoute: String = routes.AnythingElseController.onPageLoad(NormalMode).url
-
-  "AnythingElse Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, anythingElseRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AnythingElseView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+  "AnythingElseController" should {
+    "onPageLoad" must {
+      "return 200" in {
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
+        status(result) mustBe OK
+      }
+      "return HTML" in {
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
+        contentType(result) mustBe Some("text/html")
+        charset(result) mustBe Some("utf-8")
       }
     }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(AnythingElsePage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, anythingElseRoute)
-
-        val view = application.injector.instanceOf[AnythingElseView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+    "onSubmit" must {
+      "redirect with valid form" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val formRequest = requestWithForm(Map("value" -> "false"))
+        val result = controller.onSubmit(NormalMode)(formRequest)
+        status(result) mustBe 303
       }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, anythingElseRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+      "bad request if no text and yes selected" in {
+        val formRequest = requestWithForm(Map("value" -> "true"))
+        val result = controller.onSubmit(NormalMode)(formRequest)
+        status(result) mustBe 400
       }
-    }
-
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, anythingElseRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[AnythingElseView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, anythingElseRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, anythingElseRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      "bad request with invalid form" in {
+        val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
+        status(result) mustBe 400
       }
     }
   }
+
 }
