@@ -202,7 +202,7 @@ externalFeature.landHardSurfacedOpen = Hard-surfaced, open land
 externalFeature.landGravelledFenced = Gravelled, fenced land
 externalFeature.landGravelledOpen = Gravelled, open land
 externalFeature.landUnsurfacedFenced = Unsurfaced, fenced land
-externalFeature.landUnSurfacedOpen = Unsurfaced, open land
+externalFeature.landUnsurfacedOpen = Unsurfaced, open land
 externalFeature.portableBuildings = Portable buildings
 externalFeature.shippingContainers = Shipping containers
 
@@ -291,7 +291,7 @@ whichExternalFeature.landHardSurfacedOpen = Land - hard-surfaced, open
 whichExternalFeature.landGravelledFenced = Land - gravelled, fenced
 whichExternalFeature.landGravelledOpen = Land - gravelled, open
 whichExternalFeature.landUnsurfacedFenced = Land - unsurfaced, fenced
-whichExternalFeature.landUnSurfacedOpen = Land - unsurfaced, open
+whichExternalFeature.landUnsurfacedOpen = Land - unsurfaced, open
 whichExternalFeature.portableBuildings = Portable buildings
 whichExternalFeature.shippingContainers = Shipping containers
 
@@ -373,11 +373,11 @@ whatHappenedTo.landUnsurfacedFenced.remove.some = You removed some unsurfaced, f
 whatHappenedTo.landUnsurfacedFenced.remove.all = You removed all unsurfaced, fenced land
 whatHappenedTo.landUnsurfacedFenced.error = Select what has happened to unsurfaced, fenced land
 
-whatHappenedTo.landUnSurfacedOpen.title = What has happened to unsurfaced, open land?
-whatHappenedTo.landUnSurfacedOpen.added = You added unsurfaced, open land
-whatHappenedTo.landUnSurfacedOpen.remove.some = You removed some unsurfaced, open land
-whatHappenedTo.landUnSurfacedOpen.remove.all = You removed all unsurfaced, open land
-whatHappenedTo.landUnSurfacedOpen.error = Select what has happened to unsurfaced, open land
+whatHappenedTo.landUnsurfacedOpen.title = What has happened to unsurfaced, open land?
+whatHappenedTo.landUnsurfacedOpen.added = You added unsurfaced, open land
+whatHappenedTo.landUnsurfacedOpen.remove.some = You removed some unsurfaced, open land
+whatHappenedTo.landUnsurfacedOpen.remove.all = You removed all unsurfaced, open land
+whatHappenedTo.landUnsurfacedOpen.error = Select what has happened to unsurfaced, open land
 
 whatHappenedTo.portableBuildings.title = What has happened to portable buildings?
 whatHappenedTo.portableBuildings.added = You added portable buildings
