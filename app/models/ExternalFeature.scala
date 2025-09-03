@@ -50,7 +50,7 @@ object ExternalFeature extends Enumerable.Implicits {
   case object LandGravelledFenced extends WithName("landGravelledFenced") with ExternalFeature
   case object LandGravelledOpen extends WithName("landGravelledOpen") with ExternalFeature
   case object LandUnsurfacedFenced extends WithName("landUnsurfacedFenced") with ExternalFeature
-  case object LandUnsurfacedOpen extends WithName("landUnSurfacedOpen") with ExternalFeature
+  case object LandUnsurfacedOpen extends WithName("landUnsurfacedOpen") with ExternalFeature
   case object PortableBuildings extends WithName("portableBuildings") with ExternalFeature
   case object ShippingContainers extends WithName("shippingContainers") with ExternalFeature
 
