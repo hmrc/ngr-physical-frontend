@@ -21,7 +21,7 @@ import models.InternalFeature.*
 import pages.*
 import controllers.routes
 import models.InternalFeature.*
-import models.SureWantRemoveChange.camelCaseToHyphen
+import utils.StringUtils.camelCaseToHyphen
 import models.requests.OptionalDataRequest
 import pages.*
 import play.api.i18n.Messages

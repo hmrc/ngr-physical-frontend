@@ -20,7 +20,7 @@ import controllers.routes
 import models.ExternalFeature.*
 import models.requests.OptionalDataRequest
 import models.ExternalFeature.*
-import models.SureWantRemoveChange.camelCaseToHyphen
+import utils.StringUtils.camelCaseToHyphen
 import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}

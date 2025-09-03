@@ -20,7 +20,8 @@ import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
 import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, InternalFeature}
-import models.SureWantRemoveChange.{getFeatureValue, hyphenToCamelCase}
+import models.SureWantRemoveChange.getFeatureValue
+import utils.StringUtils.hyphenToCamelCase
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}

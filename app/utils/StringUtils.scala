@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import play.api.i18n.Messages
-
-object SureWantRemoveChange {
+object StringUtils {
   
-  def getFeatureValue(viewType: CYAViewType, featureKey: String)(implicit messages: Messages): Option[String] = {
-    val key = viewType match {
-      case CYAInternal => s"internalFeature.$featureKey"
-      case CYAExternal => s"externalFeature.$featureKey"
-    } 
-    
-    if (messages.isDefinedAt(key)) {
-      Some(messages(key).toLowerCase)
-    } else {
-      None
-    }
+  def camelCaseToHyphen(input: String): String = {
+    input.replaceAll("([A-Z])", "-$1").toLowerCase
+  }
+
+  def hyphenToCamelCase(input: String): String = {
+    val parts = input.split("-")
+    parts.headOption.getOrElse("") + parts.drop(1).map(_.capitalize).mkString
   }
 }
