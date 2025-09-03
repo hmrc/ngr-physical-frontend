@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AnythingElseView
 
@@ -38,7 +39,6 @@ class AnythingElseController @Inject()(
                                         navigator: Navigator,
                                         identify: IdentifierAction,
                                         getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
                                         formProvider: AnythingElseFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AnythingElseView
@@ -46,27 +46,27 @@ class AnythingElseController @Inject()(
 
   val form: Form[AnythingElseData] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AnythingElsePage) match {
+      val preparedForm = request.userAnswers.getOrElse(throw new NotFoundException("answers not found")).get(AnythingElsePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(request.property.addressFull, preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, mode))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AnythingElsePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("answers not found")).set(AnythingElsePage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(AnythingElsePage, mode, updatedAnswers))
       )
