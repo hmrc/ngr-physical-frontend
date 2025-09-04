@@ -19,6 +19,7 @@ package views
 import forms.SureWantRemoveChangeFormProvider
 import helpers.ViewBaseSpec
 import models.NavBarPageContents.createDefaultNavBar
+import models.NormalMode
 import org.jsoup.Jsoup
 import play.api.data.Form
 import views.html.SureWantRemoveChangeView
@@ -44,7 +45,7 @@ class SureWantRemoveChangeViewSpec extends ViewBaseSpec {
   private def testViewRendering(feature: String): Unit = {
     val form = formWithError(feature)
     val expectedHeading = s"Are you sure you want to remove the change to $feature"
-    val document = Jsoup.parse(view("123 street", expectedHeading, feature, form, createDefaultNavBar()).body)
+    val document = Jsoup.parse(view("123 street", expectedHeading, feature, form, createDefaultNavBar(), NormalMode).body)
 
     elementText(Selectors.address)(document) mustBe "123 street"
     elementText(Selectors.heading)(document) mustBe expectedHeading

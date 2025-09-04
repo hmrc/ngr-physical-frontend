@@ -32,12 +32,13 @@
     titleKey: String,
     featureString: String,
     form: Form[Boolean],
-    navigationBarContent: NavigationBarContent
+    navigationBarContent: NavigationBarContent,
+    mode: Mode
 )(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, titleKey)), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

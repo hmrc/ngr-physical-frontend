@@ -18,8 +18,9 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages._
-import models._
+import models.*
+import models.InternalFeature.AirConditioning
+import pages.*
 
 class NavigatorSpec extends SpecBase {
 
@@ -42,6 +43,40 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from a HaveYouChangedInternalPage` to WhichInternalFeaturePage when 'Yes' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedInternalPage, true).success.value
+        navigator.nextPage(HaveYouChangedInternalPage, CheckMode, userAnswers) mustBe routes.WhichInternalFeatureController.onPageLoad(CheckMode)
+      }
+
+      "must go from a HaveYouChangedInternalPage` to WhichInternalFeaturePage when 'No' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedInternalPage, false).success.value
+        navigator.nextPage(HaveYouChangedInternalPage, CheckMode, userAnswers) mustBe routes.HaveYouChangedController.loadExternal(CheckMode)
+      }
+
+      "must go from a HowMuchOfPropertyAirConPage` to SmallCheckYourAnswers when 'AllOf' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedInternalPage, true).success.value
+          .set(WhichInternalFeaturePage, InternalFeature.AirConditioning).success.value
+          .set(HowMuchOfPropertyAirConPage, models.HowMuchOfProperty.AllOf).success.value
+        navigator.nextPage(HowMuchOfPropertyAirConPage, CheckMode, userAnswers) mustBe routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, CheckMode)
+      }
+
+      "must go from a HaveYouChangedExternalPage` to WhichExternalFeaturePage when 'Yes' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedExternalPage, true).success.value
+        navigator.nextPage(HaveYouChangedExternalPage, CheckMode, userAnswers) mustBe routes.WhichExternalFeatureController.onPageLoad(CheckMode)
+      }
+
+      "must go from a HaveYouChangedExternalPage` to WhichExternalFeaturePage when 'No' is selected an an option" ignore  { // go to anything else page
+        val userAnswers = UserAnswers("id").set(HaveYouChangedExternalPage, false).success.value
+        navigator.nextPage(HaveYouChangedExternalPage, CheckMode, userAnswers) mustBe ???
+      }
+
+      "must go from a WhatHappenedToSolarPanelsPage` to SmallCheckYourAnswers when 'added' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedExternalPage, true).success.value
+          .set(WhichExternalFeaturePage, ExternalFeature.SolarPanels).success.value
+          .set(WhatHappenedToSolarPanelsPage, WhatHappenedTo.Added).success.value
+        navigator.nextPage(WhatHappenedToSolarPanelsPage, CheckMode, userAnswers) mustBe routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, CheckMode)
       }
     }
   }

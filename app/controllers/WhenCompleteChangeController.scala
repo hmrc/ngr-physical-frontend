@@ -56,6 +56,7 @@ class WhenCompleteChangeController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
+      
       val form = formProvider()
 
       form.bindFromRequest()(request.request).fold(

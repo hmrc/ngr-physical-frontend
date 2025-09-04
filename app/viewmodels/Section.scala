@@ -1,5 +1,5 @@
-@*
- * Copyright 2025 HM Revenue & Customs
+/*
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout
-)
+package viewmodels
 
-@()(implicit request: Request[?], messages: Messages)
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
-@layout(
-    pageTitle = titleNoForm(messages("unauthorised.title")),
-    timeout   = false
-) {
-
-    <h1 class="govuk-heading-l">@messages("unauthorised.heading")</h1>
-
-    <p class="govuk-body">@messages("unauthorised.guidance")</p>
-}
+case class Section(title: Option[String], rows: SummaryList)

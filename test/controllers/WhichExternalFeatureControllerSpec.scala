@@ -18,7 +18,7 @@ package controllers
 
 import forms.WhichExternalFeatureFormProvider
 import helpers.ControllerSpecSupport
-import models.ExternalFeature
+import models.{ExternalFeature, NormalMode}
 import views.html.WhichExternalFeatureView
 import play.api.test.Helpers.*
 
@@ -33,12 +33,12 @@ class WhichExternalFeatureControllerSpec extends ControllerSpecSupport {
   "WhichExternalFeatureController" should {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 200
       }
 
       "return HTML" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
       }
@@ -47,19 +47,19 @@ class WhichExternalFeatureControllerSpec extends ControllerSpecSupport {
       "redirect" in {
         ExternalFeature.values.map { feature =>
           val formRequest = requestWithForm(Map("value" -> feature.toString))
-          val result = controller.onSubmit(formRequest)
+          val result = controller.onSubmit(NormalMode)(formRequest)
           status(result) mustBe 303
         }
       }
 
       "get other value" in {
         val formRequest = requestWithForm(Map("value" -> "other", "otherSelect" -> "shippingContainers"))
-        val result = controller.onSubmit(formRequest)
+        val result = controller.onSubmit(NormalMode)(formRequest)
         status(result) mustBe 303
       }
 
       "BadRequest when no form data" in {
-        val result = controller.onSubmit(authenticatedFakeRequest)
+        val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 400
       }
     }

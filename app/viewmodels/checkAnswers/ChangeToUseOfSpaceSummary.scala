@@ -22,35 +22,55 @@ import pages.ChangeToUseOfSpacePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
 import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
 
 object ChangeToUseOfSpaceSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def rows(answers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     answers.get(ChangeToUseOfSpacePage).map {
-      answer =>
-        //TODO display it as per prototype
-//        val checkBoxValue = ValueViewModel(
-//          HtmlContent(
-//            answer.selectUseOfSpace.map {
-//                answer => HtmlFormat.escape(messages(s"useOfSpaces.$answer")).toString
-//              }
-//              .mkString(",<br>")
-//          )
-//        )
-//        val booleanValue: String = if (answer.hasPlanningPermission) "site.yes" else "site.no"
+      answers =>
 
-      val value = HtmlFormat.escape(answer.permissionReference.getOrElse("")).toString
+        val value = ValueViewModel(
+          HtmlContent(
+            answers.selectUseOfSpace.map {
+                answer => HtmlFormat.escape(messages(s"changeToUseOfSpace.$answer")).toString
+              }
+              .mkString(",<br>")
+          )
+        )
 
-        SummaryListRowViewModel(
-          key     = "changeToUseOfSpace.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("changeToUseOfSpace.change.hidden"))
+        val booleanValue: String = if (answers.hasPlanningPermission) "site.yes" else "site.no"
+
+        val referenceValue = HtmlFormat.escape(answers.permissionReference.getOrElse("")).toString
+
+        Seq(
+          SummaryListRowViewModel(
+            key = "changeToUseOfSpace.useOfSpace.h2",
+            value = value,
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages("changeToUseOfSpace.useOfSpace.h2"))
+            )
+          ),
+          SummaryListRowViewModel(
+            key = "changeToUseOfSpace.permission.h2",
+            value = ValueViewModel(messages(booleanValue)),
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages("changeToUseOfSpace.permission.h2"))
+            )
+          ),
+          SummaryListRowViewModel(
+            key = "changeToUseOfSpace.permissionReference",
+            value = ValueViewModel(HtmlContent(referenceValue)),
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages("changeToUseOfSpace.permissionReference"))
+            )
           )
         )
     }
+
 }

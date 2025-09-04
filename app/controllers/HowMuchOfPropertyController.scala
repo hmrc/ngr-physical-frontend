@@ -93,7 +93,10 @@ class HowMuchOfPropertyController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(HowMuchOfProperty.page(feature), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
+          } yield {
+            println("navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers)======" +navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
+            Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
+          }
       )
   }
 }
