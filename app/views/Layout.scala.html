@@ -40,11 +40,13 @@
 @(pageTitle: Option[String] = None,
     showBackLink: Boolean = false,
     fullWidth: Boolean = false,
-    navigationBarContent: Option[NavigationBarContent] = None
+    navigationBarContent: Option[NavigationBarContent] = None,
+additionalHeadBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages,  appConfig: AppConfig)
 
 @headScripts = {
     @stylesheets()
+@additionalHeadBlock
 }
 
 @navbar = {

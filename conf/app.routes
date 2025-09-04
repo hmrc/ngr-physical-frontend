@@ -206,9 +206,13 @@ POST       /anything-else-tell-us                                               
 GET        /change-anything-else-tell-us                                         controllers.AnythingElseController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-anything-else-tell-us                                         controllers.AnythingElseController.onSubmit(mode: Mode = CheckMode)
 
+
 GET        /declaration-physical                                                 controllers.DeclarationController.show
 POST       /declaration-physical                                                 controllers.DeclarationController.next
 
 GET        /property-change-details-sent                                         controllers.SubmissionConfirmationController.onPageLoad()
 
 GET        /not-told-us-about-any-changes-to-property                            controllers.NotToldAnyChangesController.show
+GET        /supporting-document-upload                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String], evidence: Option[String])
+GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId: models.upscan.UploadId, evidence: Option[String], errorCode: Option[String])
+POST       /supporting-document-uploaded                                         controllers.UploadedDocumentController.onSubmit(uploadId : models.upscan.UploadId, inProgress: Boolean)

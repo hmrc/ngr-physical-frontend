@@ -43,7 +43,7 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
 
   when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
 
-  "Dashboard Controller" must {
+  "Supporting Documents Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
         val result: Future[Result] = controller(Some(emptyUserAnswers)).onPageLoad()(fakeRequest)
@@ -57,6 +57,14 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
         val result = controller(None).onPageLoad()(fakeRequest)
         status(result) mustBe 303
         redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "method next" must {
+      "Return SEE_OTHER and the correct view" in {
+        val result: Future[Result] = controller().next()(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some("/ngr-physical-frontend/supporting-document-upload")
       }
     }
   }
