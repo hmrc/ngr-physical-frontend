@@ -37,7 +37,11 @@ class AnythingElseFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "value" -> boolean("anythingElse.error.required"),
-        "text" -> mandatoryIfTrue("value", text("anythingElse.error.requiredText"))
+        "text" -> mandatoryIfTrue("value", text("anythingElse.error.requiredText")
+          .verifying(
+            "anythingElse.error.charLimit",
+            _.length <= 125
+          ))
       )(AnythingElseData.apply)((x: AnythingElseData) => Some((x.value, x.text)))
     )
 }

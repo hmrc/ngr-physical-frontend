@@ -49,9 +49,12 @@
                         uk.gov.hmrc.govukfrontend.views.html.components.CharacterCount(
                             id = "text",
                             name = "text",
-                            maxLength = Some(250),
+                            maxLength = Some(125),
                             value = form("text").value,
-                            label = Label(content = Text(messages("anythingElse.inputTitle")))
+                            label = Label(classes = "govuk-label--s", content = Text(messages("anythingElse.inputTitle"))),
+                            errorMessage = form("text").error.map { err =>
+                                ErrorMessage(content = Text(messages(err.message)))
+                            }
                         )
                     )
                 )
