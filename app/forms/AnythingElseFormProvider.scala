@@ -22,6 +22,7 @@ import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.voa.play.form.ConditionalMappings.*
 
 case class AnythingElseData(value: Boolean, text: Option[String])
 
@@ -31,20 +32,12 @@ object AnythingElseData {
 
 class AnythingElseFormProvider @Inject() extends Mappings {
 
-  private val conditionalTextRequired: Constraint[AnythingElseData] = Constraint("conditionalText.required") { data =>
-    if (data.value && data.text.forall(_.trim.isEmpty)) {
-      Invalid("anythingElse.error.textRequired")
-    } else {
-      Valid
-    }
-  }
-
+  
   def apply(): Form[AnythingElseData] =
     Form(
       mapping(
         "value" -> boolean("anythingElse.error.required"),
-        "text" -> optional(text())
+        "text" -> mandatoryIfTrue("value", text("anythingElse.error.requiredText"))
       )(AnythingElseData.apply)((x: AnythingElseData) => Some((x.value, x.text)))
-        .verifying(conditionalTextRequired)
     )
 }

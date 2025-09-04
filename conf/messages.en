@@ -422,5 +422,6 @@ anythingElse.title = anythingElse
 anythingElse.heading = Is there anything else you want to tell us about the changes?
 anythingElse.checkYourAnswersLabel = anythingElse
 anythingElse.error.required = Select yes if anythingElse
+anythingElse.error.requiredText = Select yes if anythingElse
 anythingElse.change.hidden = AnythingElse
 anythingElse.inputTitle = What do you want to tell us?

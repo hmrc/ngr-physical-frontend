@@ -16,30 +16,36 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.{BooleanFieldBehaviours, FieldBehaviours}
 import play.api.data.FormError
 
-//class AnythingElseFormProviderSpec extends BooleanFieldBehaviours {
-//
-//  val requiredKey = "anythingElse.error.required"
-//  val invalidKey = "error.boolean"
-//
-//  val form = new AnythingElseFormProvider()()
-//
-//  ".value" - {
-//
-//    val fieldName = "value"
-//
-//    behave like booleanField(
-//      form,
-//      fieldName,
-//      invalidError = FormError(fieldName, invalidKey)
-//    )
-//
-//    behave like mandatoryField(
-//      form,
-//      fieldName,
-//      requiredError = FormError(fieldName, requiredKey)
-//    )
-//  }
-//}
+class AnythingElseFormProviderSpec extends FieldBehaviours {
+
+  val form = new AnythingElseFormProvider()()
+
+  ".anythingElse" - {
+
+    val fieldName = "value"
+    val requiredError = "anythingElse.error.required"
+    val textFieldName = "text"
+    val textRequiredError = "anythingElse.error.requiredText"
+
+    "bind mandatory fields" in {
+      val result = form.bind(Map(fieldName -> "true", textFieldName -> "some text"))
+      result.errors mustBe empty
+    }
+
+    "error when no text and true" in {
+      val result = form.bind(Map(fieldName -> "true"))
+      result.errors mustBe List(FormError(textFieldName, textRequiredError))
+    }
+
+    "fail the mandatory field validation on missing data" in {
+      val result = form.bind(Map(fieldName -> "", textFieldName -> ""))
+      result.errors mustBe List(
+        FormError(fieldName, requiredError),
+      )
+    }
+
+  }
+}
