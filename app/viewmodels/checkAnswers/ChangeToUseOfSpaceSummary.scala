@@ -46,31 +46,33 @@ object ChangeToUseOfSpaceSummary  {
         val referenceValue = HtmlFormat.escape(answers.permissionReference.getOrElse("")).toString
 
         Seq(
-          SummaryListRowViewModel(
+          Some(SummaryListRowViewModel(
             key = "changeToUseOfSpace.useOfSpace.h2",
             value = value,
             actions = Seq(
               ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
                 .withVisuallyHiddenText(messages("changeToUseOfSpace.useOfSpace.h2"))
             )
-          ),
-          SummaryListRowViewModel(
+          )),
+          Some(SummaryListRowViewModel(
             key = "changeToUseOfSpace.permission.h2",
             value = ValueViewModel(messages(booleanValue)),
             actions = Seq(
               ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
                 .withVisuallyHiddenText(messages("changeToUseOfSpace.permission.h2"))
             )
-          ),
-          SummaryListRowViewModel(
-            key = "changeToUseOfSpace.permissionReference",
-            value = ValueViewModel(HtmlContent(referenceValue)),
-            actions = Seq(
-              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
-                .withVisuallyHiddenText(messages("changeToUseOfSpace.permissionReference"))
+          )),
+          answers.permissionReference map {referenceValue =>
+            SummaryListRowViewModel(
+              key = "changeToUseOfSpace.permissionReference",
+              value = ValueViewModel(HtmlContent(referenceValue)),
+              actions = Seq(
+                ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+                  .withVisuallyHiddenText(messages("changeToUseOfSpace.permissionReference"))
+              )
             )
-          )
-        )
+          }
+        ).flatten
     }
 
 }
