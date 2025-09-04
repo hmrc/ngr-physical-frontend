@@ -35,4 +35,8 @@ object CYAViewType {
     case CYAInternal => "internalCheckYourAnswers.another"
     case CYAExternal => "externalCheckYourAnswers.another"
   }
+  def noChangesKey(viewType: CYAViewType): String = viewType match {
+    case CYAInternal => "internalCheckYourAnswers.changes.no"
+    case CYAExternal => "externalCheckYourAnswers.changes.no"
+  }
 }

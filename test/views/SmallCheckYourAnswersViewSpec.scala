@@ -26,6 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import utils.HtmlElementUtils.elementExists
 import views.html.SmallCheckYourAnswersView
 
 class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
@@ -49,12 +50,13 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
     val continue = "#continue"
     val rowKey = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dt"
     val rowValue = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dd.govuk-summary-list__value"
+    val noChanges = "#main-content > div > div.govuk-grid-column-two-thirds > form > h2"
 
   }
 
   "SmallCheckYourAnswersView" must {
-    "show correct text" in {
-      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, rows = SummaryList(Seq(summaryListRow)), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
+    "show correct text for one row" in {
+      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq(summaryListRow)), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Check and confirm changes to internal features"
       elementText(Selectors.another)(document) mustBe "Do you want to tell us about another internal feature?"
@@ -63,6 +65,20 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
       elementText(Selectors.continue)(document) mustBe "Continue"
       elementText(Selectors.rowKey)(document) mustBe "Hard-surfaced, fenced land"
       elementText(Selectors.rowValue)(document) mustBe "Added"
+      elementExists(Selectors.noChanges)(document) mustBe false
+    }
+
+    "show correct text for no rows" in {
+      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq.empty), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
+      elementText(Selectors.address)(document) mustBe address
+      elementText(Selectors.heading)(document) mustBe "Check and confirm changes to internal features"
+      elementText(Selectors.another)(document) mustBe "Do you want to tell us about another internal feature?"
+      elementText(Selectors.yes)(document) mustBe "Yes"
+      elementText(Selectors.no)(document) mustBe "No"
+      elementText(Selectors.continue)(document) mustBe "Continue"
+      elementExists(Selectors.rowKey)(document) mustBe false
+      elementExists(Selectors.rowValue)(document) mustBe false
+      elementText(Selectors.noChanges)(document) mustBe "You have no changes to internal features"
     }
   }
 
