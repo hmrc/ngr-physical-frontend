@@ -66,6 +66,11 @@ class Navigator @Inject()() {
   }
 
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
+    case HaveYouChangedSpacePage => answers =>
+      answers.get(HaveYouChangedSpacePage) map {
+        case true => routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode)
+        case false => routes.CheckYourAnswersController.onPageLoad()
+      }
     case HaveYouChangedInternalPage => answers =>
       answers.get(HaveYouChangedInternalPage) map {
         case true => routes.WhichInternalFeatureController.onPageLoad(CheckMode)

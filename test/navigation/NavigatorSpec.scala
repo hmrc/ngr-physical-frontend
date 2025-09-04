@@ -45,6 +45,16 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController.onPageLoad()
       }
 
+      "must go from a HaveYouChangedSpacePage` to ChangeToUseOfSpacePage when 'Yes' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedSpacePage, true).success.value
+        navigator.nextPage(HaveYouChangedSpacePage, CheckMode, userAnswers) mustBe routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode)
+      }
+
+      "must go from a HaveYouChangedSpacePage` to CheckYourAnswersPage when 'No' is selected an an option" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedSpacePage, false).success.value
+        navigator.nextPage(HaveYouChangedSpacePage, CheckMode, userAnswers) mustBe routes.CheckYourAnswersController.onPageLoad()
+      }
+
       "must go from a HaveYouChangedInternalPage` to WhichInternalFeaturePage when 'Yes' is selected an an option" in {
         val userAnswers = UserAnswers("id").set(HaveYouChangedInternalPage, true).success.value
         navigator.nextPage(HaveYouChangedInternalPage, CheckMode, userAnswers) mustBe routes.WhichInternalFeatureController.onPageLoad(CheckMode)
