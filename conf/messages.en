@@ -423,4 +423,4 @@ anythingElse.checkYourAnswersLabel = anythingElse
 anythingElse.error.required = Select yes if there is anything else you want to tell us about the changes
 anythingElse.error.requiredText = Tell us about the changes
 anythingElse.inputTitle = What do you want to tell us?
-anythingElse.error.charLimit = What you tell us about the changes must be 125 characters or less
+anythingElse.error.charLimit = What you tell us about the changes must be 250 characters or less
