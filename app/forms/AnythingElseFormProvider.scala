@@ -40,7 +40,7 @@ class AnythingElseFormProvider @Inject() extends Mappings {
         "text" -> mandatoryIfTrue("value", text("anythingElse.error.requiredText")
           .verifying(
             "anythingElse.error.charLimit",
-            _.length <= 125
+            _.length <= 250
           ))
       )(AnythingElseData.apply)((x: AnythingElseData) => Some((x.value, x.text)))
     )
