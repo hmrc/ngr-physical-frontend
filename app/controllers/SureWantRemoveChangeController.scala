@@ -53,7 +53,7 @@ class SureWantRemoveChangeController @Inject()(
         Ok(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, form, createDefaultNavBar(), mode))
     }
 
-  def onSubmit(hyphenFeatureString: String): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(hyphenFeatureString: String, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
       val viewType = determineViewType(camelCaseFeatureString)
@@ -65,8 +65,8 @@ class SureWantRemoveChangeController @Inject()(
         {
           case true =>
             viewType match 
-              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString).url))
-              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString).url))
+              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString, mode).url))
+              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString, mode).url))
           case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType, mode)))
         }
       )

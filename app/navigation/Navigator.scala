@@ -43,7 +43,7 @@ class Navigator @Inject()() {
       }
     case HaveYouChangedExternalPage => answers =>
       answers.get(HaveYouChangedExternalPage) match {
-        case Some(true) => routes.WhichExternalFeatureController.onPageLoad
+        case Some(true) => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
         case Some(false) => routes.AnythingElseController.onPageLoad(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
@@ -59,8 +59,8 @@ class Navigator @Inject()() {
           routes.WhichExternalFeatureController.onPageLoad(NormalMode)
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
-    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal)
-    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal)
+    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode)
+    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode)
     case AnythingElsePage => _ => routes.SupportingDocumentsController.onPageLoad()
     case _ => _ => routes.IndexController.onPageLoad()
   }

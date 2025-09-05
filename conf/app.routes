@@ -184,6 +184,7 @@ GET        /check-and-confirm-changes-to-internal-features                      
 POST       /check-and-confirm-changes-to-internal-features                       controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAInternal, mode: Mode = NormalMode)
 GET        /change-check-and-confirm-changes-to-internal-features                controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAInternal, mode: Mode = CheckMode)
 POST       /change-check-and-confirm-changes-to-internal-features                controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAInternal, mode: Mode = CheckMode)
+
 GET        /check-and-confirm-changes-to-internal-features/:featureString        controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = NormalMode)
 GET        /change-check-and-confirm-changes-to-internal-features/:featureString controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = CheckMode)
 
@@ -203,6 +204,3 @@ GET        /anything-else-tell-us                                               
 POST       /anything-else-tell-us                                                controllers.AnythingElseController.onSubmit(mode: Mode = NormalMode)
 GET        /change-anything-else-tell-us                                         controllers.AnythingElseController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-anything-else-tell-us                                         controllers.AnythingElseController.onSubmit(mode: Mode = CheckMode)
-
-GET        /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onPageLoad(featureString: String)
-POST       /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onSubmit(featureString: String)
