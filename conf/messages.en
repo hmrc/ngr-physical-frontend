@@ -419,7 +419,6 @@ sureWantRemoveChange.title = Are you sure you want to remove the change to {0}?
 sureWantRemoveChange.error.required = Select yes if you want to remove changes to {0}
 
 anythingElse.heading = Is there anything else you want to tell us about the changes?
-anythingElse.checkYourAnswersLabel = anythingElse
 anythingElse.error.required = Select yes if there is anything else you want to tell us about the changes
 anythingElse.error.requiredText = Tell us about the changes
 anythingElse.inputTitle = What do you want to tell us?

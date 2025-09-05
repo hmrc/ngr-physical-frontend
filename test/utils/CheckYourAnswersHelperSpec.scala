@@ -17,6 +17,7 @@
 package utils
 
 import base.SpecBase
+import forms.AnythingElseData
 import models.ChangeToUseOfSpace
 import models.HowMuchOfProperty.{AllOf, SomeOf}
 import models.UseOfSpaces.Rearrangedtheuseofspace
@@ -24,7 +25,7 @@ import models.WhatHappenedTo.{Added, RemovedSome}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.funsuite.AnyFunSuiteLike
 import org.scalatest.matchers.must.Matchers
-import pages.{ChangeToUseOfSpacePage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, WhatHappenedToLandHardSurfacedFencedPage, WhatHappenedToLandHardSurfacedOpenPage, WhenCompleteChangePage}
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, HowMuchOfPropertyGoodsLiftPage, WhatHappenedToLandHardSurfacedFencedPage, WhatHappenedToLandHardSurfacedOpenPage, WhenCompleteChangePage}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.test.{FakeRequest, Helpers}
@@ -49,9 +50,10 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers {
         .set(HowMuchOfPropertyGoodsLiftPage, SomeOf).success.value
         .set(WhatHappenedToLandHardSurfacedFencedPage, Added).success.value
         .set(WhatHappenedToLandHardSurfacedOpenPage, RemovedSome).success.value
+        .set(AnythingElsePage, AnythingElseData(true, Some("info"))).success.value
 
       val sections: Seq[Section] = helper.createSectionList(userAnswers)
-      sections.size mustBe 4
+      sections.size mustBe 5
       sections.head.title mustBe Some("checkYourAnswers.dateOfChange.heading")
       sections.head.rows.rows.size mustBe 1
       sections(1).title mustBe Some("checkYourAnswers.useOfSpace.heading")
@@ -60,6 +62,8 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers {
       sections(2).rows.rows.size mustBe 2
       sections(3).title mustBe Some("checkYourAnswers.externalFeature.heading")
       sections(3).rows.rows.size mustBe 3
+      sections(4).title mustBe Some("checkYourAnswers.additionalInformation.heading")
+      sections(4).rows.rows.size mustBe 2
     }
 
     "must display external and internal features details as No when user has removed all the internal and external features" in {

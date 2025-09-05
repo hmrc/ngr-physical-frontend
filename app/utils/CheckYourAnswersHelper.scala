@@ -33,6 +33,7 @@ class CheckYourAnswersHelper @Inject()() {
       createUseOfSpaceSection(userAnswers),
       createInternalFeaturesSection(userAnswers),
       createExternalFeaturesSection(userAnswers),
+      createAdditionalInformationSection(userAnswers),
     ).flatten
 
   private def createDateOfChangeSection(userAnswers: UserAnswers)(implicit
@@ -79,6 +80,15 @@ class CheckYourAnswersHelper @Inject()() {
     buildSection(
       "checkYourAnswers.externalFeature.heading",
       rows
+    )
+
+  private def createAdditionalInformationSection(userAnswers: UserAnswers)(implicit
+                                                                messages: Messages
+  ): Option[Section] =
+
+    buildSection(
+      "checkYourAnswers.additionalInformation.heading",
+      AnythingElseSummary.rows(userAnswers).getOrElse(Seq.empty).map(Some(_))
     )
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {

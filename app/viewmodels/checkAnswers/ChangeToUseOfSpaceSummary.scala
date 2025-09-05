@@ -43,8 +43,6 @@ object ChangeToUseOfSpaceSummary  {
 
         val booleanValue: String = if (answers.hasPlanningPermission) "site.yes" else "site.no"
 
-        val referenceValue = HtmlFormat.escape(answers.permissionReference.getOrElse("")).toString
-
         Seq(
           Some(SummaryListRowViewModel(
             key = "changeToUseOfSpace.useOfSpace.h2",
