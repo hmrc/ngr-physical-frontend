@@ -22,6 +22,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryWhenChangeTookPlace: Arbitrary[WhenChangeTookPlace] =
+    Arbitrary {
+      Gen.oneOf(WhenChangeTookPlace.values.toSeq)
+    }
+
   implicit lazy val arbitraryWhatHappenedTo: Arbitrary[WhatHappenedTo] =
     Arbitrary {
       Gen.oneOf(WhatHappenedTo.values.toSeq)

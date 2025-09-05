@@ -192,3 +192,8 @@ POST       /change-anything-else-tell-us                                        
 
 GET        /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onPageLoad(featureString: String)
 POST       /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onSubmit(featureString: String)
+
+GET        /review/when-change-took-place                                        controllers.WhenChangeTookPlaceController.onPageLoad(mode: Mode = NormalMode)
+POST       /review/when-change-took-place                                        controllers.WhenChangeTookPlaceController.onSubmit(mode: Mode = NormalMode)
+GET        /review/when-change-took-place                                        controllers.WhenChangeTookPlaceController.onPageLoad(mode: Mode = CheckMode)
+POST       /review/when-change-took-place                                        controllers.WhenChangeTookPlaceController.onSubmit(mode: Mode = CheckMode)
