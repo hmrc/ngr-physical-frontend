@@ -18,7 +18,7 @@ package controllers
 
 import forms.SmallCheckYourAnswersFormProvider
 import helpers.ControllerSpecSupport
-import models.{CYAInternal, NormalMode}
+import models.{CYAInternal, CheckMode, NormalMode}
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.test.Helpers.*
 import views.html.SmallCheckYourAnswersView
@@ -54,6 +54,12 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
         val formRequest = requestWithForm(Map("value" -> "false"))
         val result = controller.onSubmit(CYAInternal, NormalMode)(formRequest)
         redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadExternal(NormalMode).url)
+      }
+
+      "redirect to check your answers page when the mode is CheckMode" in {
+        val formRequest = requestWithForm(Map("value" -> "false"))
+        val result = controller.onSubmit(CYAInternal, CheckMode)(formRequest)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
       }
       "bad request when no selection" in {
         val result = controller.onSubmit(CYAInternal, NormalMode)(authenticatedFakeRequest)
