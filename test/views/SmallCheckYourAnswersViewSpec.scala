@@ -50,7 +50,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
     val continue = "#continue"
     val rowKey = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dt"
     val rowValue = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dd.govuk-summary-list__value"
-    val noChanges = "#main-content > div > div.govuk-grid-column-two-thirds > form > h2"
+    val noChanges = "#main-content > div > div.govuk-grid-column-two-thirds > form > div:nth-child(3)"
 
   }
 
