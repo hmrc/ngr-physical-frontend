@@ -50,7 +50,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
     val continue = "#continue"
     val rowKey = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dt"
     val rowValue = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dd.govuk-summary-list__value"
-    val noChanges = "#main-content > div > div.govuk-grid-column-two-thirds > form > div:nth-child(3)"
+    val noChanges = "#main-content > div > div.govuk-grid-column-two-thirds > form > p"
 
   }
 
@@ -78,7 +78,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
       elementText(Selectors.continue)(document) mustBe "Continue"
       elementExists(Selectors.rowKey)(document) mustBe false
       elementExists(Selectors.rowValue)(document) mustBe false
-      elementText(Selectors.noChanges)(document) mustBe "You have no changes to internal features"
+      elementText(Selectors.noChanges)(document) mustBe "You have no changes to internal features."
     }
   }
 

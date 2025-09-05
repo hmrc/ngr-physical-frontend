@@ -42,7 +42,7 @@
         <span class="govuk-caption-m">@address</span>
         <h1 class="govuk-heading-l">@messages(CYAViewType.titleKey(viewType))</h1>
         @if(list.rows.isEmpty) {
-            @noticeBox(messages(CYAViewType.noChangesKey(viewType)))
+            <p class="govuk-body">@messages(s"$viewType.changes.no")</p>
         } else {
             @govukSummarySummaryList(list)
         }
