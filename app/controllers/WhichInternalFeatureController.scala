@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, NormalMode}
+import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -41,25 +41,25 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
 
   val form: Form[InternalFeature] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      Ok(view(request.property.addressFull, form, createDefaultNavBar()))
+      Ok(view(request.property.addressFull, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
         feature =>
-          nextPage(feature)
+          nextPage(feature, mode)
       )
   }
 
-  private def nextPage(feature: InternalFeature): Future[Result] = {
+  private def nextPage(feature: InternalFeature, mode: Mode): Future[Result] = {
     val call = feature match {
-      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, NormalMode)
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(NormalMode)
+      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, mode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode)
     }
     Future.successful(Redirect(call))
   }

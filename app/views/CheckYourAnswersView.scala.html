@@ -14,16 +14,24 @@
  * limitations under the License.
  *@
 
+@import viewmodels.Section
+
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList
 )
 
-@(list: SummaryList)(implicit request: Request[?], messages: Messages)
+@(address: String, navigationBarContent: NavigationBarContent, list: Seq[Section])(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+    <span class="govuk-caption-m">@address</span>
+    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
+    @list.map { section =>
+        @section.title.map { title =>
+            <h2 class="govuk-heading-m">@messages(title)</h2>
+        }
 
-    @govukSummaryList(list)
+        @govukSummaryList(section.rows)
+    }
 }

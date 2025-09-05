@@ -18,7 +18,7 @@ package views
 
 import forms.SmallCheckYourAnswersFormProvider
 import helpers.ViewBaseSpec
-import models.{CYAInternal, InternalFeature}
+import models.{CYAInternal, InternalFeature, NormalMode}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -56,7 +56,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
 
   "SmallCheckYourAnswersView" must {
     "show correct text for one row" in {
-      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq(summaryListRow)), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
+      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq(summaryListRow)), form = formProvider(CYAInternal), navigationBarContent = navBarContent(), NormalMode).body)
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Check and confirm changes to internal features"
       elementText(Selectors.another)(document) mustBe "Do you want to tell us about another internal feature?"
@@ -69,7 +69,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
     }
 
     "show correct text for no rows" in {
-      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq.empty), form = formProvider(CYAInternal), navigationBarContent = navBarContent()).body)
+      val document: Document = Jsoup.parse(view(viewType = CYAInternal, address = address, list = SummaryList(Seq.empty), form = formProvider(CYAInternal), navigationBarContent = navBarContent(), NormalMode).body)
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Check and confirm changes to internal features"
       elementText(Selectors.another)(document) mustBe "Do you want to tell us about another internal feature?"
@@ -78,7 +78,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
       elementText(Selectors.continue)(document) mustBe "Continue"
       elementExists(Selectors.rowKey)(document) mustBe false
       elementExists(Selectors.rowValue)(document) mustBe false
-      elementText(Selectors.noChanges)(document) mustBe "You have no changes to internal features."
+      elementText(Selectors.noChanges)(document) mustBe "No internal features changed"
     }
   }
 

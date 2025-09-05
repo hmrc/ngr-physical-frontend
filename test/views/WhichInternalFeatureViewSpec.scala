@@ -18,6 +18,7 @@ package views
 
 import forms.WhichInternalFeatureFormProvider
 import helpers.ViewBaseSpec
+import models.NormalMode
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.FormError
@@ -42,7 +43,7 @@ class WhichInternalFeatureViewSpec extends ViewBaseSpec {
   }
 
   "WhichInternalFeatureView" must {
-    val document: Document = Jsoup.parse(view(address, formProvider(), navBarContent()).body)
+    val document: Document = Jsoup.parse(view(address, formProvider(), navBarContent(), NormalMode).body)
     "show correct text" in {
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Which internal feature have you changed?"
@@ -54,7 +55,7 @@ class WhichInternalFeatureViewSpec extends ViewBaseSpec {
       elementText(Selectors.other)(document) mustBe "Other internal feature"
 
       val formWithError = formProvider().withError(FormError("value", "whichInternalFeature.error.required"))
-      val errorDocument: Document = Jsoup.parse(view(address, formWithError, navBarContent()).body)
+      val errorDocument: Document = Jsoup.parse(view(address, formWithError, navBarContent(), NormalMode).body)
 
       elementText(Selectors.topError)(errorDocument) mustBe "Select which internal feature you have changed"
     }

@@ -18,7 +18,7 @@ package controllers
 
 import forms.WhichInternalFeatureFormProvider
 import helpers.ControllerSpecSupport
-import models.InternalFeature
+import models.{InternalFeature, NormalMode}
 import views.html.WhichInternalFeatureView
 import play.api.test.Helpers.*
 
@@ -32,12 +32,12 @@ class WhichInternalFeatureControllerSpec extends ControllerSpecSupport {
   "WhichInternalFeatureController" should {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 200
       }
 
       "return HTML" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
+        val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
       }
@@ -46,19 +46,19 @@ class WhichInternalFeatureControllerSpec extends ControllerSpecSupport {
       "redirect" in {
         InternalFeature.values.map { feature =>
           val formRequest = requestWithForm(Map("value" -> feature.toString))
-          val result = controller.onSubmit(formRequest)
+          val result = controller.onSubmit(NormalMode)(formRequest)
           status(result) mustBe 303
         }
       }
 
       "get other value" in {
         val formRequest = requestWithForm(Map("value" -> "other", "otherSelect" -> "sprinklers"))
-        val result = controller.onSubmit(formRequest)
+        val result = controller.onSubmit(NormalMode)(formRequest)
         status(result) mustBe 303
       }
 
       "BadRequest when no form data" in {
-        val result = controller.onSubmit(authenticatedFakeRequest)
+        val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 400
       }
     }

@@ -63,9 +63,8 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getAnswers(sessionRepository: SessionRepository)
-                (implicit request: OptionalDataRequest[AnyContent], messages: Messages): Seq[SummaryListRow] = {
-    request.userAnswers.toSeq.flatMap { answers =>
+  def getAnswers(userAnswers: Option[UserAnswers], mode: Mode)(implicit messages: Messages): Seq[SummaryListRow] = {
+    userAnswers.toSeq.flatMap { answers =>
       InternalFeature.values.flatMap {
         case feature: InternalFeatureGroup1 =>
           answers.get(HowMuchOfProperty.page(feature)).map { value =>
@@ -74,7 +73,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(feature).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString)).url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
@@ -87,7 +86,7 @@ object InternalFeature extends Enumerable.Implicits {
               value = ValueViewModel(value.toString),
               actions = Seq(
                 ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString)).url)
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )

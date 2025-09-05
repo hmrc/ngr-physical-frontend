@@ -43,6 +43,6 @@ class SupportingDocumentsController @Inject()(
 
   def next(): Action[AnyContent] =
     (identify andThen getData) {
-      Redirect(routes.IndexController.onPageLoad())
+      Redirect(routes.CheckYourAnswersController.onPageLoad()) //TODO: Update with correct route to support testing redirecting to CYA page
     }
 }

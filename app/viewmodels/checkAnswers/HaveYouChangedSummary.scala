@@ -42,11 +42,11 @@ object HaveYouChangedSummary  {
           case External => routes.HaveYouChangedController.loadExternal(CheckMode).url
         }
         SummaryListRowViewModel(
-          key     = s"$key.checkYourAnswersLabel",
+          key     = s"$key.title",
           value   = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", url)
-              .withVisuallyHiddenText(messages(s"$key.change.hidden"))
+              .withVisuallyHiddenText(messages(s"$key.title"))
           )
         )
     }

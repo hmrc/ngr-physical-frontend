@@ -37,42 +37,59 @@ class Navigator @Inject()() {
     case ChangeToUseOfSpacePage => _ => routes.HaveYouChangedController.loadInternal(NormalMode)
     case HaveYouChangedInternalPage => answers =>
       answers.get(HaveYouChangedInternalPage) match {
-        case Some(true) => routes.WhichInternalFeatureController.onPageLoad
+        case Some(true) => routes.WhichInternalFeatureController.onPageLoad(NormalMode)
         case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case HaveYouChangedExternalPage => answers =>
       answers.get(HaveYouChangedExternalPage) match {
-        case Some(true) => routes.WhichExternalFeatureController.onPageLoad
+        case Some(true) => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
         case Some(false) => routes.AnythingElseController.onPageLoad(NormalMode)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case WhichInternalFeaturePage => answers =>
       answers.get(WhichInternalFeaturePage) match {
         case Some(feature) =>
-          routes.WhichInternalFeatureController.onPageLoad
+          routes.WhichInternalFeatureController.onPageLoad(NormalMode)
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case WhichExternalFeaturePage => answers =>
       answers.get(WhichExternalFeaturePage) match {
         case Some(feature) =>
-          routes.WhichExternalFeatureController.onPageLoad
+          routes.WhichExternalFeatureController.onPageLoad(NormalMode)
         case None => throw new RuntimeException("No selection - should be caught by form validation")
       }
-    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal)
-    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal)
+    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode)
+    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode)
     case AnythingElsePage => _ => routes.SupportingDocumentsController.onPageLoad()
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = {
-    case _ => _ => routes.CheckYourAnswersController.onPageLoad()
+  private val checkRouteMap: Page => UserAnswers => Option[Call] = {
+    case HaveYouChangedSpacePage => answers =>
+      answers.get(HaveYouChangedSpacePage) map {
+        case true => routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode)
+        case false => routes.CheckYourAnswersController.onPageLoad()
+      }
+    case HaveYouChangedInternalPage => answers =>
+      answers.get(HaveYouChangedInternalPage) map {
+        case true => routes.WhichInternalFeatureController.onPageLoad(CheckMode)
+        case false => routes.HaveYouChangedController.loadExternal(CheckMode)
+      }
+    case HaveYouChangedExternalPage => answers =>
+      answers.get(HaveYouChangedExternalPage) map {
+        case true => routes.WhichExternalFeatureController.onPageLoad(CheckMode)
+        case false => routes.CheckYourAnswersController.onPageLoad()
+      }
+    case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, CheckMode))
+    case page if ExternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, CheckMode))
+    case _ => _ => Some(routes.CheckYourAnswersController.onPageLoad())
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode =>
-      checkRouteMap(page)(userAnswers)
+      checkRouteMap(page)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
   }
 }

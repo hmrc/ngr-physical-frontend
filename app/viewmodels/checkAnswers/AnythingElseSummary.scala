@@ -21,24 +21,35 @@ import models.{CheckMode, UserAnswers}
 import pages.AnythingElsePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
-object AnythingElseSummary  {
+object AnythingElseSummary {
 
-//  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-//    answers.get(AnythingElsePage).map {
-//      answer =>
-//
-//        val value = if (answer) "site.yes" else "site.no"
-//
-//        SummaryListRowViewModel(
-//          key     = "anythingElse.checkYourAnswersLabel",
-//          value   = ValueViewModel(value),
-//          actions = Seq(
-//            ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
-//              .withVisuallyHiddenText(messages("anythingElse.change.hidden"))
-//          )
-//        )
-//    }
+  def rows(answers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+    answers.get(AnythingElsePage).map {
+      answer =>
+
+        val value = if (answer.value) "site.yes" else "site.no"
+
+        Seq(
+          Some(SummaryListRowViewModel(
+            key = "anythingElse.heading",
+            value = ValueViewModel(value),
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages("anythingElse.heading"))
+            ))),
+          answer.text map { info =>
+            SummaryListRowViewModel(
+              key = "anythingElse.heading",
+              value = ValueViewModel(info),
+              actions = Seq(
+                ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
+                  .withVisuallyHiddenText(messages("anythingElse.heading"))
+              )
+            )
+          }
+        ).flatten
+    }
 }

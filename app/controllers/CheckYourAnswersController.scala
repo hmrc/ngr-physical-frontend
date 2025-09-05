@@ -18,30 +18,38 @@ package controllers
 
 import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
+import config.{AppConfig, FrontendAppConfig}
+import models.NavBarPageContents.createDefaultNavBar
+import models.UserAnswers
+import pages.WhenCompleteChangePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.CheckYourAnswersHelper
+import viewmodels.Section
+import viewmodels.checkAnswers.WhenCompleteChangeSummary
 import viewmodels.govuk.summarylist.*
 import views.html.CheckYourAnswersView
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CheckYourAnswersController @Inject()(
                                             override val messagesApi: MessagesApi,
-                                            authenticate: IdentifierAction,
+                                            identify: IdentifierAction,
                                             getData: DataRetrievalAction,
-                                            requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
+                                            cyaHelper: CheckYourAnswersHelper,
                                             view: CheckYourAnswersView
-                                          ) extends FrontendBaseController with I18nSupport {
+                                          )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (authenticate andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val list = SummaryListViewModel(
-        rows = Seq.empty
-      )
 
-      Ok(view(list))
+      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers.getOrElse(UserAnswers(request.userId)))
+
+      Ok(view(request.property.addressFull, createDefaultNavBar(), list))
   }
 }

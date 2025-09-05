@@ -18,7 +18,7 @@ package controllers
 
 import forms.SmallCheckYourAnswersFormProvider
 import helpers.ControllerSpecSupport
-import models.{CYAInternal, NormalMode}
+import models.{CYAInternal, CheckMode, NormalMode}
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.test.Helpers.*
 import views.html.SmallCheckYourAnswersView
@@ -33,12 +33,12 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
   "SmallCheckYourAnswersController" should {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(CYAInternal)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(CYAInternal, NormalMode)(authenticatedFakeRequest)
         status(result) mustBe OK
       }
 
       "return HTML" in {
-        val result = controller.onPageLoad(CYAInternal)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(CYAInternal, NormalMode)(authenticatedFakeRequest)
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
       }
@@ -47,16 +47,22 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
     "onSubmit" must {
       "redirect to have you changed Internal" in {
         val formRequest = requestWithForm(Map("value" -> "true"))
-        val result = controller.onSubmit(CYAInternal)(formRequest)
-        redirectLocation(result) mustBe Some(routes.WhichInternalFeatureController.onPageLoad.url)
+        val result = controller.onSubmit(CYAInternal, NormalMode)(formRequest)
+        redirectLocation(result) mustBe Some(routes.WhichInternalFeatureController.onPageLoad(NormalMode).url)
       }
       "redirect to have you changed External" in {
         val formRequest = requestWithForm(Map("value" -> "false"))
-        val result = controller.onSubmit(CYAInternal)(formRequest)
+        val result = controller.onSubmit(CYAInternal, NormalMode)(formRequest)
         redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadExternal(NormalMode).url)
       }
+
+      "redirect to check your answers page when the mode is CheckMode" in {
+        val formRequest = requestWithForm(Map("value" -> "false"))
+        val result = controller.onSubmit(CYAInternal, CheckMode)(formRequest)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      }
       "bad request when no selection" in {
-        val result = controller.onSubmit(CYAInternal)(authenticatedFakeRequest)
+        val result = controller.onSubmit(CYAInternal, NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 400
       }
     }

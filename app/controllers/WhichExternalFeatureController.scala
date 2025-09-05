@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.WhichExternalFeatureFormProvider
 import models.ExternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{ExternalFeature, NormalMode, WhatHappenedTo}
+import models.{ExternalFeature, Mode, NormalMode, WhatHappenedTo}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -41,23 +41,23 @@ class WhichExternalFeatureController @Inject()(identify: IdentifierAction,
 
   val form: Form[ExternalFeature] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      Ok(view(request.property.addressFull, form, createDefaultNavBar()))
+      Ok(view(request.property.addressFull, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
         feature =>
-          nextPage(feature)
+          nextPage(feature, mode)
       )
   }
 
-  private def nextPage(feature: ExternalFeature): Future[Result] = {
-    Future.successful(Redirect(WhatHappenedTo.pageLoadAction(feature, NormalMode)))
+  private def nextPage(feature: ExternalFeature, mode: Mode): Future[Result] = {
+    Future.successful(Redirect(WhatHappenedTo.pageLoadAction(feature, mode)))
   }
 
 }
