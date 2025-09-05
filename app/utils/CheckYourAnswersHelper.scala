@@ -93,7 +93,7 @@ class CheckYourAnswersHelper @Inject()() {
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows: Seq[SummaryListRow] = rows.flatten
-    if (nonEmptyRows.nonEmpty) Some(Section(Some(heading), SummaryListViewModel(nonEmptyRows))) else None
+    if (nonEmptyRows.nonEmpty) Some(Section(Some(heading), SummaryListViewModel(nonEmptyRows).withCssClass("govuk-!-margin-bottom-9"))) else None
   }
 
 }
