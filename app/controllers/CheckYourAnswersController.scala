@@ -52,4 +52,11 @@ class CheckYourAnswersController @Inject()(
 
       Ok(view(request.property.addressFull, createDefaultNavBar(), list))
   }
+
+  def onSubmit(): Action[AnyContent] =
+    (identify andThen getData) {
+      implicit request =>
+        Redirect(routes.IndexController.onPageLoad())
+    }
+  
 }
