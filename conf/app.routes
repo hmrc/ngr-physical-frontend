@@ -192,8 +192,8 @@ GET        /change-check-and-confirm-changes-to-internal-features/:featureString
 
 GET        /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAExternal, mode: Mode = NormalMode)
 POST       /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal, mode: Mode = NormalMode)
-GET        /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
-POST       /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
+GET        /change-check-and-confirm-changes-to-external-features                controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
+POST       /change-check-and-confirm-changes-to-external-features                controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
 GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = NormalMode)
 GET        /change-check-and-confirm-changes-to-external-features/:featureString controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = CheckMode)
 
