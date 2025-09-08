@@ -15,15 +15,18 @@
  *@
 
 @import viewmodels.Section
+@import config.AppConfig
 
 @this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
+    layout: Layout,
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton,
+    formHelper: FormWithCSRF
 )
 
-@(address: String, navigationBarContent: NavigationBarContent, list: Seq[Section])(implicit request: Request[?], messages: Messages)
+@(address: String, navigationBarContent: NavigationBarContent, list: Seq[Section])(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = Some(messages("checkYourAnswers.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
     <span class="govuk-caption-m">@address</span>
     <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 
@@ -33,5 +36,11 @@
         }
 
         @govukSummaryList(section.rows)
+    }
+
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
+        @govukButton(
+            ButtonViewModel(messages("site.continue")).withAttribute("id" -> "submit").preventingDoubleClick()
+        )
     }
 }
