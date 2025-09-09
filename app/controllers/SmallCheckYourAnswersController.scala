@@ -72,8 +72,8 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
             case CYAExternal => Future.successful(Redirect(routes.WhichExternalFeatureController.onPageLoad(mode)))
           }
           case false => viewType match {
-            case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(NormalMode)))
-            case CYAExternal if mode == NormalMode => Future.successful(Redirect(routes.AnythingElseController.onPageLoad(NormalMode)))
+            case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(mode)))
+            case CYAExternal if mode == NormalMode => Future.successful(Redirect(routes.AnythingElseController.onPageLoad(mode)))
             case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
           }
         }
