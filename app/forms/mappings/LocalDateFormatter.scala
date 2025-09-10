@@ -32,13 +32,32 @@ private[mappings] class LocalDateFormatter(
 
   private val fieldKeys: List[String] = List("day", "month", "year")
 
-  private def toDate(key: String, day: Int, month: Int, year: Int): Either[Seq[FormError], LocalDate] =
-    Try(LocalDate.of(year, month, day)) match {
-      case Success(date) =>
-        Right(date)
-      case Failure(_) =>
-        Left(Seq(FormError(key, invalidKey, args)))
+  private def toDate(key: String, day: Int, month: Int, year: Int): Either[Seq[FormError], LocalDate] = {
+    def isLeapYear(y: Int): Boolean = java.time.Year.isLeap(y)
+
+    def maxDayInMonth(m: Int, y: Int): Option[Int] = m match {
+      case 1 | 3 | 5 | 7 | 8 | 10 | 12 => Some(31)
+      case 4 | 6 | 9 | 11             => Some(30)
+      case 2                          => Some(if (isLeapYear(y)) 29 else 28)
+      case _                          => None
     }
+
+    Try(LocalDate.of(year, month, day)) match {
+      case Success(date) => Right(date)
+      case Failure(_) =>
+        val invalidFieldKey = {
+          if (month < 1 || month > 12) s"$key.month"
+          else if (year < 1900 || year > 9999) s"$key.year"
+          else maxDayInMonth(month, year) match {
+            case Some(maxDay) if day < 1 || day > maxDay => s"$key.day"
+            case None => s"$key.month"
+            case _ => key
+          }
+        }
+        Left(Seq(FormError(invalidFieldKey, invalidKey, args)))
+    }
+  }
+
 
   private def formatDate(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
 
@@ -60,31 +79,33 @@ private[mappings] class LocalDateFormatter(
   }
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
-
-    val fields = fieldKeys.map {
-      field =>
-        field -> data.get(s"$key.$field").filter(_.nonEmpty)
+    val fields: Map[String, Option[String]] = fieldKeys.map { field =>
+      field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
 
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-      .map(field => messages(s"date.error.$field"))
+    val missingFieldKeys = fields.collect { case (field, None) => field }.toSeq
+    val missingMessages = missingFieldKeys.map(field => messages(s"date.error.$field"))
 
     fields.count(_._2.isDefined) match {
       case 3 =>
-        formatDate(key, data).left.map {
-          _.map(_.copy(key = key, args = args))
-        }
+        formatDate(key, data)
+
       case 2 =>
-        Left(List(FormError(key, requiredKey, missingFields ++ args)))
+        val firstMissing = missingFieldKeys.head
+        Left(List(FormError(s"$key.$firstMissing", requiredKey, missingMessages ++ args)))
+
       case 1 =>
-        Left(List(FormError(key, twoRequiredKey, missingFields ++ args)))
+        val firstError = FormError(s"$key.${missingFieldKeys.head}", twoRequiredKey, missingMessages ++ args)
+        val secondErrorOpt = missingFieldKeys.lift(1).map { secondMissing =>
+          FormError(s"$key.$secondMissing", "", args)
+        }
+        Left(firstError :: secondErrorOpt.toList)
+
       case _ =>
         Left(List(FormError(key, allRequiredKey, args)))
     }
   }
+
 
   override def unbind(key: String, value: LocalDate): Map[String, String] =
     Map(

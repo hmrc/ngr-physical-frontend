@@ -17,13 +17,12 @@
 @import models.NavigationBarContent
 @import config.AppConfig
 @import views.html.components.*
-@import uk.gov.hmrc.govukfrontend.views.html.components.*
 
 @this(
     layout: Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukDateInput: GovukDateInput,
+    dateEntry: DateEntry,
     saveAndContinueButton: saveAndContinueButton
 )
 
@@ -34,16 +33,31 @@
     @formHelper(action = routes.WhenCompleteChangeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukDateInput(
-            DateViewModel(
-                field  = form("value"),
-                legend = Legend(content = messages("whenCompleteChange.heading"), classes = "govuk-fieldset__legend--l")
+
+
+@for(error <- form.errors) {
+<p>Error key: @error.key</p>
+<p>Raw message key: @error.message</p>
+<p>Resolved message: @messages(error.message)</p>
+<p>Args: @error.args.mkString(", ")</p>
+}
+
+
+
+
+
+        @dateEntry(
+            form,
+            DateInput(
+                id = "value",
+                fieldset = Some(Fieldset(legend = Some(Legend(content = Text(messages("whenCompleteChange.heading")), classes = "govuk-fieldset__legend--l")))),
+                hint = Some(Hint(content = Text(messages("whenCompleteChange.hint"))))
             )
-            .withHint(HintViewModel(messages("whenCompleteChange.hint")))
         )
+
 
         @saveAndContinueButton(msg = messages("site.continue"))
     }
