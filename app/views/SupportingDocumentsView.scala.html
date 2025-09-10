@@ -40,7 +40,7 @@
     @p(id = Some("detail-para-4")) { @messages("supporting.help.details4") }
 }
 
-@layout(pageTitle = Some("ngr-physical-frontend"), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(titleNoForm("supporting.documents.heading")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = controllers.routes.SupportingDocumentsController.next()) {
         <span class="govuk-caption-m">@address</span>

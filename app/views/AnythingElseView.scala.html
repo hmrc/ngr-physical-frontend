@@ -29,7 +29,7 @@
 
 @(address: String, form: Form[?], navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("anythingElse.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages("anythingElse.heading"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.AnythingElseController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

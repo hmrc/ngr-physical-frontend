@@ -36,7 +36,7 @@
     mode: Mode
 )(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("changeToUseOfSpace.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages("changeToUseOfSpace.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.ChangeToUseOfSpaceController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

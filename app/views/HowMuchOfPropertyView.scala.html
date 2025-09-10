@@ -38,7 +38,7 @@
     navigationBarContent: NavigationBarContent
 )(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages(strings("title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages(strings("title")))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
