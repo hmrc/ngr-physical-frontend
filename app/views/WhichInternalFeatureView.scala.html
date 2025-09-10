@@ -30,7 +30,7 @@
 
 @(address: String, form: Form[InternalFeature], navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("whichInternalFeature.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages("whichInternalFeature.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.WhichInternalFeatureController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

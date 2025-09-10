@@ -137,7 +137,7 @@ changedFeaturesOrSpace.ul3.li8 = parking
 changedFeaturesOrSpace.ul3.li9 = portable buildings
 changedFeaturesOrSpace.ul3.li10 = shipping containers
 changedFeaturesOrSpace.ul3.li11 = solar panels
-whenCompleteChange.title = When did you complete the change? - Manage your business rates valuation
+whenCompleteChange.title = When did you complete the change?
 whenCompleteChange.heading = When did you complete the change?
 whenCompleteChange.hint = For example, 27 6 2026.
 

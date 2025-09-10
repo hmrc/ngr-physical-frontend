@@ -42,7 +42,7 @@
 }
 
 
-@layout(pageTitle = Some("ngr-physical-frontend"), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(titleNoForm("info.and.supporting.documents.heading")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
 @formHelper(action = controllers.routes.InfoAndSupportingDocController.next) {
 
@@ -52,24 +52,24 @@
 @h2(msg = messages("info.and.supporting.documents.sub.heading1"), optId = Some("sub-heading-1"))
 
 @p(
-id = Some("para-1")) {
-@messages("info.and.supporting.documents.p1")
-}
+    id = Some("para-1")) {
+        @messages("info.and.supporting.documents.p1")
+    }
 
 @p(
-id = Some("para-2")) {
-@messages("info.and.supporting.documents.p2")
-}
+    id = Some("para-2")) {
+        @messages("info.and.supporting.documents.p2")
+    }
 
 @p(
-id = Some("para-3")) {
-@messages("info.and.supporting.documents.p3")
-}
+    id = Some("para-3")) {
+        @messages("info.and.supporting.documents.p3")
+    }
 
 @bulletPointList(
-Seq("info.and.supporting.documents.change.bullet.point1",
-"info.and.supporting.documents.change.bullet.point2",
-"info.and.supporting.documents.change.bullet.point3")
+    Seq("info.and.supporting.documents.change.bullet.point1",
+    "info.and.supporting.documents.change.bullet.point2",
+    "info.and.supporting.documents.change.bullet.point3")
 )
 
 
