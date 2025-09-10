@@ -33,12 +33,13 @@
     featureString: String,
     form: Form[Boolean],
     navigationBarContent: NavigationBarContent,
-    mode: Mode
+    mode: Mode,
+    fromMiniCYA: Boolean
 )(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, titleKey)), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString, mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString, mode, fromMiniCYA), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

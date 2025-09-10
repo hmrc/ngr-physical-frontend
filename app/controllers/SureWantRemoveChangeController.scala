@@ -44,16 +44,16 @@ class SureWantRemoveChangeController @Inject()(
                                           view: SureWantRemoveChangeView
                                         )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(hyphenFeatureString: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(hyphenFeatureString: String, mode: Mode, fromMiniCYA: Boolean = false): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
         val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
         val viewType = determineViewType(camelCaseFeatureString)
         val form: Form[Boolean] = formProvider(getFeatureValue(viewType, camelCaseFeatureString).getOrElse(hyphenFeatureString))
-        Ok(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, form, createDefaultNavBar(), mode))
+        Ok(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, form, createDefaultNavBar(), mode, fromMiniCYA))
     }
 
-  def onSubmit(hyphenFeatureString: String, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(hyphenFeatureString: String, mode: Mode, fromMiniCYA: Boolean = false): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
       val viewType = determineViewType(camelCaseFeatureString)
@@ -61,12 +61,12 @@ class SureWantRemoveChangeController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, formWithErrors, createDefaultNavBar(), mode))),
+          Future.successful(BadRequest(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, formWithErrors, createDefaultNavBar(), mode, fromMiniCYA))),
         {
           case true =>
             viewType match 
-              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString, mode).url))
-              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString, mode).url))
+              case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString, mode, fromMiniCYA).url))
+              case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString, mode, fromMiniCYA).url))
           case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType, mode)))
         }
       )

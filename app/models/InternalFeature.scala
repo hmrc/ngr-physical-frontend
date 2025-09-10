@@ -63,7 +63,7 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getAnswers(userAnswers: Option[UserAnswers], mode: Mode)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def getAnswers(userAnswers: Option[UserAnswers], mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
     userAnswers.toSeq.flatMap { answers =>
       InternalFeature.values.flatMap {
         case feature: InternalFeatureGroup1 =>
@@ -72,8 +72,8 @@ object InternalFeature extends Enumerable.Implicits {
               key = s"internalFeature.${feature.toString}",
               value = ValueViewModel(valueString(feature, value.toString)),
               actions = Seq(
-                ActionItemViewModel("site.change", changeLink(feature).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode).url)
+                ActionItemViewModel("site.change", changeLink(feature, mode).url),
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
@@ -85,8 +85,8 @@ object InternalFeature extends Enumerable.Implicits {
               key = "internalFeature.securityCamera",
               value = ValueViewModel(value.toString),
               actions = Seq(
-                ActionItemViewModel("site.change", changeLink(SecurityCamera).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode).url)
+                ActionItemViewModel("site.change", changeLink(SecurityCamera, mode).url),
+                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode, fromMiniCYA).url)
               ),
               actionClasses = "govuk-!-width-one-third"
             )
@@ -96,16 +96,16 @@ object InternalFeature extends Enumerable.Implicits {
     }
   }
 
-  def changeLink(feature: InternalFeature): Call = {
+  def changeLink(feature: InternalFeature, mode: Mode): Call = {
     feature match {
-      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(CheckMode)
-      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(CheckMode)
-      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(CheckMode)
-      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(CheckMode)
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(CheckMode)
-      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(CheckMode)
-      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(CheckMode)
-      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(CheckMode)
+      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(mode)
+      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(mode)
+      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(mode)
+      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(mode)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode)
+      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(mode)
+      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(mode)
+      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(mode)
     }
   }
 

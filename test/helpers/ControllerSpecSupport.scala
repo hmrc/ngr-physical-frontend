@@ -31,6 +31,7 @@ trait ControllerSpecSupport extends TestSupport with TestData {
   val fakeRequireData = new FakeDataRequiredAction()
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   val navigator: Navigator = inject[Navigator]
+  val emptyUserAnswers: UserAnswers = UserAnswers("id")
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   
