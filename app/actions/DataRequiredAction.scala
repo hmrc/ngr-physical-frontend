@@ -16,10 +16,14 @@
 
 package actions
 
+import connectors.NGRConnector
 import controllers.routes
+import models.registration.CredId
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
+import uk.gov.hmrc.http.NotFoundException
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +35,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
       case None =>
         Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
       case Some(data) =>
-        Future.successful(Right(DataRequest(request.request, request.userId, data)))
+        Future.successful(Right(DataRequest(request.request, request.userId, data, request.property)))
     }
   }
 }
