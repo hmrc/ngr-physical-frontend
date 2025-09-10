@@ -36,19 +36,6 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-
-
-@for(error <- form.errors) {
-<p>Error key: @error.key</p>
-<p>Raw message key: @error.message</p>
-<p>Resolved message: @messages(error.message)</p>
-<p>Args: @error.args.mkString(", ")</p>
-}
-
-
-
-
-
         @dateEntry(
             form,
             DateInput(
