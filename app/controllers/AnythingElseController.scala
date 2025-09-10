@@ -60,7 +60,6 @@ class AnythingElseController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      println("Submitting Anything Else form"+request.userAnswers)
 
       form.bindFromRequest().fold(
         formWithErrors =>
