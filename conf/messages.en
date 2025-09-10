@@ -412,8 +412,6 @@ CYAInternal.changes.no = You have no changes to internal features.
 smallCheckYourAnswers.internal.error.required = Select yes if you want to tell us about another internal feature
 smallCheckYourAnswers.external.error.required = Select yes if you want to tell us about another external feature
 
-CYAInternal.changes.no = No internal features changed
-CYAExternal.changes.no = No external features changed
 whichExternalFeature.hint = You can tell us about one feature at a time.
 
 externalCheckYourAnswers.title = Check and confirm changes to external features

@@ -78,7 +78,7 @@ class SmallCheckYourAnswersViewSpec extends ViewBaseSpec {
       elementText(Selectors.continue)(document) mustBe "Continue"
       elementExists(Selectors.rowKey)(document) mustBe false
       elementExists(Selectors.rowValue)(document) mustBe false
-      elementText(Selectors.noChanges)(document) mustBe "No internal features changed"
+      elementText(Selectors.noChanges)(document) mustBe "You have no changes to internal features."
     }
   }
 

@@ -187,20 +187,20 @@ POST       /check-and-confirm-changes-to-internal-features                      
 GET        /change-check-and-confirm-changes-to-internal-features                controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAInternal, mode: Mode = CheckMode)
 POST       /change-check-and-confirm-changes-to-internal-features                controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAInternal, mode: Mode = CheckMode)
 
-GET        /check-and-confirm-changes-to-internal-features/:featureString        controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = NormalMode)
-GET        /change-check-and-confirm-changes-to-internal-features/:featureString controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = CheckMode)
+GET        /check-and-confirm-changes-to-internal-features/:featureString        controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = NormalMode, fromMiniCYA: Boolean)
+GET        /change-check-and-confirm-changes-to-internal-features/:featureString controllers.SmallCheckYourAnswersController.removeInternal(featureString: String, mode: Mode = CheckMode, fromMiniCYA: Boolean)
 
 GET        /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAExternal, mode: Mode = NormalMode)
 POST       /check-and-confirm-changes-to-external-features                       controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal, mode: Mode = NormalMode)
 GET        /change-check-and-confirm-changes-to-external-features                controllers.SmallCheckYourAnswersController.onPageLoad(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
 POST       /change-check-and-confirm-changes-to-external-features                controllers.SmallCheckYourAnswersController.onSubmit(viewType: CYAViewType = CYAExternal, mode: Mode = CheckMode)
-GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = NormalMode)
-GET        /change-check-and-confirm-changes-to-external-features/:featureString controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = CheckMode)
+GET        /check-and-confirm-changes-to-external-features/:featureString        controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = NormalMode, fromMiniCYA: Boolean)
+GET        /change-check-and-confirm-changes-to-external-features/:featureString controllers.SmallCheckYourAnswersController.removeExternal(featureString: String, mode: Mode = CheckMode, fromMiniCYA: Boolean)
 
-GET        /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onPageLoad(featureString: String, mode: Mode = NormalMode)
-POST       /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onSubmit(featureString: String, mode: Mode = NormalMode)
-GET        /change-are-you-sure-want-remove-change-to-:featureString             controllers.SureWantRemoveChangeController.onPageLoad(featureString: String, mode: Mode = CheckMode)
-POST       /change-are-you-sure-want-remove-change-to-:featureString             controllers.SureWantRemoveChangeController.onSubmit(featureString: String, mode: Mode = CheckMode)
+GET        /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onPageLoad(featureString: String, mode: Mode = NormalMode, fromMiniCYA: Boolean)
+POST       /are-you-sure-want-remove-change-to-:featureString                    controllers.SureWantRemoveChangeController.onSubmit(featureString: String, mode: Mode = NormalMode, fromMiniCYA: Boolean)
+GET        /change-are-you-sure-want-remove-change-to-:featureString             controllers.SureWantRemoveChangeController.onPageLoad(featureString: String, mode: Mode = CheckMode, fromMiniCYA: Boolean)
+POST       /change-are-you-sure-want-remove-change-to-:featureString             controllers.SureWantRemoveChangeController.onSubmit(featureString: String, mode: Mode = CheckMode, fromMiniCYA: Boolean)
 
 GET        /anything-else-tell-us                                                controllers.AnythingElseController.onPageLoad(mode: Mode = NormalMode)
 POST       /anything-else-tell-us                                                controllers.AnythingElseController.onSubmit(mode: Mode = NormalMode)
