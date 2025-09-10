@@ -20,12 +20,14 @@ import actions.DataRequiredAction
 import models.UserAnswers
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.*
+
 import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 import controllers.routes
+import helpers.TestData
 
 class FakeDataRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
-  extends DataRequiredAction {
+  extends DataRequiredAction with TestData {
 
   var userAnswersToReturn: Option[UserAnswers] = Some(UserAnswers("id"))
 
@@ -34,7 +36,7 @@ class FakeDataRequiredAction @Inject()(implicit val executionContext: ExecutionC
       case None =>
         Future.successful(Left(Results.Redirect(routes.JourneyRecoveryController.onPageLoad())))
       case Some(data) =>
-        Future.successful(Right(DataRequest(request.request, request.userId, data)))
+        Future.successful(Right(DataRequest(request.request, request.userId, data, request.property)))
     }
   }
 }

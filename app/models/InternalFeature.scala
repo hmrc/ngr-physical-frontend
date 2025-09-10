@@ -129,7 +129,7 @@ object InternalFeature extends Enumerable.Implicits {
       }
     } else {
       feature match {
-        case CompressedAir if(value == "all") => messages("internalFeature.compressedAir.added")
+        case CompressedAir if value == "all" => messages("internalFeature.compressedAir.added")
         case _ => messages(s"internalFeature.${feature.toString}.value", value)
       }
     }

@@ -39,22 +39,23 @@ class CheckYourAnswersController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             identify: IdentifierAction,
                                             getData: DataRetrievalAction,
+                                            requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
                                             cyaHelper: CheckYourAnswersHelper,
                                             view: CheckYourAnswersView
                                           )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
 
-      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers.getOrElse(UserAnswers(request.userId)))
+      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
 
       Ok(view(request.property.addressFull, createDefaultNavBar(), list))
   }
 
   def onSubmit(): Action[AnyContent] =
-    (identify andThen getData) {
+    (identify andThen getData andThen requireData) {
       implicit request =>
         Redirect(routes.DeclarationController.show)
     }
