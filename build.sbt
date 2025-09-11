@@ -6,7 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 lazy val appName: String = "ngr-physical-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "3.4.2"
+ThisBuild / scalaVersion := "3.6.4"
 
 lazy val microservice = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -40,6 +40,7 @@ lazy val microservice = (project in file("."))
     scalacOptions ++= Seq(
       "-Wconf:cat=deprecation:s,cat=feature:s",
       "-Wconf:msg=unused import:s",
+      "-Wconf:src=routes/.*:silent", // Suppress warnings from routes files
     ),
     scalacOptions := scalacOptions.value.distinct,
     libraryDependencies ++= AppDependencies(),
