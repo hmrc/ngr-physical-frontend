@@ -427,3 +427,15 @@ anythingElse.error.required = Select yes if there is anything else you want to t
 anythingElse.error.requiredText = Tell us about the changes
 anythingElse.inputTitle = What do you want to tell us?
 anythingElse.error.charLimit = What you tell us about the changes must be 250 characters or less
+
+submissionConfirmation.title = submissionConfirmation
+submissionConfirmation.heading = Property change details sent
+submissionConfirmation.ref = Your reference is
+submissionConfirmation.print = Print this page
+submissionConfirmation.address = Address
+submissionConfirmation.next = What happens next
+submissionConfirmation.p1 = We will review the information you sent us. We will contact you if we need to clarify anything or need more details.
+submissionConfirmation.p2 = We will contact you with our decision about your rateable value - usually within 90 days. Your rateable value may go up, down or stay the same.
+submissionConfirmation.p3 = We will update the details we hold about your property when we let you know about the rateable value.
+submissionConfirmation.p4 = We will tell your local council about your new rateable value. A change in rateable value may affect the business rates you pay.
+submissionConfirmation.goHome = Go to your account home

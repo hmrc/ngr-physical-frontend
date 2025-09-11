@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 trait AppConfig {
   val registrationHost: String
   val dashboardHost: String
+  val dashboardUrl: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
   val features: Features
@@ -60,6 +61,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
 
 
   override val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  override val dashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
   override val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
   override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")

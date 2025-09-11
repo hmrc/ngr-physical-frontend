@@ -206,3 +206,5 @@ GET        /anything-else-tell-us                                               
 POST       /anything-else-tell-us                                                controllers.AnythingElseController.onSubmit(mode: Mode = NormalMode)
 GET        /change-anything-else-tell-us                                         controllers.AnythingElseController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-anything-else-tell-us                                         controllers.AnythingElseController.onSubmit(mode: Mode = CheckMode)
+
+GET        /property-change-details-sent                                         controllers.SubmissionConfirmationController.onPageLoad()
