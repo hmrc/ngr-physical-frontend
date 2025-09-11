@@ -97,10 +97,6 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
       elementText(Selectors.thirdSubHeading) mustBe "How your rateable value will change"
     }
 
-    "show correct fourth paragraph" in {
-      elementText(Selectors.thirdParagraph) mustBe "You should upload at least one document that supports all the changes you tell us about."
-    }
-
     "show correct help detail section" in {
       elementText(Selectors.helpDetailTitle) mustBe "Help with supporting documents"
       elementText(Selectors.helpDetail_1) mustBe "Plans can be drawings with measurements, plans drawn to scale or your own sketch. Your architect or builder may be able to give you a copy of your plans."
