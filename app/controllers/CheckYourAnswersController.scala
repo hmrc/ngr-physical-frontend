@@ -47,9 +47,7 @@ class CheckYourAnswersController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-
-
-      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
+    val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
 
       Ok(view(request.property.addressFull, createDefaultNavBar(), list))
   }
