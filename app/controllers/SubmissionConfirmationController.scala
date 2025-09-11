@@ -26,7 +26,6 @@ import views.html.SubmissionConfirmationView
 import javax.inject.Inject
 
 class SubmissionConfirmationController @Inject()(
-                                       override val messagesApi: MessagesApi,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
 //                                       requireData: DataRequiredAction,
