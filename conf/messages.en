@@ -443,3 +443,12 @@ submissionConfirmation.p2 = We will contact you with our decision about your rat
 submissionConfirmation.p3 = We will update the details we hold about your property when we let you know about the rateable value.
 submissionConfirmation.p4 = We will tell your local council about your new rateable value. A change in rateable value may affect the business rates you pay.
 submissionConfirmation.goHome = Go to your account home
+
+notToldAnyChanges.title = You have not told us about any changes to your property
+notToldAnyChanges.p1 = To continue, you need to tell us about a change to at least one of the following:
+notToldAnyChanges.ul1.li1 = use of space
+notToldAnyChanges.ul1.li2 = internal features
+notToldAnyChanges.ul1.li3 = external features
+notToldAnyChanges.p2 = If you do not have any changes to tell us about, you can go to your account home. We will not save any information or documents you have provided.
+
+
