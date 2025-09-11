@@ -83,7 +83,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
     }
 
     "show correct third paragraph" in {
-      elementText(Selectors.thirdParagraph) mustBe "You must upload at least one document that supports all the changes you tell us about."
+      elementText(Selectors.thirdParagraph) mustBe "You should upload at least one document that supports all the changes you tell us about."
     }
 
     "show correct second bullet point section" in {
@@ -98,7 +98,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
     }
 
     "show correct fourth paragraph" in {
-      elementText(Selectors.thirdParagraph) mustBe "You must upload at least one document that supports all the changes you tell us about."
+      elementText(Selectors.thirdParagraph) mustBe "You should upload at least one document that supports all the changes you tell us about."
     }
 
     "show correct help detail section" in {
