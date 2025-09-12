@@ -33,7 +33,7 @@ class WhenCompleteChangeViewSpec extends ViewBaseSpec {
   val address: String = "123 Street Lane"
 
   object Selectors {
-    val h1 = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > legend"
+    val h1 = "#main-content > div > div.govuk-grid-column-two-thirds > form > h1"
     val dateHintText = """#value-hint"""
     val inputDay = """#value\.day"""
     val inputMonth = """#value\.month"""
