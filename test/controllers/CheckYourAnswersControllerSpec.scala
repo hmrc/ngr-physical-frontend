@@ -17,44 +17,78 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
+import helpers.TestData
+import models.NavBarPageContents.createDefaultNavBar
+import models.NavigationBarContent
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
-//class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
-//
-//  "Check Your Answers Controller" - {
-//
-//    "must return OK and the correct view for a GET" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
-//
-//        val result = route(application, request).value
-//
-//        val view = application.injector.instanceOf[CheckYourAnswersView]
-//        val list = SummaryListViewModel(Seq.empty)
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//  }
-//}
+class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with TestData {
+
+  "Check Your Answers Controller" - {
+
+    "must return OK and the correct view for a GET" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      running(application) {
+        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+        val list = Seq.empty
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), list)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to Index page" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      running(application) {
+        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.DeclarationController.show.url)
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+}
