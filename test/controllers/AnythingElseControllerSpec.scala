@@ -16,9 +16,9 @@
 
 package controllers
 
-import forms.{AnythingElseData, AnythingElseFormProvider}
+import forms.{AnythingElseFormProvider}
 import helpers.ControllerSpecSupport
-import models.{NormalMode, UserAnswers}
+import models.{AnythingElseData, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import pages.AnythingElsePage

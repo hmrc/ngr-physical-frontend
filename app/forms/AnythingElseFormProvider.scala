@@ -18,17 +18,12 @@ package forms
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.AnythingElseData
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.voa.play.form.ConditionalMappings.*
-
-case class AnythingElseData(value: Boolean, text: Option[String])
-
-object AnythingElseData {
-  implicit val format: OFormat[AnythingElseData] = Json.format
-}
 
 class AnythingElseFormProvider @Inject() extends Mappings {
 
