@@ -16,6 +16,7 @@
 
 @import config.AppConfig
 @import views.html.components.printLink
+@import models.NavigationBarContent
 
 @this(
     layout: Layout,
@@ -24,9 +25,9 @@
     govukSummaryList: GovukSummaryList
 )
 
-@(address: String, ref: String)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(address: String, ref: String, navBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("submissionConfirmation.title"))) {
+@layout(pageTitle = Some(messages("submissionConfirmation.title")), showBackLink = true, navigationBarContent = Some(navBarContent)) {
 
     @govukPanel(
         Panel(

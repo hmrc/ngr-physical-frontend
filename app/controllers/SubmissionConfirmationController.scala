@@ -18,6 +18,7 @@ package controllers
 
 import actions.*
 import config.AppConfig
+import models.NavBarPageContents.createDefaultNavBar
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -36,6 +37,6 @@ class SubmissionConfirmationController @Inject()(
   def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val ref = "AB7F-7GDM-ER54"
-      Ok(view(request.property.addressFull, ref))
+      Ok(view(request.property.addressFull, ref, createDefaultNavBar()))
   }
 }
