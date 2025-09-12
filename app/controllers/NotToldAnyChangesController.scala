@@ -21,16 +21,12 @@ import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
 import models.NormalMode
 import navigation.Navigator
-import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NotToldAnyChangesView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NotToldAnyChangesController @Inject()(
