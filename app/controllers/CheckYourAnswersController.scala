@@ -56,7 +56,7 @@ class CheckYourAnswersController @Inject()(
   def onSubmit(): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        Redirect(routes.IndexController.onPageLoad())
+        Redirect(routes.DeclarationController.show)
     }
   
 }

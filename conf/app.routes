@@ -207,4 +207,6 @@ POST       /anything-else-tell-us                                               
 GET        /change-anything-else-tell-us                                         controllers.AnythingElseController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-anything-else-tell-us                                         controllers.AnythingElseController.onSubmit(mode: Mode = CheckMode)
 
+GET        /declaration-physical                                                 controllers.DeclarationController.show
+POST       /declaration-physical                                                 controllers.DeclarationController.next
 GET        /not-told-us-about-any-changes-to-property                            controllers.NotToldAnyChangesController.show

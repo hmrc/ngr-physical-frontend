@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import models.AnythingElseData
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Json, OFormat}
 
-case object AnythingElsePage extends QuestionPage[AnythingElseData] {
-  override def path: JsPath = JsPath \ toString
-  override def toString: String = "anythingElse"
+case class AnythingElseData(value: Boolean, text: Option[String])
+
+object AnythingElseData {
+  implicit val format: OFormat[AnythingElseData] = Json.format
 }
