@@ -13,6 +13,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.acceptAndSend = Accept and send
 
 date.day = Day
 date.month = Month
@@ -427,3 +428,7 @@ anythingElse.error.required = Select yes if there is anything else you want to t
 anythingElse.error.requiredText = Tell us about the changes
 anythingElse.inputTitle = What do you want to tell us?
 anythingElse.error.charLimit = What you tell us about the changes must be 250 characters or less
+
+declaration.title = declaration
+declaration.heading = Declaration
+declaration.p1 = By submitting these details, you declare that to the best of your knowledge the information given is correct and complete.

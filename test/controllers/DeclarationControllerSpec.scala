@@ -16,35 +16,37 @@
 
 package controllers
 
-
+import base.SpecBase
 import helpers.{ControllerSpecSupport, TestData}
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import play.api.mvc.*
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import views.html.{DeclarationView, InfoAndSupportingDocView}
+import views.html.DeclarationView
 
 import scala.concurrent.Future
 
-class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with TestData {
+class DeclarationControllerSpec extends ControllerSpecSupport with TestData {
 
-  lazy val view: InfoAndSupportingDocView = inject[InfoAndSupportingDocView]
+  lazy val view: DeclarationView = inject[DeclarationView]
   private val fakeRequest = FakeRequest("GET", "/information-and-supporting-documents-need")
 
-  def controller() = new InfoAndSupportingDocController(
+  def controller() = new DeclarationController(
     mcc,
     view,
     fakeAuth,
     fakeReg,
-    fakeData(None)
-  )(mockConfig)
+    fakeData(None),
+    mockSessionRepository
+  )
 
-  val pageTitle = "Information and supporting documents you need"
-  val contentP = "You need information about the things you changed and what the property is like after the change."
+  val pageTitle = "Declaration"
+  val contentP = "By submitting these details, you declare that to the best of your knowledge the information given is correct and complete."
 
-  "Info and supporting Controller" must {
+
+  "Declaration Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
         val result: Future[Result] = controller().show(fakeRequest)
@@ -52,6 +54,13 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
         val content = contentAsString(result)
         content must include(pageTitle)
         content must include(contentP)
+      }
+    }
+    "next" must {
+      s"redirect when accepted" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val result = controller().next(fakeRequest)
+        status(result) mustBe 303
       }
     }
   }

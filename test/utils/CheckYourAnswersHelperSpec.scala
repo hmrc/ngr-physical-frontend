@@ -17,8 +17,7 @@
 package utils
 
 import base.SpecBase
-import forms.AnythingElseData
-import models.ChangeToUseOfSpace
+import models.{AnythingElseData, ChangeToUseOfSpace}
 import models.HowMuchOfProperty.{AllOf, SomeOf}
 import models.UseOfSpaces.Rearrangedtheuseofspace
 import models.WhatHappenedTo.{Added, RemovedSome}
