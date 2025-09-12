@@ -45,10 +45,11 @@
         }
 
         <span class="govuk-caption-m">@address</span>
+        <h1 class="govuk-heading-l">@messages(titleKey))</h1>
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(content = titleKey, classes = "govuk-fieldset__legend--l")
+                legend = Legend()
             )
         )
         @saveAndContinueButton(msg=messages("site.continue"))

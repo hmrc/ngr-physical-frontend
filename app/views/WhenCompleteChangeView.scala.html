@@ -37,10 +37,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
         }
 
+        <h1 class="govuk-heading-l">@messages("whenCompleteChange.heading"))</h1>
+
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = Legend(content = messages("whenCompleteChange.heading"), classes = "govuk-fieldset__legend--l")
+                legend = Legend()
             )
             .withHint(HintViewModel(messages("whenCompleteChange.hint")))
         )
