@@ -56,7 +56,7 @@ object ExternalFeature extends Enumerable.Implicits {
 
   val values: Seq[ExternalFeature] = Seq(
     LoadingBays, LockupGarages, OutdoorSeating, Parking, SolarPanels, AdvertisingDisplays,
-    BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen,
+    BikeSheds, Canopies, LandHardSurfacedFenced, LandHardSurfacedOpen, LandGravelledFenced, LandGravelledOpen, 
     LandUnsurfacedFenced, LandUnsurfacedOpen, PortableBuildings, ShippingContainers
   )
 
@@ -114,7 +114,7 @@ object ExternalFeature extends Enumerable.Implicits {
     WhatHappenedToLandHardSurfacedFencedPage,
     WhatHappenedToLandHardSurfacedOpenPage,
     WhatHappenedToLandGravelledFencedPage,
-    WhatHappenedToLandHardSurfacedOpenPage,
+    WhatHappenedToLandGravelledOpenPage,
     WhatHappenedToLandUnsurfacedFencedPage,
     WhatHappenedToLandUnsurfacedOpenPage,
     WhatHappenedToPortableBuildingsPage,
