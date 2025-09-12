@@ -19,6 +19,7 @@ package controllers
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
+import models.NormalMode
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
@@ -41,7 +42,7 @@ class NotToldAnyChangesController @Inject()(
 
   def show: Action[AnyContent] =
     (identify andThen getData) { implicit request =>
-      Ok(view(request.property.addressFull, createDefaultNavBar()))
+      Ok(view(request.property.addressFull, createDefaultNavBar(), NormalMode))
     }
 
 
