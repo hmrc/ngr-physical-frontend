@@ -19,10 +19,15 @@ package controllers
 import helpers.ControllerSpecSupport
 import play.api.test.Helpers.*
 import views.html.SubmissionConfirmationView
+import models.*
+import pages.*
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import scala.util.Try
 
 class SubmissionConfirmationControllerSpec extends ControllerSpecSupport {
   val view: SubmissionConfirmationView = inject[SubmissionConfirmationView]
-  val controller: SubmissionConfirmationController = new SubmissionConfirmationController(identify = fakeAuth, getData = fakeData(None), controllerComponents = mcc, view = view)
+  val userAnswers: Option[UserAnswers] = Some(UserAnswers("id").set(DeclarationPage, "1234-1234-1234").success.value)
+  val controller: SubmissionConfirmationController = new SubmissionConfirmationController(identify = fakeAuth, getData = fakeData(userAnswers), requireData = fakeRequireData, controllerComponents = mcc, view = view)
 
   "SubmissionConfirmationController" should {
     "onPageLoad" must {
