@@ -54,8 +54,9 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
   def onPageLoad(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(viewType)
-      val rows = getRows(viewType, mode)
-      Ok(view(viewType, request.property.addressFull, rows, form, createDefaultNavBar(), mode))
+      val list = getRows(viewType, mode)
+      updateHaveYouChangedFeatures(viewType, list)
+      Ok(view(viewType, request.property.addressFull, list, form, createDefaultNavBar(), mode))
   }
 
   def onSubmit(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
@@ -111,4 +112,22 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
         else routes.CheckYourAnswersController.onPageLoad()
       )
   }
+
+  private def updateHaveYouChangedFeatures(viewType: CYAViewType, list: SummaryList)(implicit request: OptionalDataRequest[AnyContent]): Future[Boolean] = {
+    val updatedAnswers = request.userAnswers.getOrElse(
+      throw new NotFoundException("User answers not found")
+    )
+
+    val page = viewType match {
+      case CYAInternal => HaveYouChangedInternalPage
+      case CYAExternal => HaveYouChangedExternalPage
+    }
+
+    val haveYouChangedFeatures = list.rows.nonEmpty
+
+    val newUpdatedAnswers = updatedAnswers.set(page, haveYouChangedFeatures).getOrElse(updatedAnswers)
+    sessionRepository.set(newUpdatedAnswers)
+  }
+
+
 }
