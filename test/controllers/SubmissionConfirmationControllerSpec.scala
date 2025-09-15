@@ -16,30 +16,33 @@
 
 package controllers
 
-import helpers.ControllerSpecSupport
+import base.SpecBase
+import config.FrontendAppConfig
+import helpers.TestData
+import models.NavBarPageContents.createDefaultNavBar
+import pages.DeclarationPage
+import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import viewmodels.govuk.SummaryListFluency
 import views.html.SubmissionConfirmationView
-import models.*
-import pages.*
-import org.scalatest.TryValues.convertTryToSuccessOrFailure
+
 import scala.util.Try
 
-class SubmissionConfirmationControllerSpec extends ControllerSpecSupport {
-  val view: SubmissionConfirmationView = inject[SubmissionConfirmationView]
-  val userAnswers: Option[UserAnswers] = Some(UserAnswers("id").set(DeclarationPage, "1234-1234-1234").success.value)
-  val controller: SubmissionConfirmationController = new SubmissionConfirmationController(identify = fakeAuth, getData = fakeData(userAnswers), requireData = fakeRequireData, controllerComponents = mcc, view = view)
+class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFluency with TestData {
+  "SubmissionConfirmationController" - {
+    "must return OK and the correct view for a GET" in {
 
-  "SubmissionConfirmationController" should {
-    "onPageLoad" must {
-      "return 200" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
-        status(result) mustBe 200
-      }
+      val ref = "1234-1234-1234"
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DeclarationPage, ref).success.value)).build()
 
-      "return HTML" in {
-        val result = controller.onPageLoad(authenticatedFakeRequest)
-        contentType(result) mustBe Some("text/html")
-        charset(result) mustBe Some("utf-8")
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      running(application) {
+        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad().url)
+        val result = route(application, request).value
+        val view = application.injector.instanceOf[SubmissionConfirmationView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(property.addressFull, ref, createDefaultNavBar())(request, messages(application)).toString
       }
     }
   }
