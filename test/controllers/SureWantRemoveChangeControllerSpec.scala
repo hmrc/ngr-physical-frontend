@@ -56,13 +56,13 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
       "redirect to remove an internal feature when the mode if NormalMode" in {
         val internalFeature = AirConditioning
         val result = controller.onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "true")))
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(internalFeature.toString, NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(internalFeature.toString, NormalMode, false).url)
       }
 
       "redirect to remove an external feature" in {
         val externalFeature = SolarPanels
         val result = controller.onSubmit(externalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "true")))
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeExternal(externalFeature.toString, NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeExternal(externalFeature.toString, NormalMode, false).url)
       }
       "bad request when no selection" in {
         val result = controller.onSubmit(SecurityCamera.toString, NormalMode)(authenticatedFakeRequest)

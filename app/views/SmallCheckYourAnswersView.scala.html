@@ -31,7 +31,7 @@
 
 @(viewType: CYAViewType, address: String, list: SummaryList, form: Form[Boolean], navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("smallCheckYourAnswers.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
+@layout(pageTitle = Some(title(form, messages(CYAViewType.titleKey(viewType)))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
     @formHelper(action = routes.SmallCheckYourAnswersController.onSubmit(viewType, mode), Symbol("autoComplete") -> "off") {
     

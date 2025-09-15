@@ -13,6 +13,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.acceptAndSend = Accept and send
 
 date.day = Day
 date.month = Month
@@ -83,7 +84,7 @@ info.and.supporting.documents.p3 = Depending on the change, you need to know thi
 info.and.supporting.documents.change.bullet.point1 = the planning application reference, if you got planning permission
 info.and.supporting.documents.change.bullet.point2 = whether you added or removed features
 info.and.supporting.documents.change.bullet.point3 = how much of the property has air conditioning, heating, sprinklers, lifts or escalators
-info.and.supporting.documents.p4 = You must upload at least one document that supports all the changes you tell us about.
+info.and.supporting.documents.p4 = You should upload at least one document that supports all the changes you tell us about.
 info.and.supporting.documents.p5 = You can upload:
 info.and.supporting.documents.upload.bullet.point1 = plans
 info.and.supporting.documents.upload.bullet.point2 = photos
@@ -136,7 +137,7 @@ changedFeaturesOrSpace.ul3.li8 = parking
 changedFeaturesOrSpace.ul3.li9 = portable buildings
 changedFeaturesOrSpace.ul3.li10 = shipping containers
 changedFeaturesOrSpace.ul3.li11 = solar panels
-whenCompleteChange.title = When did you complete the change? - Manage your business rates valuation
+whenCompleteChange.title = When did you complete the change?
 whenCompleteChange.heading = When did you complete the change?
 whenCompleteChange.hint = For example, 27 6 2026.
 
@@ -411,8 +412,6 @@ CYAInternal.changes.no = You have no changes to internal features.
 smallCheckYourAnswers.internal.error.required = Select yes if you want to tell us about another internal feature
 smallCheckYourAnswers.external.error.required = Select yes if you want to tell us about another external feature
 
-CYAInternal.changes.no = No internal features changed
-CYAExternal.changes.no = No external features changed
 whichExternalFeature.hint = You can tell us about one feature at a time.
 
 externalCheckYourAnswers.title = Check and confirm changes to external features
@@ -427,6 +426,10 @@ anythingElse.error.required = Select yes if there is anything else you want to t
 anythingElse.error.requiredText = Tell us about the changes
 anythingElse.inputTitle = What do you want to tell us?
 anythingElse.error.charLimit = What you tell us about the changes must be 250 characters or less
+
+declaration.title = declaration
+declaration.heading = Declaration
+declaration.p1 = By submitting these details, you declare that to the best of your knowledge the information given is correct and complete.
 
 submissionConfirmation.title = submissionConfirmation
 submissionConfirmation.heading = Property change details sent

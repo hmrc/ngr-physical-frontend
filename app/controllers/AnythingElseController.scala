@@ -19,8 +19,8 @@ package controllers
 import actions.*
 import config.AppConfig
 import connectors.NGRConnector
-import forms.{AnythingElseData, AnythingElseFormProvider}
-import models.Mode
+import forms.AnythingElseFormProvider
+import models.{AnythingElseData, Mode}
 import models.NavBarPageContents.createDefaultNavBar
 import navigation.Navigator
 import pages.AnythingElsePage
