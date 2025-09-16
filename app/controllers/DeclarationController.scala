@@ -59,8 +59,8 @@ class DeclarationController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DeclarationPage, generateRef)) 
               _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(routes.IndexController.onPageLoad()) 
-          case Some(value) => Future.successful(Redirect(routes.IndexController.onPageLoad()))
+            } yield Redirect(routes.SubmissionConfirmationController.onPageLoad()) 
+          case Some(value) => Future.successful(Redirect(routes.SubmissionConfirmationController.onPageLoad()))
         }
     }
 }

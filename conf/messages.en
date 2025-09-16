@@ -146,6 +146,7 @@ whenCompleteChange.error.required.all = Enter when you completed the change.
 whenCompleteChange.error.required.two =  When you completed the change must include {0} and {1}.
 whenCompleteChange.error.required =  When you completed the change must include {0}.
 whenCompleteChange.error.invalid = When you completed the change must be a real date.
+whenCompleteChange.error.minDate = Date must be 1900 or after
 whenCompleteChange.change.hidden = When did you complete the change?
 
 haveYouChangedSpace.title = Have you changed use of space?
@@ -431,7 +432,7 @@ declaration.title = declaration
 declaration.heading = Declaration
 declaration.p1 = By submitting these details, you declare that to the best of your knowledge the information given is correct and complete.
 
-submissionConfirmation.title = submissionConfirmation
+submissionConfirmation.title = Property change details sent
 submissionConfirmation.heading = Property change details sent
 submissionConfirmation.ref = Your reference is
 submissionConfirmation.print = Print this page

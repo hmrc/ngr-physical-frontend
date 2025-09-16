@@ -86,6 +86,18 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
       status(result) mustBe 303
     }
 
+    "should error if before 1900" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      val formRequest = FakeRequest()
+        .withFormUrlEncodedBody(
+          "value.day" -> "31",
+          "value.month" -> "12",
+          "value.year" -> "1888"
+        )
+      val result = controller.onSubmit(NormalMode)(formRequest)
+      status(result) mustBe 400
+    }
+
     "should error if no selection" in {
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
       val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
