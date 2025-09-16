@@ -431,7 +431,7 @@ declaration.title = declaration
 declaration.heading = Declaration
 declaration.p1 = By submitting these details, you declare that to the best of your knowledge the information given is correct and complete.
 
-submissionConfirmation.title = submissionConfirmation
+submissionConfirmation.title = Property change details sent
 submissionConfirmation.heading = Property change details sent
 submissionConfirmation.ref = Your reference is
 submissionConfirmation.print = Print this page
