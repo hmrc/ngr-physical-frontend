@@ -28,7 +28,7 @@ private[mappings] class LocalDateFormatter(
                                             twoRequiredKey: String,
                                             requiredKey: String,
                                             args: Seq[String] = Seq.empty
-                                          )(implicit messages: Messages) extends Formatter[LocalDate] with Formatters {
+                                          ) extends Formatter[LocalDate] with Formatters {
 
   private val fieldKeys: List[String] = List("day", "month", "year")
 
@@ -60,31 +60,33 @@ private[mappings] class LocalDateFormatter(
   }
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
-
-    val fields = fieldKeys.map {
-      field =>
-        field -> data.get(s"$key.$field").filter(_.nonEmpty)
+    val fields = fieldKeys.map { field =>
+      field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
 
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-      .map(field => messages(s"date.error.$field"))
+    val missingFieldNames: List[String] = fields.collect {
+      case (field, None) => field
+    }.toList
+
+    val errorKey = missingFieldNames.headOption.map(f => s"$key.$f").getOrElse(key)
 
     fields.count(_._2.isDefined) match {
       case 3 =>
         formatDate(key, data).left.map {
           _.map(_.copy(key = key, args = args))
         }
+
       case 2 =>
-        Left(List(FormError(key, requiredKey, missingFields ++ args)))
+        Left(List(FormError(errorKey, requiredKey, missingFieldNames ++ args)))
+
       case 1 =>
-        Left(List(FormError(key, twoRequiredKey, missingFields ++ args)))
+        Left(List(FormError(errorKey, twoRequiredKey, missingFieldNames ++ args)))
+
       case _ =>
         Left(List(FormError(key, allRequiredKey, args)))
     }
   }
+
 
   override def unbind(key: String, value: LocalDate): Map[String, String] =
     Map(
