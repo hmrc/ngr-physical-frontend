@@ -48,8 +48,6 @@ trait DateFluency {
 
       val fields = Seq("day", "month", "year")
 
-      println(s"Field: $field")
-
       def checkForError(fieldToCheck: String): Boolean = {
         fields.foldLeft(false) { (acc, subFieldName) =>
           val subField = field(subFieldName)
