@@ -22,7 +22,7 @@ import forms.SmallCheckYourAnswersFormProvider
 import models.NavBarPageContents.createDefaultNavBar
 import models.requests.OptionalDataRequest
 import models.{CYAExternal, CYAInternal, CYAViewType, CheckMode, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode, WhatHappenedTo}
-import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, QuestionPage, SecurityCamerasChangePage}
+import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, QuestionPage, SecurityCamerasChangePage}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,6 +30,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.ChangeChecker
 import viewmodels.govuk.all.SummaryListViewModel
 import views.html.SmallCheckYourAnswersView
 
@@ -73,7 +74,19 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
           }
           case false => viewType match {
             case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(mode)))
-            case CYAExternal if mode == NormalMode => Future.successful(Redirect(routes.AnythingElseController.onPageLoad(mode)))
+            case CYAExternal if mode == NormalMode =>
+
+              request.userAnswers match {
+                case Some(answers) =>
+                  val nextPage = ChangeChecker.recheckForAnyChanges(answers, List(
+                    HaveYouChangedInternalPage,
+                    HaveYouChangedSpacePage,
+                    HaveYouChangedExternalPage
+                  ))
+                  Future.successful(Redirect(nextPage))
+
+                case None => Future.failed(new RuntimeException("Missing UserAnswers"))
+              }
             case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
           }
         }
