@@ -32,7 +32,7 @@ class WhenCompleteChangeFormProvider @Inject() extends Mappings {
         twoRequiredKey = "whenCompleteChange.error.required.two",
         requiredKey    = "whenCompleteChange.error.required"
       )
-        .verifying(minDate(LocalDate.of(1900,1,1), "whenCompleteChange.error.minDate")
+        .verifying(minDate(LocalDate.of(1900,1,1), "whenCompleteChange.error.minDate"))
     )
   
 }
