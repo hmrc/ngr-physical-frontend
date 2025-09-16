@@ -67,6 +67,7 @@ class SureWantRemoveChangeController @Inject()(
             viewType match 
               case CYAInternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeInternal(camelCaseFeatureString, mode, fromMiniCYA).url))
               case CYAExternal => Future.successful(Redirect(routes.SmallCheckYourAnswersController.removeExternal(camelCaseFeatureString, mode, fromMiniCYA).url))
+          case false if !fromMiniCYA => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
           case false => Future.successful(Redirect(routes.SmallCheckYourAnswersController.onPageLoad(viewType, mode)))
         }
       )

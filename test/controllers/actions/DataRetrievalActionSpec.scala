@@ -18,49 +18,73 @@ package controllers.actions
 
 import actions.DataRetrievalActionImpl
 import base.SpecBase
+import connectors.NGRConnector
+import helpers.TestData
 import models.UserAnswers
+import models.registration.CredId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import repositories.SessionRepository
+import uk.gov.hmrc.http.NotFoundException
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-//class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
-//
-//  class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
-//    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
-//  }
-//
-//  "Data Retrieval Action" - {
-//
-//    "when there is no data in the cache" - {
-//
-//      "must set userAnswers to 'None' in the request" in {
-//
-//        val sessionRepository = mock[SessionRepository]
-//        when(sessionRepository.get("id")) thenReturn Future(None)
-//        val action = new Harness(sessionRepository)
-//
-//        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id")).futureValue
-//
-//        result.userAnswers must not be defined
-//      }
-//    }
-//
-//    "when there is data in the cache" - {
-//
-//      "must build a userAnswers object and add it to the request" in {
-//
-//        val sessionRepository = mock[SessionRepository]
-//        when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
-//        val action = new Harness(sessionRepository)
-//
-//        val result = action.callTransform(new IdentifierRequest(FakeRequest(), "id")).futureValue
-//
-//        result.userAnswers mustBe defined
-//      }
-//    }
-//  }
-//}
+class DataRetrievalActionSpec extends SpecBase with MockitoSugar with TestData {
+
+  class Harness(sessionRepository: SessionRepository, ngrConnector: NGRConnector) extends DataRetrievalActionImpl(sessionRepository, ngrConnector) {
+    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
+  }
+
+  "Data Retrieval Action" - {
+
+    "when there is no data in the cache" - {
+
+      "must set userAnswers to 'None' in the request" in {
+
+        val sessionRepository = mock[SessionRepository]
+        val ngrConnector = mock[NGRConnector]
+        when(sessionRepository.get(any)).thenReturn(Future(None))
+        when(ngrConnector.getLinkedProperty(any)(any)).thenReturn(Future(Some(property)))
+        val action = new Harness(sessionRepository, ngrConnector)
+
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", "")).futureValue
+
+        result.userAnswers must not be defined
+      }
+      
+      "must throw NotFoundException when no property is found" in {
+
+        val sessionRepository = mock[SessionRepository]
+        val ngrConnector = mock[NGRConnector]
+        when(sessionRepository.get(any)).thenReturn(Future(None))
+        when(ngrConnector.getLinkedProperty(any)(any)).thenReturn(Future(None))
+        val action = new Harness(sessionRepository, ngrConnector)
+
+        intercept[NotFoundException] {
+          await(action.callTransform(IdentifierRequest(FakeRequest(), "id", "")))
+        }
+      }
+    }
+
+    "when there is data in the cache" - {
+
+      "must build a userAnswers object and add it to the request" in {
+
+        val sessionRepository = mock[SessionRepository]
+        val ngrConnector = mock[NGRConnector]
+        when(sessionRepository.get(any)).thenReturn(Future(Some(UserAnswers("id"))))
+        when(ngrConnector.getLinkedProperty(any)(any)).thenReturn(Future(Some(property)))
+        val action = new Harness(sessionRepository, ngrConnector)
+
+        val result = action.callTransform(new IdentifierRequest(FakeRequest(), "id", "")).futureValue
+
+        result.userAnswers mustBe defined
+      }
+    }
+  }
+}

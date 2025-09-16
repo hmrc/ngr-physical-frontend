@@ -18,11 +18,15 @@ package controllers
 
 import forms.SmallCheckYourAnswersFormProvider
 import helpers.ControllerSpecSupport
+import models.HowMuchOfProperty.AllOf
 import models.InternalFeature.Escalators
+import models.WhatHappenedTo.Added
 import models.{CYAExternal, CYAInternal, CheckMode, ExternalFeature, NormalMode, UserAnswers}
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import pages.{HowMuchOfPropertyAirConPage, HowMuchOfPropertyEscalatorsPage, WhatHappenedToLoadingBaysPage, WhatHappenedToLockupGaragesPage}
 import play.api.test.Helpers.*
 import views.html.SmallCheckYourAnswersView
 
@@ -80,9 +84,22 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
           redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode).url)
         }
 
-      "remove data and redirect to check your answers page when fromMiniCYA flag is false" in {
+      "remove data and redirect to check your answers page when fromMiniCYA flag is false and internal features are empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         val result = controller.removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode).url)
+      }
+
+      "remove data and redirect to check your answers page when fromMiniCYA flag is false and internal features are not empty" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val updatedAnswers = emptyUserAnswers.set(HowMuchOfPropertyEscalatorsPage, AllOf).success.value
+          .set(HowMuchOfPropertyAirConPage, AllOf).success.value
+        val controller: SmallCheckYourAnswersController = new SmallCheckYourAnswersController(
+          identify = fakeAuth, getData = fakeData(Some(updatedAnswers)), sessionRepository = mockSessionRepository, formProvider = formProvider, controllerComponents = mcc, view = view
+        )
+
+        val result = controller.removeInternal(Escalators.toString, CheckMode, fromMiniCYA = false)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
       }
@@ -99,6 +116,19 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
       "remove data and redirect to check your answers page when fromMiniCYA flag is false" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         val result = controller.removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode).url)
+      }
+
+      "remove data and redirect to mini check your answers page when fromMiniCYA flag is false and external features are not empty" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val updatedAnswers = emptyUserAnswers.set(WhatHappenedToLoadingBaysPage, Added).success.value
+          .set(WhatHappenedToLockupGaragesPage, Added).success.value
+        val controller: SmallCheckYourAnswersController = new SmallCheckYourAnswersController(
+          identify = fakeAuth, getData = fakeData(Some(updatedAnswers)), sessionRepository = mockSessionRepository, formProvider = formProvider, controllerComponents = mcc, view = view
+        )
+
+        val result = controller.removeExternal(ExternalFeature.SolarPanels.toString, CheckMode, fromMiniCYA = false)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
       }

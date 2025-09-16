@@ -90,10 +90,11 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       }
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
-        newUpdatedAnswers <- if(InternalFeature.getAnswers(Some(updatedAnswers), mode, fromMiniCYA).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
+        features = feature.map(_ => InternalFeature.getAnswers(Some(updatedAnswers), mode, fromMiniCYA)).getOrElse(Seq.empty)
+        newUpdatedAnswers <- if(features.isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
-        if (fromMiniCYA) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode)
+       if (fromMiniCYA || features.isEmpty) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode)
         else routes.CheckYourAnswersController.onPageLoad()
       )
   }
@@ -104,11 +105,14 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       val page: QuestionPage[?] = WhatHappenedTo.page(feature)
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
-        newUpdatedAnswers <- if(ExternalFeature.getAnswers(Some(updatedAnswers), mode).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
+        features = ExternalFeature.getAnswers(Some(updatedAnswers), mode, fromMiniCYA)
+        newUpdatedAnswers <- if(features.isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
-      } yield Redirect(
-        if (fromMiniCYA)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode)
-        else routes.CheckYourAnswersController.onPageLoad()
-      )
+      } yield {
+        Redirect(
+          if (fromMiniCYA || features.isEmpty)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode)
+          else routes.CheckYourAnswersController.onPageLoad()
+        )
+      }
   }
 }
