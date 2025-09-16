@@ -45,10 +45,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
         <span class="govuk-caption-m">@address</span>
+        <h1 class="govuk-heading-l">@messages(strings("title"))</h1>
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = Legend(content = messages(strings("title")), classes = "govuk-fieldset__legend--l"),
+                legend = Legend(),
                 items  = radioItems
             )
         )

@@ -31,7 +31,7 @@ class WhatHappenedToViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
-    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > legend"
+    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > h1"
     val add = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div > div:nth-child(1) > label"
     val removeSome = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div > div:nth-child(2) > label"
     val removeAll =  "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div > div:nth-child(3) > label"

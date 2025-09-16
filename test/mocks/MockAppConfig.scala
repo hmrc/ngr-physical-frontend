@@ -22,8 +22,9 @@ import config.features.Features
 
 class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   override val features: Features = new Features()(runModeConfiguration)
-  override val dashboardHost: String = "http://localhost:1503/ngr-dashboard-frontend/dashboard"
+  override val dashboardHost: String = "http://localhost:1503"
   override val ngrLogoutUrl: String = "http://localhost:1503/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = ""
   override val registrationHost: String = "http://localhost:1502/ngr-login-register-frontend/register"
+  override val dashboardUrl: String = "http://localhost:1503/ngr-dashboard-frontend/dashboard"
 }

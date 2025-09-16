@@ -30,7 +30,7 @@ class HowMuchOfPropertyViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
-    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > legend"
+    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > h1"
     val hint = "#value-hint"
     val allOf =  "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(1) > label"
     val someOf = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > fieldset > div.govuk-radios > div:nth-child(2) > label"

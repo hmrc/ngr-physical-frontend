@@ -209,3 +209,5 @@ POST       /change-anything-else-tell-us                                        
 
 GET        /declaration-physical                                                 controllers.DeclarationController.show
 POST       /declaration-physical                                                 controllers.DeclarationController.next
+
+GET        /property-change-details-sent                                         controllers.SubmissionConfirmationController.onPageLoad()
