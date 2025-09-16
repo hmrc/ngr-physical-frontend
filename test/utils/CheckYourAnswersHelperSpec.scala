@@ -60,7 +60,7 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers {
       sections(2).title mustBe Some("checkYourAnswers.internalFeature.heading")
       sections(2).rows.rows.size mustBe 2
       sections(3).title mustBe Some("checkYourAnswers.externalFeature.heading")
-      sections(3).rows.rows.size mustBe 3
+      sections(3).rows.rows.size mustBe 2
       sections(4).title mustBe Some("checkYourAnswers.additionalInformation.heading")
       sections(4).rows.rows.size mustBe 2
     }

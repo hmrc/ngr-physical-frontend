@@ -113,7 +113,7 @@ object WhatHappenedTo extends Enumerable.Implicits {
       case LandHardSurfacedFenced => WhatHappenedToLandHardSurfacedFencedPage
       case LandHardSurfacedOpen => WhatHappenedToLandHardSurfacedOpenPage
       case LandGravelledFenced => WhatHappenedToLandGravelledFencedPage
-      case LandGravelledOpen => WhatHappenedToLandHardSurfacedOpenPage
+      case LandGravelledOpen => WhatHappenedToLandGravelledOpenPage
       case LandUnsurfacedFenced => WhatHappenedToLandUnsurfacedFencedPage
       case LandUnsurfacedOpen => WhatHappenedToLandUnsurfacedOpenPage
       case PortableBuildings=> WhatHappenedToPortableBuildingsPage
