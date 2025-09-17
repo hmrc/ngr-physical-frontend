@@ -35,6 +35,13 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
+
+      "must go to not told us about any changes page when all have you changed pages are set to no" in {
+        val userAnswers = UserAnswers("id").set(HaveYouChangedSpacePage, false).success.value
+          .set(HaveYouChangedInternalPage, false).success.value
+          .set(HaveYouChangedExternalPage, false).success.value
+        navigator.nextPage(HaveYouChangedExternalPage, NormalMode, userAnswers) mustBe routes.NotToldAnyChangesController.show
+      }
     }
 
     "in Check mode" - {
