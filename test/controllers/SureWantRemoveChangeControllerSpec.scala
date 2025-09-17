@@ -55,8 +55,14 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
     "onSubmit" must {
       "redirect to remove an internal feature when the mode if NormalMode" in {
         val internalFeature = AirConditioning
-        val result = controller.onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "true")))
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(internalFeature.toString, NormalMode, false).url)
+        val result = controller.onSubmit(internalFeature.toString, NormalMode, true)(requestWithForm(Map("value" -> "true")))
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeInternal(internalFeature.toString, NormalMode, true).url)
+      }
+
+      "redirect to check your answers page when the flag selected is 'false' and the mode is CheckMode for the internalFeature" in {
+        val internalFeature = AirConditioning
+        val result = controller.onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "false")))
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
       }
 
       "redirect to remove an external feature" in {
@@ -64,6 +70,13 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
         val result = controller.onSubmit(externalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "true")))
         redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.removeExternal(externalFeature.toString, NormalMode, false).url)
       }
+
+      "redirect to check your answers page when the flag selected is 'false' and the mode is CheckMode for the externalFeature" in {
+        val externalFeature = SolarPanels
+        val result = controller.onSubmit(externalFeature.toString, CheckMode)(requestWithForm(Map("value" -> "false")))
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      }
+
       "bad request when no selection" in {
         val result = controller.onSubmit(SecurityCamera.toString, NormalMode)(authenticatedFakeRequest)
         status(result) mustBe BAD_REQUEST
