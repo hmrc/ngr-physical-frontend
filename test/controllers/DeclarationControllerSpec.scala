@@ -17,10 +17,13 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import helpers.{ControllerSpecSupport, TestData}
+import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import pages.DeclarationPage
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -28,39 +31,36 @@ import views.html.DeclarationView
 
 import scala.concurrent.Future
 
-class DeclarationControllerSpec extends ControllerSpecSupport with TestData {
+class DeclarationControllerSpec extends SpecBase with TestData {
 
   lazy val view: DeclarationView = inject[DeclarationView]
-  private val fakeRequest = FakeRequest("GET", "/information-and-supporting-documents-need")
 
-  def controller() = new DeclarationController(
-    mcc,
-    view,
-    fakeAuth,
-    fakeReg,
-    fakeData(None),
-    mockSessionRepository
-  )
+  "Declaration Controller" - {
+    "Return OK and the correct view" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-  val pageTitle = "Declaration"
-  val contentP = "By submitting these details, you declare that to the best of your knowledge the information given is correct and complete."
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      running(application) {
+        val request = FakeRequest(GET, routes.DeclarationController.show.url)
+        val result = route(application, request).value
+        val view = application.injector.instanceOf[DeclarationView]
 
-
-  "Declaration Controller" must {
-    "method show" must {
-      "Return OK and the correct view" in {
-        val result: Future[Result] = controller().show(fakeRequest)
-        status(result) mustBe OK
-        val content = contentAsString(result)
-        content must include(pageTitle)
-        content must include(contentP)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar())(request, messages(application)).toString
       }
     }
-    "next" must {
-      s"redirect when accepted" in {
-        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller().next(fakeRequest)
-        status(result) mustBe 303
+
+    "redirect when accepted" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.DeclarationController.next.url)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.SubmissionConfirmationController.onPageLoad().url
       }
     }
   }

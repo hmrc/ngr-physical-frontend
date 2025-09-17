@@ -32,32 +32,32 @@ import utils.UniqueIdGenerator
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
 class DeclarationController @Inject()(
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DeclarationView,
                                        authenticate: IdentifierAction,
                                        isRegisteredCheck: RegistrationAction,
                                        getData: DataRetrievalAction,
+                                       requireData: DataRequiredAction,
                                        sessionRepository: SessionRepository
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
   val show: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData) {
+    (authenticate andThen isRegisteredCheck andThen getData andThen requireData) {
       implicit request =>
         Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
 
   val next: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData).async  {
+    (authenticate andThen isRegisteredCheck andThen getData andThen requireData).async  {
       //TODO replace the current creating page object and storing number and  with adding with adding directly to model 
       // and then sending the completed PropertyChangesUserAnswers when backend code is complete
       implicit request =>
-        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(DeclarationPage) match {
+        request.userAnswers.get(DeclarationPage) match {
           case None => 
             val generateRef =  UniqueIdGenerator.generateId
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DeclarationPage, generateRef)) 
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef)) 
               _ <- sessionRepository.set(updatedAnswers)
             } yield Redirect(routes.SubmissionConfirmationController.onPageLoad()) 
           case Some(value) => Future.successful(Redirect(routes.SubmissionConfirmationController.onPageLoad()))

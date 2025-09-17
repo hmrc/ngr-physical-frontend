@@ -28,7 +28,7 @@ trait ControllerSpecSupport extends TestSupport with TestData {
   val fakeAuth = new FakeIdentifierAction(mcc.parsers.defaultBodyParser)
   val fakeReg = new FakeRegistrationAction(stubMessagesControllerComponents().parsers)
   def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
-  val fakeRequireData = new FakeDataRequiredAction()
+  def fakeRequireData(answers: Option[UserAnswers]) = new FakeDataRequiredAction(answers)
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   val navigator: Navigator = inject[Navigator]
   val emptyUserAnswers: UserAnswers = UserAnswers("id")

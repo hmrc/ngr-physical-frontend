@@ -16,8 +16,8 @@
 
 package base
 
-import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
-import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
+import actions.*
+import controllers.actions.*
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
@@ -67,12 +67,11 @@ trait SpecBase
     val fakeAuth = new FakeIdentifierAction(bodyParsers)
     val fakeReg = new FakeRegistrationAction(stubMcc.parsers)
     def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
-    val fakeRequireData = new FakeDataRequiredAction()
-    
 
     new GuiceApplicationBuilder()
       .overrides(
         bind[IdentifierAction].toInstance(fakeAuth),
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[RegistrationAction].toInstance(fakeReg),
         bind[DataRetrievalAction].toInstance(fakeData(userAnswers)),
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
