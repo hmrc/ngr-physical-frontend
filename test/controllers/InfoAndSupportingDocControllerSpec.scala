@@ -18,6 +18,7 @@ package controllers
 
 
 import helpers.{ControllerSpecSupport, TestData}
+import models.{NormalMode, UserAnswers}
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -33,12 +34,13 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
   lazy val view: InfoAndSupportingDocView = inject[InfoAndSupportingDocView]
   private val fakeRequest = FakeRequest("GET", "/information-and-supporting-documents-need")
 
-  def controller() = new InfoAndSupportingDocController(
+  def controller(userAnswers: Option[UserAnswers]) = new InfoAndSupportingDocController(
     mcc,
     view,
     fakeAuth,
     fakeReg,
-    fakeData(None)
+    fakeData(userAnswers),
+    fakeRequireData(userAnswers)
   )(mockConfig)
 
   val pageTitle = "Information and supporting documents you need"
@@ -47,11 +49,32 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
   "Info and supporting Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller().show(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).show(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
         content must include(contentP)
+      }
+
+      "redirect to Journey Recovery when no user data" in {
+        val result: Future[Result] = controller(None).show(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "next" must {
+      "redirect to Changed Features or Space page" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).next(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.WhenCompleteChangeController.onPageLoad(NormalMode).url
+      }
+
+      "redirect to Journey Recovery when no user data" in {
+        val result: Future[Result] = controller(None).next(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

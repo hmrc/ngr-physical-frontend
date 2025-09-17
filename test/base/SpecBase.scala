@@ -43,8 +43,7 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience
-    with Injecting {
+    with IntegrationPatience {
 
   val userAnswersId: String = "id"
 
@@ -78,7 +77,4 @@ trait SpecBase
         bind[SessionRepository].toInstance(mockSessionRepository)
       )
   }
-
-  implicit lazy val app: Application = applicationBuilder().build()
-  lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[play.api.mvc.MessagesControllerComponents]
-}
+ }

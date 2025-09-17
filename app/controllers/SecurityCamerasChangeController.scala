@@ -29,6 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SecurityCamerasChangeView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +39,7 @@ class SecurityCamerasChangeController @Inject()(
                                         navigator: Navigator,
                                         identify: IdentifierAction,
                                         getData: DataRetrievalAction,
+                                        requireData: DataRequiredAction,
                                         formProvider: SecurityCamerasChangeFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: SecurityCamerasChangeView
@@ -45,10 +47,10 @@ class SecurityCamerasChangeController @Inject()(
 
   val form: Form[Int] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(SecurityCamerasChangePage) match {
+      val preparedForm = request.userAnswers.get(SecurityCamerasChangePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -56,7 +58,7 @@ class SecurityCamerasChangeController @Inject()(
       Ok(view(request.property.addressFull, preparedForm, mode, createDefaultNavBar()))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -65,7 +67,7 @@ class SecurityCamerasChangeController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(SecurityCamerasChangePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SecurityCamerasChangePage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(SecurityCamerasChangePage, mode, updatedAnswers))
       )

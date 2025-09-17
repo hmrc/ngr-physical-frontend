@@ -16,9 +16,10 @@
 
 package controllers
 
+import base.SpecBase
 import forms.HowMuchOfPropertyFormProvider
 import helpers.ControllerSpecSupport
-import models.{HowMuchOfProperty, InternalFeatureGroup1, NormalMode}
+import models.{HowMuchOfProperty, InternalFeatureGroup1, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.test.Helpers.*
@@ -29,8 +30,8 @@ import scala.concurrent.Future
 class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
   lazy val view: HowMuchOfPropertyView = inject[HowMuchOfPropertyView]
   lazy val formProvider: HowMuchOfPropertyFormProvider = HowMuchOfPropertyFormProvider()
-  private val controller: HowMuchOfPropertyController = new HowMuchOfPropertyController(
-    sessionRepository = mockSessionRepository, navigator = navigator, identify = fakeAuth, getData = fakeData(None), formProvider = formProvider, controllerComponents = mcc, view = view
+  private def controller(userAnswers: Option[UserAnswers]): HowMuchOfPropertyController = new HowMuchOfPropertyController(
+    sessionRepository = mockSessionRepository, navigator = navigator, identify = fakeAuth, getData = fakeData(None), requireData = fakeRequireData(userAnswers), formProvider = formProvider, controllerComponents = mcc, view = view
   )
 
   "HowMuchOfPropertyController" should {
@@ -38,11 +39,8 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
 
       "onPageLoad" must {
         s"return 200: ${feature.toString}" in {
-          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
           status(result) mustBe 200
-        }
-        s"return HTML: ${feature.toString}" in {
-          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
@@ -51,17 +49,30 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
         s"redirect with valid form submission: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "some"))
-          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
           status(result) mustBe 303
         }
+
         s"Bad request with invalid form: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "wow"))
-          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
           status(result) mustBe 400
         }
-      }
 
+        s"redirect to journey recovery Expired for a GET if no existing data is found for $feature" in {
+          val result = controller(None).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          status(result) mustBe 303
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+
+        s"redirect to journey recovery for a POST if no existing data is found for $feature" in {
+          val formRequest = requestWithForm(Map("value" -> "some"))
+          val result = controller(None).onSubmit(feature, NormalMode)(formRequest)
+          status(result) mustBe 303
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
     }
   }
 

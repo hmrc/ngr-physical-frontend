@@ -33,8 +33,6 @@ import scala.concurrent.Future
 
 class DeclarationControllerSpec extends SpecBase with TestData {
 
-  lazy val view: DeclarationView = inject[DeclarationView]
-
   "Declaration Controller" - {
     "Return OK and the correct view" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

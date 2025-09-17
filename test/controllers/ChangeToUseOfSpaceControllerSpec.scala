@@ -42,13 +42,13 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
   lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode).url
   val changeToUseOfSpace: ChangeToUseOfSpace = ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("1234555"))
   val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeToUseOfSpacePage, changeToUseOfSpace).success.value
-  implicit val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
 
   "ChangeToUseOfSpace Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
       running(application) {
         val request = FakeRequest(GET, changeToUseOfSpaceRoute)
@@ -65,6 +65,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
       running(application) {
         val request = FakeRequest(GET, changeToUseOfSpaceRoute)
@@ -103,7 +104,8 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      
       running(application) {
         val request =
           FakeRequest(POST, changeToUseOfSpaceRoute)

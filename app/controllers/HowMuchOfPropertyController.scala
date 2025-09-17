@@ -40,6 +40,7 @@ class HowMuchOfPropertyController @Inject()(
                                        navigator: Navigator,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
+                                       requireData: DataRequiredAction,
                                        formProvider: HowMuchOfPropertyFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: HowMuchOfPropertyView
@@ -53,12 +54,12 @@ class HowMuchOfPropertyController @Inject()(
   def onPageLoadPassengerLift(mode: Mode): Action[AnyContent] = onPageLoad(PassengerLift, mode)
   def onPageLoadCompressedAir(mode: Mode): Action[AnyContent] = onPageLoad(CompressedAir, mode)
 
-  def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(HowMuchOfProperty.page(feature)) match {
+      val preparedForm = request.userAnswers.get(HowMuchOfProperty.page(feature)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -77,7 +78,7 @@ class HowMuchOfPropertyController @Inject()(
   def onSubmitPassengerLift(mode: Mode): Action[AnyContent] = onSubmit(PassengerLift, mode)
   def onSubmitCompressedAir(mode: Mode): Action[AnyContent] = onSubmit(CompressedAir, mode)
 
-  def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
@@ -91,7 +92,7 @@ class HowMuchOfPropertyController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(HowMuchOfProperty.page(feature), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(HowMuchOfProperty.page(feature), value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
       )
