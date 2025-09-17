@@ -34,6 +34,7 @@ import scala.concurrent.Future
 @Singleton
 class WhichExternalFeatureController @Inject()(identify: IdentifierAction,
                                                getData: DataRetrievalAction,
+                                               requireData: DataRequiredAction,
                                                formProvider: WhichExternalFeatureFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: WhichExternalFeatureView
@@ -41,12 +42,12 @@ class WhichExternalFeatureController @Inject()(identify: IdentifierAction,
 
   val form: Form[ExternalFeature] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       Ok(view(request.property.addressFull, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>

@@ -16,16 +16,14 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction}
+import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.WhatHappenedToFormProvider
 import models.ExternalFeature.{AdvertisingDisplays, BikeSheds, Canopies, LandGravelledFenced, LandGravelledOpen, LandHardSurfacedFenced, LandHardSurfacedOpen, LandUnsurfacedFenced, LandUnsurfacedOpen, LoadingBays, LockupGarages, OutdoorSeating, Parking, PortableBuildings, ShippingContainers, SolarPanels}
 import models.NavBarPageContents.createDefaultNavBar
-import pages.*
-
-import javax.inject.Inject
 import models.{ExternalFeature, Mode, UserAnswers, WhatHappenedTo}
 import navigation.Navigator
+import pages.*
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,6 +31,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhatHappenedToView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhatHappenedToController @Inject()(
@@ -40,6 +39,7 @@ class WhatHappenedToController @Inject()(
                                        navigator: Navigator,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
+                                       requireData: DataRequiredAction,
                                        formProvider: WhatHappenedToFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: WhatHappenedToView
@@ -62,12 +62,12 @@ class WhatHappenedToController @Inject()(
   def onPageLoadPortableBuildings(mode: Mode): Action[AnyContent] = onPageLoad(PortableBuildings, mode)
   def onPageLoadShippingContainers(mode: Mode): Action[AnyContent] = onPageLoad(ShippingContainers, mode)
 
-  def onPageLoad(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       
       val form: Form[WhatHappenedTo] = formProvider(feature)
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhatHappenedTo.page(feature)) match {
+      val preparedForm = request.userAnswers.get(WhatHappenedTo.page(feature)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -96,7 +96,7 @@ class WhatHappenedToController @Inject()(
   def onPageSubmitShippingContainers(mode: Mode): Action[AnyContent] = onSubmit(ShippingContainers, mode)
   
 
-  def onSubmit(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[WhatHappenedTo] = formProvider(feature)
 
@@ -109,7 +109,7 @@ class WhatHappenedToController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhatHappenedTo.page(feature), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatHappenedTo.page(feature), value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(WhatHappenedTo.page(feature), mode, updatedAnswers))
       )

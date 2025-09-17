@@ -19,8 +19,6 @@ package models
 import controllers.routes
 import models.ExternalFeature.*
 import models.requests.OptionalDataRequest
-import models.ExternalFeature.*
-import utils.StringUtils.camelCaseToHyphen
 import pages.*
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
@@ -31,6 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAn
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import utils.StringUtils.camelCaseToHyphen
 import viewmodels.govuk.all.{ActionItemViewModel, SummaryListRowViewModel, ValueViewModel, stringToKey, stringToText}
 
 sealed trait ExternalFeature
@@ -150,20 +149,18 @@ object ExternalFeature extends Enumerable.Implicits {
     }
   }
 
-  def getAnswers(userAnswers: Option[UserAnswers], mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
-    userAnswers.toSeq.flatMap { answers =>
-      ExternalFeature.values.flatMap { feature =>
-        answers.get(WhatHappenedTo.page(feature)).map { value =>
-          SummaryListRowViewModel(
-            key = s"externalFeature.${feature.toString}",
-            value = ValueViewModel(valueString(feature, value.toString)),
-            actions = Seq(
-              ActionItemViewModel("site.change", changeLink(feature, mode).url),
-              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
-            ),
-            actionClasses = "govuk-!-width-one-third"
-          )
-        }
+  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
+    ExternalFeature.values.flatMap { feature =>
+      userAnswers.get(WhatHappenedTo.page(feature)).map { value =>
+        SummaryListRowViewModel(
+          key = s"externalFeature.${feature.toString}",
+          value = ValueViewModel(valueString(feature, value.toString)),
+          actions = Seq(
+            ActionItemViewModel("site.change", changeLink(feature, mode).url),
+            ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
+          ),
+          actionClasses = "govuk-!-width-one-third"
+        )
       }
     }
   }

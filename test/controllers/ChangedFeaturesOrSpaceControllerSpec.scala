@@ -38,10 +38,6 @@ class ChangedFeaturesOrSpaceControllerSpec
     "return 200" in :
       val result: Future[Result] = controller.show(authenticatedFakeRequest)
       status(result) mustBe Status.OK
-
-    "return HTML" in :
-      val result = controller.show(authenticatedFakeRequest)
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
-      
 }

@@ -18,10 +18,6 @@ package models
 
 import controllers.routes
 import models.InternalFeature.*
-import pages.*
-import controllers.routes
-import models.InternalFeature.*
-import utils.StringUtils.camelCaseToHyphen
 import models.requests.OptionalDataRequest
 import pages.*
 import play.api.i18n.Messages
@@ -33,6 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.html.helpers.{GovukFormGroup, GovukHintAn
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import utils.StringUtils.camelCaseToHyphen
 import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
 
@@ -63,36 +60,33 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getAnswers(userAnswers: Option[UserAnswers], mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
-    userAnswers.toSeq.flatMap { answers =>
-      InternalFeature.values.flatMap {
-        case feature: InternalFeatureGroup1 =>
-          answers.get(HowMuchOfProperty.page(feature)).map { value =>
-            SummaryListRowViewModel(
-              key = s"internalFeature.${feature.toString}",
-              value = ValueViewModel(valueString(feature, value.toString)),
-              actions = Seq(
-                ActionItemViewModel("site.change", changeLink(feature, mode).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
-              ),
-              actionClasses = "govuk-!-width-one-third"
-            )
-          }
+  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
+    InternalFeature.values.flatMap {
+      case feature: InternalFeatureGroup1 =>
+        userAnswers.get(HowMuchOfProperty.page(feature)).map { value =>
+          SummaryListRowViewModel(
+            key = s"internalFeature.${feature.toString}",
+            value = ValueViewModel(valueString(feature, value.toString)),
+            actions = Seq(
+              ActionItemViewModel("site.change", changeLink(feature, mode).url),
+              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
+            ),
+            actionClasses = "govuk-!-width-one-third"
+          )
+        }
 
-        case SecurityCamera =>
-          answers.get(SecurityCamerasChangePage).map { value =>
-            SummaryListRowViewModel(
-              key = "internalFeature.securityCamera",
-              value = ValueViewModel(value.toString),
-              actions = Seq(
-                ActionItemViewModel("site.change", changeLink(SecurityCamera, mode).url),
-                ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode, fromMiniCYA).url)
-              ),
-              actionClasses = "govuk-!-width-one-third"
-            )
-          }
-
-      }
+      case SecurityCamera =>
+        userAnswers.get(SecurityCamerasChangePage).map { value =>
+          SummaryListRowViewModel(
+            key = "internalFeature.securityCamera",
+            value = ValueViewModel(value.toString),
+            actions = Seq(
+              ActionItemViewModel("site.change", changeLink(SecurityCamera, mode).url),
+              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode, fromMiniCYA).url)
+            ),
+            actionClasses = "govuk-!-width-one-third"
+          )
+        }
     }
   }
 

@@ -16,11 +16,11 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction}
+import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SmallCheckYourAnswersFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.requests.OptionalDataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import models.{CYAExternal, CYAInternal, CYAViewType, CheckMode, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode, WhatHappenedTo}
 import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, QuestionPage, SecurityCamerasChangePage}
 import play.api.data.Form
@@ -38,27 +38,28 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
                                                 getData: DataRetrievalAction,
+                                                requireData: DataRequiredAction,
                                                 sessionRepository: SessionRepository,
                                                 formProvider: SmallCheckYourAnswersFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: SmallCheckYourAnswersView
                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private def getRows(viewType: CYAViewType, mode: Mode)(implicit request: OptionalDataRequest[AnyContent]): SummaryList = {
+  private def getRows(viewType: CYAViewType, mode: Mode)(implicit request: DataRequest[AnyContent]): SummaryList = {
     viewType match {
       case CYAInternal => SummaryListViewModel(InternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true))
       case CYAExternal => SummaryListViewModel(ExternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true))
     }
   }
 
-  def onPageLoad(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(viewType)
       val rows = getRows(viewType, mode)
       Ok(view(viewType, request.property.addressFull, rows, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider(viewType)
       
@@ -80,7 +81,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       )
   }
 
-  def removeInternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData).async {
+  def removeInternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val feature = InternalFeature.withNameOption(featureString)
       val page: QuestionPage[?] = feature match {
@@ -89,8 +90,8 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
         case None => throw new RuntimeException("no feature chosen to remove")
       }
       for {
-        updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
-        newUpdatedAnswers <- if(InternalFeature.getAnswers(Some(updatedAnswers), mode, fromMiniCYA).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
+        updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
+        newUpdatedAnswers <- if(InternalFeature.getAnswers(updatedAnswers, mode, fromMiniCYA).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
         if (fromMiniCYA) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode)
@@ -98,13 +99,13 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       )
   }
 
-  def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData).async {
+  def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("feature not found"))
       val page: QuestionPage[?] = WhatHappenedTo.page(feature)
       for {
-        updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("User answers not found")).remove(page))
-        newUpdatedAnswers <- if(ExternalFeature.getAnswers(Some(updatedAnswers), mode).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
+        updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
+        newUpdatedAnswers <- if(ExternalFeature.getAnswers(updatedAnswers, mode).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
         if (fromMiniCYA)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode)

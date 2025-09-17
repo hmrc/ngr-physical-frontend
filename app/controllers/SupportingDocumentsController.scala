@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction}
+import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 
 import javax.inject.Inject
@@ -31,18 +31,19 @@ import models.NormalMode
 class SupportingDocumentsController @Inject()(
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
+                                       requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: SupportingDocumentsView
                                      )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] =
-    (identify andThen getData) {
+    (identify andThen getData andThen requireData) {
       implicit request =>
         Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
 
   def next(): Action[AnyContent] =
-    (identify andThen getData) {
+    (identify andThen getData andThen requireData) {
       Redirect(routes.CheckYourAnswersController.onPageLoad()) //TODO: Update with correct route to support testing redirecting to CYA page
     }
 }
