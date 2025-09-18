@@ -61,6 +61,16 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
         val result = controller(Some(emptyUserAnswers)).onSubmit(CYAInternal, NormalMode)(formRequest)
         redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadExternal(NormalMode).url)
       }
+      "redirect to which external feature" in {
+        val formRequest = requestWithForm(Map("value" -> "true"))
+        val result = controller.onSubmit(CYAExternal, NormalMode)(formRequest)
+        redirectLocation(result) mustBe Some(routes.WhichExternalFeatureController.onPageLoad(NormalMode).url)
+      }
+      "redirect to you have no changes" in {
+        val formRequest = requestWithForm(Map("value" -> "false"))
+        val result = controller.onSubmit(CYAExternal, NormalMode)(formRequest)
+        redirectLocation(result) mustBe Some(routes.NotToldAnyChangesController.show.url)
+      }
 
       "redirect to check your answers page when the mode is CheckMode" in {
         val formRequest = requestWithForm(Map("value" -> "false"))

@@ -20,19 +20,19 @@ import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import com.google.inject.{Inject, Singleton}
 import config.{AppConfig, FrontendAppConfig}
 import models.NavBarPageContents.createDefaultNavBar
-import models.UserAnswers
-import pages.WhenCompleteChangePage
+import models.{NormalMode, UserAnswers}
+import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, WhenCompleteChangePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.CheckYourAnswersHelper
+import utils.{ChangeChecker, CheckYourAnswersHelper}
 import viewmodels.Section
 import viewmodels.checkAnswers.WhenCompleteChangeSummary
 import viewmodels.govuk.summarylist.*
 import views.html.CheckYourAnswersView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject()(
@@ -43,11 +43,11 @@ class CheckYourAnswersController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             cyaHelper: CheckYourAnswersHelper,
                                             view: CheckYourAnswersView
-                                          )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
+                                          )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-    val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
+      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
 
       Ok(view(request.property.addressFull, createDefaultNavBar(), list))
   }
@@ -55,7 +55,11 @@ class CheckYourAnswersController @Inject()(
   def onSubmit(): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        Redirect(routes.DeclarationController.show)
+        val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
+          HaveYouChangedInternalPage,
+          HaveYouChangedSpacePage,
+          HaveYouChangedExternalPage
+        ), routes.DeclarationController.show, routes.NotToldAnyChangesController.show)
+        Redirect(nextPage)
     }
-  
 }

@@ -20,6 +20,7 @@ import controllers.routes
 import models.{CYAViewType, *}
 import pages.*
 import play.api.mvc.Call
+import utils.ChangeChecker
 
 import javax.inject.{Inject, Singleton}
 
@@ -44,7 +45,8 @@ class Navigator @Inject()() {
     case HaveYouChangedExternalPage => answers =>
       answers.get(HaveYouChangedExternalPage) match {
         case Some(true) => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
-        case Some(false) => routes.AnythingElseController.onPageLoad(NormalMode)
+        case Some(false) => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage), 
+          routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
         case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
     case WhichInternalFeaturePage => answers =>
