@@ -53,26 +53,18 @@ trait SpecBase
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  implicit lazy val actorSystem: ActorSystem = ActorSystem("TestActorSystem")
-  implicit lazy val mat: Materializer = Materializer(actorSystem)
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   
   def onwardRoute: Call = Call("GET", "/foo")
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
-    val stubMcc = play.api.test.Helpers.stubMessagesControllerComponents()
-    val bodyParsers: BodyParser[AnyContent] = stubMcc.parsers.defaultBodyParser
-
-    val fakeAuth = new FakeIdentifierAction(bodyParsers)
-    val fakeReg = new FakeRegistrationAction(stubMcc.parsers)
-    def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
 
     new GuiceApplicationBuilder()
       .overrides(
-        bind[IdentifierAction].toInstance(fakeAuth),
+        bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[RegistrationAction].toInstance(fakeReg),
-        bind[DataRetrievalAction].toInstance(fakeData(userAnswers)),
+        bind[RegistrationAction].to[FakeRegistrationAction],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[SessionRepository].toInstance(mockSessionRepository)
       )

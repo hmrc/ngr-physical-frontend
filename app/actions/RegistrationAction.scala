@@ -25,6 +25,7 @@ import play.api.mvc.*
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,8 +33,8 @@ class RegistrationActionImpl @Inject()(
                                         ngrConnector: NGRConnector,
                                         authenticate: IdentifierAction,
                                         appConfig: FrontendAppConfig,
-                                        mcc: MessagesControllerComponents
-                                  )(implicit ec: ExecutionContext) extends RegistrationAction {
+                                        val parser: BodyParsers.Default
+                                  )(implicit val executionContext: ExecutionContext) extends RegistrationAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -60,12 +61,6 @@ class RegistrationActionImpl @Inject()(
   private def redirectToRegister(): Future[Result] = {
     Future.successful(Redirect(s"${appConfig.registrationHost}/ngr-login-register-frontend/register"))
   }
-  // $COVERAGE-OFF$
-  override def parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
-
-  override protected def executionContext: ExecutionContext = ec
-  // $COVERAGE-ON$
-
 }
 
 @ImplementedBy(classOf[RegistrationActionImpl])

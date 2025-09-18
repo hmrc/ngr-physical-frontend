@@ -17,16 +17,21 @@
 package controllers.actions
 
 import actions.IdentifierAction
-import jakarta.inject.Inject
+
+import javax.inject.Inject
 import models.requests.IdentifierRequest
 import play.api.mvc.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(val parser: BodyParser[AnyContent])(implicit val executionContext: ExecutionContext)
-  extends IdentifierAction {
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-    val newRequest = IdentifierRequest(request, "id", "id")
-    block(newRequest)
-  }
+class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
+
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
+    block(IdentifierRequest(request, "id", "id"))
+
+  override def parser: BodyParser[AnyContent] =
+    bodyParsers.default
+
+  override protected def executionContext: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
 }

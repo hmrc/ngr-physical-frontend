@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 trait ControllerSpecSupport extends TestSupport with TestData {
   
-  val fakeAuth = new FakeIdentifierAction(mcc.parsers.defaultBodyParser)
+  val fakeAuth = new FakeIdentifierAction(stubMessagesControllerComponents().parsers)
   val fakeReg = new FakeRegistrationAction(stubMessagesControllerComponents().parsers)
   def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
   def fakeRequireData(answers: Option[UserAnswers]) = new FakeDataRequiredAction(answers)
