@@ -82,7 +82,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
                     HaveYouChangedInternalPage,
                     HaveYouChangedSpacePage,
                     HaveYouChangedExternalPage
-                  ))
+                  ), routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
                   Future.successful(Redirect(nextPage))
 
                 case None => Future.failed(new RuntimeException("Missing UserAnswers"))

@@ -22,10 +22,13 @@ import controllers.routes
 import play.api.mvc.Call
 
 object ChangeChecker {
-  def recheckForAnyChanges(answers: UserAnswers, pagesToCheck: List[QuestionPage[Boolean]]): Call = {
+  def recheckForAnyChanges(answers: UserAnswers, pagesToCheck: List[QuestionPage[Boolean]],
+                           ifChangesFound: Call,
+                           ifNoChangesFound: Call
+                          ): Call = {
     pagesToCheck.find(page => answers.get(page).contains(true)) match {
-      case Some(_) => routes.AnythingElseController.onPageLoad(NormalMode)
-      case None => routes.NotToldAnyChangesController.show
+      case Some(_) => ifChangesFound
+      case None => ifNoChangesFound
     }
   }
 }
