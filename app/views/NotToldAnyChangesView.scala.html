@@ -20,42 +20,39 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 
 @this(
-layout: Layout,
-formHelper: FormWithCSRF
+layout: Layout
 )
 
 @(address: String, navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("notToldAnyChanges.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
-    @formHelper(action = controllers.routes.NotToldAnyChangesController.show){
-        <span class="govuk-caption-m">@address</span>
-        <h1 class="govuk-heading-l">@messages("notToldAnyChanges.title")</h1>
-        <p class="govuk-body">@messages("notToldAnyChanges.p1")</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a class="govuk-link" href="@routes.HaveYouChangedController.loadSpace(mode)">
-                    @messages("notToldAnyChanges.ul1.li1")
-                </a>
-            </li>
-            <li>
-                <a class="govuk-link" href="@routes.HaveYouChangedController.loadInternal(mode)">
-                    @messages("notToldAnyChanges.ul1.li2")
-                </a>
-            </li>
-            <li>
-                <a class="govuk-link" href="@routes.HaveYouChangedController.loadExternal(mode)">
-                    @messages("notToldAnyChanges.ul1.li3")
-                </a>
-            </li>
-        </ul>
-        <p class="govuk-body">@messages("notToldAnyChanges.p2")</p>
-
-        <p class="govuk-body">
-            <a class="govuk-link" href="@{appConfig.dashboardHost + "/ngr-dashboard-frontend/dashboard"}">
-                @messages("notToldAnyChanges.p3")
+    <span class="govuk-caption-m">@address</span>
+    <h1 class="govuk-heading-l">@messages("notToldAnyChanges.title")</h1>
+    <p class="govuk-body">@messages("notToldAnyChanges.p1")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadSpace(mode)">
+                @messages("notToldAnyChanges.ul1.li1")
             </a>
-        </p>
-    }
+        </li>
+        <li>
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadInternal(mode)">
+                @messages("notToldAnyChanges.ul1.li2")
+            </a>
+        </li>
+        <li>
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadExternal(mode)">
+                @messages("notToldAnyChanges.ul1.li3")
+            </a>
+        </li>
+    </ul>
+    <p class="govuk-body">@messages("notToldAnyChanges.p2")</p>
+
+    <p class="govuk-body">
+        <a class="govuk-link" href="@{appConfig.dashboardHost + "/ngr-dashboard-frontend/dashboard"}">
+            @messages("notToldAnyChanges.p3")
+        </a>
+    </p>
 }
 
 @{

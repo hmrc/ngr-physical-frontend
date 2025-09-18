@@ -31,15 +31,13 @@ class NotToldAnyChangesControllerSpec
   lazy val view: NotToldAnyChangesView = inject[NotToldAnyChangesView]
   private val controller = new NotToldAnyChangesController(fakeAuth, fakeData(None), mcc, view)(mockConfig)
 
-  "GET /" should :
-
-    "return 200" in :
+  "GET /" should {
+    "return 200 and HTML content with UTF-8 charset" in {
       val result = controller.show(authenticatedFakeRequest)
+
       status(result) mustBe Status.OK
-
-    "return HTML" in :
-      val result = controller.show(authenticatedFakeRequest)
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
-      
+    }
+  }
 }

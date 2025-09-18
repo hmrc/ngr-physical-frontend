@@ -28,14 +28,14 @@ class NotToldAnyChangesViewSpec extends ViewBaseSpec {
   val view: NotToldAnyChangesView = inject[NotToldAnyChangesView]
 
   object Selectors {
-    val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
-    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > h1"
-    val p1Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(3)"
-    val ul1li1Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > ul > li:nth-child(1) > a"
-    val ul1li2Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > ul > li:nth-child(2) > a"
-    val ul1li3Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > ul > li:nth-child(3) > a"
-    val p2Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(5)"
-    val p3Text = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(6)"
+    val address = "#main-content > div > div.govuk-grid-column-two-thirds > span"
+    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > h1"
+    val p1Text = "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(3)"
+    val ul1li1Text = "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1) > a"
+    val ul1li2Text = "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2) > a"
+    val ul1li3Text = "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3) > a"
+    val p2Text = "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(5)"
+    val p3Text = "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(6)"
   }
 
   "NotToldAnyChangesView" must {
