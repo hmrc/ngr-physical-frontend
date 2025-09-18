@@ -22,9 +22,9 @@ import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.Assertion
+import pages.WhenCompleteChangePage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import pages.WhenCompleteChangePage
 import views.html.WhenCompleteChangeView
 
 import java.time.LocalDate
@@ -47,16 +47,9 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
 
   "HaveYouChangedController" must {
     "return 200 for space" in {
-      checkForOkPageLoad(NormalMode)
-      checkForOkPageLoad(CheckMode)
+      Seq(NormalMode, CheckMode).foreach(checkForOkPageLoad)
     }
-
-    "return HTML" in {
-      val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
-      contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
-    }
-
+    
     "pre-filled form" in {
       val filledController = WhenCompleteChangeController(
         mockSessionRepository,
@@ -109,5 +102,7 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
   def checkForOkPageLoad(mode: Mode): Assertion =
     val result = controller.onPageLoad(mode)(authenticatedFakeRequest)
     status(result) mustBe OK
+    contentType(result) mustBe Some("text/html")
+    charset(result) mustBe Some("utf-8")
 
 }

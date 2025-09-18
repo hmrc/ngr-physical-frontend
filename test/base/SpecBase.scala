@@ -16,8 +16,8 @@
 
 package base
 
-import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
-import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
+import actions.*
+import controllers.actions.*
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
@@ -43,8 +43,7 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience
-    with Injecting {
+    with IntegrationPatience {
 
   val userAnswersId: String = "id"
 
@@ -54,32 +53,20 @@ trait SpecBase
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  implicit lazy val actorSystem: ActorSystem = ActorSystem("TestActorSystem")
-  implicit lazy val mat: Materializer = Materializer(actorSystem)
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   
   def onwardRoute: Call = Call("GET", "/foo")
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
-    val stubMcc = play.api.test.Helpers.stubMessagesControllerComponents()
-    val bodyParsers: BodyParser[AnyContent] = stubMcc.parsers.defaultBodyParser
-
-    val fakeAuth = new FakeIdentifierAction(bodyParsers)
-    val fakeReg = new FakeRegistrationAction(stubMcc.parsers)
-    def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
-    val fakeRequireData = new FakeDataRequiredAction()
-    
 
     new GuiceApplicationBuilder()
       .overrides(
-        bind[IdentifierAction].toInstance(fakeAuth),
-        bind[RegistrationAction].toInstance(fakeReg),
-        bind[DataRetrievalAction].toInstance(fakeData(userAnswers)),
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[RegistrationAction].to[FakeRegistrationAction],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[SessionRepository].toInstance(mockSessionRepository)
       )
   }
-
-  implicit lazy val app: Application = applicationBuilder().build()
-  lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[play.api.mvc.MessagesControllerComponents]
-}
+ }

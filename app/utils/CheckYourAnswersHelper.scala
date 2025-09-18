@@ -59,7 +59,7 @@ class CheckYourAnswersHelper @Inject()() {
   private def createInternalFeaturesSection(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[Section] =
-    val rowsSeq = InternalFeature.getAnswers(Some(userAnswers), CheckMode)
+    val rowsSeq = InternalFeature.getAnswers(userAnswers, CheckMode)
     val rows  = if (rowsSeq.nonEmpty) rowsSeq.map(Some(_)) else Seq(
       HaveYouChangedSummary.row(userAnswers, Internal)
     )
@@ -73,7 +73,7 @@ class CheckYourAnswersHelper @Inject()() {
                                                                       messages: Messages
   ): Option[Section] =
 
-    val rowsSeq = ExternalFeature.getAnswers(Some(userAnswers), CheckMode)
+    val rowsSeq = ExternalFeature.getAnswers(userAnswers, CheckMode)
     val rows  = if (rowsSeq.nonEmpty) rowsSeq.map(Some(_)) else Seq(
       HaveYouChangedSummary.row(userAnswers, External)
     )

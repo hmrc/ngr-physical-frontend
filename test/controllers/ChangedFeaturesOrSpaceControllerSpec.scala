@@ -21,8 +21,10 @@ import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.http.Status
+import play.api.mvc.Result
 import play.api.test.Helpers.*
 import views.html.ChangedFeaturesOrSpaceView
+
 import scala.concurrent.Future
 
 class ChangedFeaturesOrSpaceControllerSpec
@@ -34,12 +36,8 @@ class ChangedFeaturesOrSpaceControllerSpec
     
     when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
     "return 200" in :
-      val result = controller.show(authenticatedFakeRequest)
+      val result: Future[Result] = controller.show(authenticatedFakeRequest)
       status(result) mustBe Status.OK
-
-    "return HTML" in :
-      val result = controller.show(authenticatedFakeRequest)
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
-      
 }

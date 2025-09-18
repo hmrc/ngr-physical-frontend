@@ -29,6 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ChangeToUseOfSpaceView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +39,7 @@ class ChangeToUseOfSpaceController @Inject()(
                                       navigator: Navigator,
                                       identify: IdentifierAction,
                                       getData: DataRetrievalAction,
+                                      requireData: DataRequiredAction,
                                       formProvider: ChangeToUseOfSpaceFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChangeToUseOfSpaceView
@@ -45,10 +47,9 @@ class ChangeToUseOfSpaceController @Inject()(
 
   val form: Form[ChangeToUseOfSpace] = formProvider()
 
-  //TODO: add requireData along with getData in onPageLoad and onSubmit methods when first page is implemented
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(ChangeToUseOfSpacePage) match {
+      val preparedForm = request.userAnswers.get(ChangeToUseOfSpacePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -56,14 +57,14 @@ class ChangeToUseOfSpaceController @Inject()(
       Ok(view(request.property.addressFull, createDefaultNavBar(), preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest()(request.request).fold(
         formWithErrors =>
           Future.successful(BadRequest(view(request.property.addressFull, createDefaultNavBar(), formWithErrors, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(ChangeToUseOfSpacePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChangeToUseOfSpacePage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(ChangeToUseOfSpacePage, mode, updatedAnswers))
       )

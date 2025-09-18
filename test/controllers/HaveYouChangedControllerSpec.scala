@@ -21,76 +21,73 @@ import helpers.ControllerSpecSupport
 import models.{CheckMode, External, HaveYouChangedControllerUse, Internal, Mode, NormalMode, Space, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatest.Assertion
-import pages.HaveYouChangedSpacePage
-import play.api.test.Helpers.*
+import org.scalatest.{Assertion, TryValues}
+import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage}
+import play.api.test.Helpers.{contentType, *}
 import views.html.HaveYouChangedView
 
 import scala.concurrent.Future
 
-class HaveYouChangedControllerSpec extends ControllerSpecSupport {
+class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues {
   lazy val view: HaveYouChangedView = inject[HaveYouChangedView]
-  lazy val controller: HaveYouChangedController =
-    HaveYouChangedController(
+    def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = HaveYouChangedController(
       mockSessionRepository,
       navigator,
       fakeAuth,
-      fakeData(None),
+      fakeData(userAnswers),
+      fakeRequireData(userAnswers),
       HaveYouChangedFormProvider(),
       mcc,
       view
     )
 
-  lazy val userAnswersFilled: Option[UserAnswers] = UserAnswers("id").set(HaveYouChangedSpacePage, true).toOption
+  lazy val userAnswersFilled: UserAnswers = UserAnswers("id")
+    .set(HaveYouChangedSpacePage, true).success.value
+    .set(HaveYouChangedInternalPage, true).success.value
+    .set(HaveYouChangedExternalPage, true).success.value
 
   "HaveYouChangedController" must {
-    "return 200 for space" in {
-      checkForOkPageLoad(Space, NormalMode)
-      checkForOkPageLoad(Space, CheckMode)
-      checkForOkPageLoad(Internal, NormalMode)
-      checkForOkPageLoad(Internal, CheckMode)
-      checkForOkPageLoad(External, NormalMode)
-      checkForOkPageLoad(External, CheckMode)
+    Seq(Space, Internal, External).foreach { changeType =>
+      Seq(NormalMode, CheckMode).foreach { mode =>
+        s"return 200 for $changeType and mode $mode" in {
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).onPageLoad(changeType, mode)(authenticatedFakeRequest)
+          status(result) mustBe OK
+          contentType(result) mustBe Some("text/html")
+          charset(result) mustBe Some("utf-8")
+        }
+
+        s"pre-filled form for $changeType and mode $mode" in {
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).onPageLoad(changeType, mode)(authenticatedFakeRequest)
+          contentAsString(result) must include("checked")
+        }
+
+        s"should redirect on successful submission for $changeType and mode $mode" in {
+          when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+          val formRequest = requestWithForm(Map("value" -> "true"))
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).onSubmit(changeType, mode)(formRequest)
+          status(result) mustBe 303
+        }
+
+        s"should error if no selection for $changeType and mode $mode" in {
+          when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).onSubmit(changeType, mode)(authenticatedFakeRequest)
+          status(result) mustBe BAD_REQUEST
+        }
+
+        s"redirect to Journey Recovery for a GET if no existing data is found for $changeType and mode $mode" in {
+
+          val result = controllerWithUserAnswers(None).onPageLoad(changeType, mode)(authenticatedFakeRequest)
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+        }
+
+        s"redirect to Journey Recovery for a POST if no existing data is found for $changeType and mode $mode" in {
+          val formRequest = requestWithForm(Map("value" -> "true"))
+          val result = controllerWithUserAnswers(None).onSubmit(changeType, mode)(formRequest)
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
     }
-
-    "return HTML" in {
-      val result = controller.onPageLoad(Space, NormalMode)(authenticatedFakeRequest)
-      contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
-    }
-
-    "pre-filled form" in {
-      val filledController = HaveYouChangedController(
-        mockSessionRepository,
-        navigator,
-        fakeAuth,
-        fakeData(userAnswersFilled),
-        HaveYouChangedFormProvider(),
-        mcc,
-        view
-      )
-
-      val result = filledController.onPageLoad(Space, NormalMode)(authenticatedFakeRequest)
-      contentAsString(result) must include("checked")
-    }
-
-    "should redirect on successful submission" in {
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val formRequest = requestWithForm(Map("value" -> "true"))
-      val result = controller.onSubmit(Space, NormalMode)(formRequest)
-      status(result) mustBe 303
-    }
-
-    "should error if no selection" in {
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val result = controller.onSubmit(Space, NormalMode)(authenticatedFakeRequest)
-      status(result) mustBe BAD_REQUEST
-    }
-
   }
-
-  def checkForOkPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Assertion =
-    val result = controller.onPageLoad(use, mode)(authenticatedFakeRequest)
-    status(result) mustBe OK
-
 }

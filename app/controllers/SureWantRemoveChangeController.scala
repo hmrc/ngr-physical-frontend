@@ -16,21 +16,21 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction}
+import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import forms.SureWantRemoveChangeFormProvider
-import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, InternalFeature, Mode, NormalMode}
+import models.NavBarPageContents.createDefaultNavBar
 import models.SureWantRemoveChange.getFeatureValue
-import utils.StringUtils.hyphenToCamelCase
+import models.{CYAExternal, CYAInternal, CYAViewType, ExternalFeature, InternalFeature, Mode, NormalMode}
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.SureWantRemoveChangeView
-import models.NavBarPageContents.createDefaultNavBar
 import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.StringUtils.hyphenToCamelCase
+import views.html.SureWantRemoveChangeView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,13 +39,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class SureWantRemoveChangeController @Inject()(
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
+                                          requireData: DataRequiredAction,
                                           formProvider: SureWantRemoveChangeFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: SureWantRemoveChangeView
                                         )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(hyphenFeatureString: String, mode: Mode, fromMiniCYA: Boolean = false): Action[AnyContent] =
-    (identify andThen getData) {
+    (identify andThen getData andThen requireData) {
       implicit request =>
         val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
         val viewType = determineViewType(camelCaseFeatureString)
@@ -53,7 +54,7 @@ class SureWantRemoveChangeController @Inject()(
         Ok(view(request.property.addressFull, getTitle(viewType, camelCaseFeatureString), hyphenFeatureString, form, createDefaultNavBar(), mode, fromMiniCYA))
     }
 
-  def onSubmit(hyphenFeatureString: String, mode: Mode, fromMiniCYA: Boolean = false): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(hyphenFeatureString: String, mode: Mode, fromMiniCYA: Boolean = false): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val camelCaseFeatureString = hyphenToCamelCase(hyphenFeatureString)
       val viewType = determineViewType(camelCaseFeatureString)

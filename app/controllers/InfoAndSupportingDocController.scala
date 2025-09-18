@@ -42,8 +42,4 @@ class InfoAndSupportingDocController @Inject()(
         Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
     
-  val next: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData) {
-      Redirect(routes.WhenCompleteChangeController.onPageLoad(NormalMode))
-    }
 }

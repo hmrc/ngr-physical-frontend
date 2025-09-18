@@ -16,7 +16,9 @@
 
 package views
 
+import controllers.routes
 import helpers.ViewBaseSpec
+import models.NormalMode
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.html.InfoAndSupportingDocView
@@ -34,11 +36,11 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
     val secondParagraph = "#para-2"
     val thirdParagraph = "#para-4"
     val fourthParagraph = "#para-6"
-    val firstBulletPointSection = "#main-content > div > div.govuk-grid-column-two-thirds > form > ul:nth-child(7) >"
+    val firstBulletPointSection = "#main-content > div > div.govuk-grid-column-two-thirds > ul:nth-child(7) >"
     val firstBulletPointSection_1 = s"$firstBulletPointSection li:nth-child(1)"
     val firstBulletPointSection_2 = s"$firstBulletPointSection li:nth-child(2)"
     val firstBulletPointSection_3 = s"$firstBulletPointSection li:nth-child(3)"
-    val secondBulletPointSection = "#main-content > div > div > form > ul:nth-child(11)  >"
+    val secondBulletPointSection = "#main-content > div > div > ul:nth-child(11)  >"
     val secondBulletPointSection_1 = s"$secondBulletPointSection li:nth-child(1)"
     val secondBulletPointSection_2 = s"$secondBulletPointSection li:nth-child(2)"
     val secondBulletPointSection_3 = s"$secondBulletPointSection li:nth-child(3)"
@@ -103,6 +105,11 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
       elementText(Selectors.helpDetail_2) mustBe "Photos must show what the property was like after the changes."
       elementText(Selectors.helpDetail_3) mustBe "Letters or emails must be about the changes. For example, receipts from suppliers or confirmation from your builder about the work they have done."
       elementText(Selectors.helpDetail_4) mustBe "Project plans or a schedule of works need to show what work was done when."
+    }
+
+    "show conitnue button" in {
+      elementText(".govuk-button") mustBe "Continue"
+      element(".govuk-button").attr("href") must include(routes.WhenCompleteChangeController.onPageLoad(NormalMode).url)
     }
 
   }

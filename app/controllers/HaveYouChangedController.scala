@@ -39,6 +39,7 @@ class HaveYouChangedController @Inject()(
                                           navigator: Navigator,
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
+                                          requireData: DataRequiredAction,
                                           formProvider: HaveYouChangedFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: HaveYouChangedView
@@ -48,10 +49,10 @@ class HaveYouChangedController @Inject()(
   def loadInternal(mode: Mode): Action[AnyContent] = onPageLoad(Internal, mode)
   def loadExternal(mode: Mode): Action[AnyContent] = onPageLoad(External, mode)
 
-  def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(pageType(use)) match {
+      val preparedForm = request.userAnswers.get(pageType(use)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -69,7 +70,7 @@ class HaveYouChangedController @Inject()(
   def submitInternal(mode: Mode): Action[AnyContent] = onSubmit(Internal, mode)
   def submitExternal(mode: Mode): Action[AnyContent] = onSubmit(External, mode)
 
-  def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
       form.bindFromRequest().fold(
@@ -79,7 +80,7 @@ class HaveYouChangedController @Inject()(
         value =>
           val page = pageType(use)
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(page, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(page, value))
             _ <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(page, mode, updatedAnswers))
       )

@@ -20,8 +20,8 @@ import actions.*
 import config.AppConfig
 import connectors.NGRConnector
 import forms.AnythingElseFormProvider
-import models.{AnythingElseData, Mode}
 import models.NavBarPageContents.createDefaultNavBar
+import models.{AnythingElseData, Mode}
 import navigation.Navigator
 import pages.AnythingElsePage
 import play.api.data.Form
@@ -40,6 +40,7 @@ class AnythingElseController @Inject()(
                                         navigator: Navigator,
                                         identify: IdentifierAction,
                                         getData: DataRetrievalAction,
+                                        requireData: DataRequiredAction,
                                         formProvider: AnythingElseFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AnythingElseView
@@ -47,10 +48,10 @@ class AnythingElseController @Inject()(
 
   val form: Form[AnythingElseData] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(throw new NotFoundException("answers not found")).get(AnythingElsePage) match {
+      val preparedForm = request.userAnswers.get(AnythingElsePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -58,7 +59,7 @@ class AnythingElseController @Inject()(
       Ok(view(request.property.addressFull, preparedForm, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -67,7 +68,7 @@ class AnythingElseController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(throw new NotFoundException("answers not found")).set(AnythingElsePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AnythingElsePage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(AnythingElsePage, mode, updatedAnswers))
       )

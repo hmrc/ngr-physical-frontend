@@ -17,22 +17,20 @@
 package controllers.actions
 
 import actions.DataRequiredAction
+import controllers.routes
+import helpers.TestData
 import models.UserAnswers
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.*
 
-import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
-import controllers.routes
-import helpers.TestData
+import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
+class FakeDataRequiredAction @Inject()(userAnswers: Option[UserAnswers])(implicit val executionContext: ExecutionContext)
   extends DataRequiredAction with TestData {
 
-  var userAnswersToReturn: Option[UserAnswers] = Some(UserAnswers("id"))
-
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-    userAnswersToReturn match {
+    userAnswers match {
       case None =>
         Future.successful(Left(Results.Redirect(routes.JourneyRecoveryController.onPageLoad())))
       case Some(data) =>

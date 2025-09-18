@@ -18,6 +18,7 @@ package controllers
 
 import base.SpecBase
 import helpers.{ControllerSpecSupport, TestData}
+import models.UserAnswers
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -33,8 +34,8 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
   lazy val view: SupportingDocumentsView = inject[SupportingDocumentsView]
   private val fakeRequest = FakeRequest("GET", "/supporting-documents")
 
-  def controller() = new SupportingDocumentsController(
-     identify = fakeAuth, getData = fakeData(None), controllerComponents = mcc, view = view
+  def controller(userAnswers: Option[UserAnswers]) = new SupportingDocumentsController(
+     identify = fakeAuth, getData = fakeData(userAnswers), requireData = fakeRequireData(userAnswers), controllerComponents = mcc, view = view
   )(mockConfig)
 
   val pageTitle = "Supporting documents"
@@ -45,11 +46,17 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
   "Dashboard Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller().onPageLoad()(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).onPageLoad()(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
         content must include(contentP)
+      }
+
+      "redirect to Journey Recovery for a GET if no existing data is found" in {
+        val result = controller(None).onPageLoad()(fakeRequest)
+        status(result) mustBe 303
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

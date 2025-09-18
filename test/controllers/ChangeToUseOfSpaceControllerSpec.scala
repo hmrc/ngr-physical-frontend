@@ -16,93 +16,141 @@
 
 package controllers
 
+import base.SpecBase
+import config.FrontendAppConfig
 import forms.ChangeToUseOfSpaceFormProvider
-import helpers.ControllerSpecSupport
+import helpers.TestData
+import models.NavBarPageContents.createDefaultNavBar
 import models.UseOfSpaces.Rearrangedtheuseofspace
-import models.{ChangeToUseOfSpace, CheckMode, Mode, NormalMode, UseOfSpaces, UserAnswers}
+import models.{ChangeToUseOfSpace, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import pages.ChangeToUseOfSpacePage
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import repositories.SessionRepository
 import views.html.ChangeToUseOfSpaceView
-import org.scalatest.Assertion
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class ChangeToUseOfSpaceControllerSpec extends ControllerSpecSupport{
+class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with TestData {
 
-  lazy val view: ChangeToUseOfSpaceView = inject[ChangeToUseOfSpaceView]
-  lazy val controller: ChangeToUseOfSpaceController =
-    ChangeToUseOfSpaceController(
-      mockSessionRepository,
-      navigator,
-      fakeAuth,
-      fakeData(None),
-      ChangeToUseOfSpaceFormProvider(),
-      mcc,
-      view
-    )
+  val formProvider = new ChangeToUseOfSpaceFormProvider()
+  val form: Form[ChangeToUseOfSpace] = formProvider()
+  lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode).url
+  val changeToUseOfSpace: ChangeToUseOfSpace = ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("1234555"))
+  val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeToUseOfSpacePage, changeToUseOfSpace).success.value
 
-  lazy val prefillAnswers: ChangeToUseOfSpace =
-    ChangeToUseOfSpace(
-      selectUseOfSpace = Set(Rearrangedtheuseofspace),
-      hasPlanningPermission = true,
-      permissionReference = Some("AB1234FRXYXYX")
-    )
+  "ChangeToUseOfSpace Controller" - {
 
-  lazy val userAnswersFilled: Option[UserAnswers] = UserAnswers("id").set(ChangeToUseOfSpacePage, prefillAnswers).toOption
+    "must return OK and the correct view for a GET" in {
 
-  "ChangeToUseOfSpace Controller" should {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
-    "return 200 for space" in {
-      checkForOkPageLoad(NormalMode)
-      checkForOkPageLoad(CheckMode)
+      running(application) {
+        val request = FakeRequest(GET, changeToUseOfSpaceRoute)
+
+        val view = application.injector.instanceOf[ChangeToUseOfSpaceView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), form, NormalMode)(request, messages(application)).toString
+      }
     }
 
-    "return HTML" in {
-      val result = controller.onPageLoad(NormalMode)(authenticatedFakeRequest)
-      contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
+    "must populate the view correctly on a GET when the question has previously been answered" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+
+      running(application) {
+        val request = FakeRequest(GET, changeToUseOfSpaceRoute)
+
+        val view = application.injector.instanceOf[ChangeToUseOfSpaceView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), form.fill(ChangeToUseOfSpace(Set(Rearrangedtheuseofspace),true, Some("1234555"))), NormalMode)(request, messages(application)).toString
+      }
     }
 
-    "pre-filled form" in {
-      lazy val filledController: ChangeToUseOfSpaceController =
-        ChangeToUseOfSpaceController(
-          mockSessionRepository,
-          navigator,
-          fakeAuth,
-          fakeData(userAnswersFilled),
-          ChangeToUseOfSpaceFormProvider(),
-          mcc,
-          view
-        )
 
-      val result = filledController.onPageLoad(NormalMode)(authenticatedFakeRequest)
-      contentAsString(result) must include("checked")
-      contentAsString(result) must include("AB1234FRXYXYX")
+    "must redirect when planning permission is true and reference is provided" in {
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, changeToUseOfSpaceRoute)
+          .withFormUrlEncodedBody(
+            "selectUseOfSpace[0]" -> "rearrangedTheUseOfSpace",
+            "hasPlanningPermission" -> "false"
+          )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
     }
 
-    "should redirect on successful submission" in {
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val formRequest = FakeRequest()
-        .withFormUrlEncodedBody(
-                  "selectUseOfSpace[0]" -> "rearrangedTheUseOfSpace",
-                  "hasPlanningPermission" -> "false"
-                )
-      val result = controller.onSubmit(NormalMode)(formRequest)
-      status(result) mustBe 303
+    "must return a Bad Request and errors when invalid data is submitted" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      
+      running(application) {
+        val request =
+          FakeRequest(POST, changeToUseOfSpaceRoute)
+            .withFormUrlEncodedBody(("value", "invalid value"))
+
+        val boundForm = form.bind(Map("value" -> "invalid value"))
+
+        val view = application.injector.instanceOf[ChangeToUseOfSpaceView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), boundForm, NormalMode)(request, messages(application)).toString
+      }
     }
 
-    "should error if no selection" in {
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
-      status(result) mustBe BAD_REQUEST
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, changeToUseOfSpaceRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, changeToUseOfSpaceRoute)
+            .withFormUrlEncodedBody(("selectUseOfSpace", "value 1"), ("hasPlanningPermission", "value 2"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
     }
   }
-
-  def checkForOkPageLoad(mode: Mode): Assertion =
-    val result = controller.onPageLoad(mode)(authenticatedFakeRequest)
-    status(result) mustBe OK
-
 }

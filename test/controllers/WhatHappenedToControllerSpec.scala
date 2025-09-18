@@ -36,8 +36,9 @@ import scala.concurrent.Future
 class WhatHappenedToControllerSpec extends ControllerSpecSupport {
   lazy val view: WhatHappenedToView = inject[WhatHappenedToView]
   lazy val formProvider: WhatHappenedToFormProvider = WhatHappenedToFormProvider()
-  private val controller: WhatHappenedToController = new WhatHappenedToController(
-    sessionRepository = mockSessionRepository, navigator = navigator, identify = fakeAuth, getData = fakeData(None), formProvider = formProvider, controllerComponents = mcc, view = view
+
+  private def controller(userAnswers: Option[UserAnswers]): WhatHappenedToController = new WhatHappenedToController(
+    sessionRepository = mockSessionRepository, navigator = navigator, identify = fakeAuth, getData = fakeData(userAnswers), requireData = fakeRequireData(userAnswers), formProvider = formProvider, controllerComponents = mcc, view = view
   )
 
   "WhatHappenedToController" should {
@@ -45,32 +46,47 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport {
 
       "onPageLoad" must {
         s"return 200: ${feature.toString}" in {
-          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
           status(result) mustBe 200
         }
         s"return HTML: ${feature.toString}" in {
-          val result = controller.onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
+
+        s"redirect to journey recovery Expired for a GET if no existing data is found: ${feature.toString}" in {
+          val result = controller(None).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          status(result) mustBe 303
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
+
       "onSubmit" must {
         s"redirect with valid form submission: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "added"))
-          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
           status(result) mustBe 303
         }
+
         s"Bad request with invalid form: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "wow"))
-          val result = controller.onSubmit(feature, NormalMode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
           status(result) mustBe 400
+        }
+
+        s"redirect to journey recovery Expired for a POST if no existing data is found: ${feature.toString}" in {
+          val formRequest = requestWithForm(Map("value" -> "added"))
+          val result = controller(None).onSubmit(feature, NormalMode)(formRequest)
+          status(result) mustBe 303
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
 
     }
   }
 
-  
+
 }
