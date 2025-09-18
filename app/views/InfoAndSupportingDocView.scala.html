@@ -26,87 +26,84 @@
     p: p,
     bulletPointList: bulletPointList,
     detailsDropdown: detailsDropdown,
-    saveAndContinueButton: saveAndContinueButton,
-    formHelper: FormWithCSRF
+    govukButton: GovukButton
 )
 
 @(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
-@dropDownContentHelp = {
-
-@p(id = Some("detail-para-1")) { @messages("info.and.supporting.help.details1") }
-@p(id = Some("detail-para-2")) { @messages("info.and.supporting.help.details2") }
-@p(id = Some("detail-para-3")) { @messages("info.and.supporting.help.details3") }
-@p(id = Some("detail-para-4")) { @messages("info.and.supporting.help.details4") }
-
-}
+    @dropDownContentHelp = {
+        @p(id = Some("detail-para-1")) { @messages("info.and.supporting.help.details1") }
+        @p(id = Some("detail-para-2")) { @messages("info.and.supporting.help.details2") }
+        @p(id = Some("detail-para-3")) { @messages("info.and.supporting.help.details3") }
+        @p(id = Some("detail-para-4")) { @messages("info.and.supporting.help.details4") }
+    }
 
 
 @layout(pageTitle = Some(titleNoForm("info.and.supporting.documents.heading")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-@formHelper(action = controllers.routes.InfoAndSupportingDocController.next) {
+    <span class="govuk-caption-m">@address</span>
+    @h1(msg = messages("info.and.supporting.documents.heading"), size = "l", id = Some("page-heading"))
 
-<span class="govuk-caption-m">@address</span>
-@h1(msg = messages("info.and.supporting.documents.heading"), size = "l", id = Some("page-heading"))
+    @h2(msg = messages("info.and.supporting.documents.sub.heading1"), optId = Some("sub-heading-1"))
 
-@h2(msg = messages("info.and.supporting.documents.sub.heading1"), optId = Some("sub-heading-1"))
+    @p(
+        id = Some("para-1")) {
+            @messages("info.and.supporting.documents.p1")
+        }
 
-@p(
-    id = Some("para-1")) {
-        @messages("info.and.supporting.documents.p1")
+    @p(
+        id = Some("para-2")) {
+            @messages("info.and.supporting.documents.p2")
+        }
+
+    @p(
+        id = Some("para-3")) {
+            @messages("info.and.supporting.documents.p3")
+        }
+
+    @bulletPointList(
+        Seq("info.and.supporting.documents.change.bullet.point1",
+        "info.and.supporting.documents.change.bullet.point2",
+        "info.and.supporting.documents.change.bullet.point3")
+    )
+
+
+
+
+    @h2(msg = messages("info.and.supporting.documents.sub.heading2"), optId = Some("sub-heading-2"))
+
+    @p(
+        id = Some("para-4")) {
+        @messages("info.and.supporting.documents.p4")
     }
 
-@p(
-    id = Some("para-2")) {
-        @messages("info.and.supporting.documents.p2")
+    @p(
+        id = Some("para-5")) {
+        @messages("info.and.supporting.documents.p5")
     }
 
-@p(
-    id = Some("para-3")) {
-        @messages("info.and.supporting.documents.p3")
+    @bulletPointList(
+        Seq("info.and.supporting.documents.upload.bullet.point1",
+        "info.and.supporting.documents.upload.bullet.point2",
+        "info.and.supporting.documents.upload.bullet.point3",
+        "info.and.supporting.documents.upload.bullet.point4")
+    )
+
+    @detailsDropdown("info.and.supporting.help", dropDownContentHelp, Some("help-details-dropdown"))
+
+    @h2(msg = messages("info.and.supporting.documents.sub.heading3"), optId = Some("sub-heading-3"))
+
+    @p(
+        id = Some("para-6")) {
+        @messages("info.and.supporting.documents.p6")
     }
 
-@bulletPointList(
-    Seq("info.and.supporting.documents.change.bullet.point1",
-    "info.and.supporting.documents.change.bullet.point2",
-    "info.and.supporting.documents.change.bullet.point3")
-)
-
-
-
-
-@h2(msg = messages("info.and.supporting.documents.sub.heading2"), optId = Some("sub-heading-2"))
-
-@p(
-id = Some("para-4")) {
-@messages("info.and.supporting.documents.p4")
-}
-
-@p(
-id = Some("para-5")) {
-@messages("info.and.supporting.documents.p5")
-}
-
-@bulletPointList(
-Seq("info.and.supporting.documents.upload.bullet.point1",
-"info.and.supporting.documents.upload.bullet.point2",
-"info.and.supporting.documents.upload.bullet.point3",
-"info.and.supporting.documents.upload.bullet.point4")
-)
-
-@detailsDropdown("info.and.supporting.help", dropDownContentHelp, Some("help-details-dropdown"))
-
-@h2(msg = messages("info.and.supporting.documents.sub.heading3"), optId = Some("sub-heading-3"))
-
-@p(
-id = Some("para-6")) {
-@messages("info.and.supporting.documents.p6")
-}
-
-
-@saveAndContinueButton(msg = messages("site.continue"))
-
-}
+    <p class="govuk-body">
+        @govukButton(
+        ButtonViewModel(messages("site.continue"))
+        .asLink(routes.WhenCompleteChangeController.onPageLoad(NormalMode).url)
+        )
+    </p>
 
 }
 

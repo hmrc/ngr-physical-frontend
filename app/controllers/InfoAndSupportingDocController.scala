@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, RegistrationAction}
+import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
 import models.NormalMode
@@ -33,18 +33,13 @@ class InfoAndSupportingDocController @Inject()(
                                                 view: InfoAndSupportingDocView,
                                                 authenticate: IdentifierAction,
                                                 isRegisteredCheck: RegistrationAction,
-                                                getData: DataRetrievalAction,
-                                                requireData: DataRequiredAction
+                                                getData: DataRetrievalAction
 )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
   val show: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData andThen requireData) {
+    (authenticate andThen isRegisteredCheck andThen getData) {
       implicit request =>
         Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
     
-  val next: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData andThen requireData) {
-      Redirect(routes.WhenCompleteChangeController.onPageLoad(NormalMode))
-    }
 }

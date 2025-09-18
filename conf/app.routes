@@ -17,7 +17,6 @@ GET        /tell-us-changed-property-features-or-use-of-space                   
 POST       /tell-us-changed-property-features-or-use-of-space                    controllers.ChangedFeaturesOrSpaceController.next
 
 GET        /information-and-supporting-documents-need                            controllers.InfoAndSupportingDocController.show
-POST       /information-and-supporting-documents-need                            controllers.InfoAndSupportingDocController.next
 
 GET        /when-complete-change                                                 controllers.WhenCompleteChangeController.onPageLoad(mode: Mode = NormalMode)
 POST       /when-complete-change                                                 controllers.WhenCompleteChangeController.onSubmit(mode: Mode = NormalMode)
