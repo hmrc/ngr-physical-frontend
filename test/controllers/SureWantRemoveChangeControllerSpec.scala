@@ -67,7 +67,7 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
 
         "redirect to check your answers page when the flag selected is 'false' and the mode is CheckMode for the internalFeature" in {
           val internalFeature = AirConditioning
-          val result = controller.onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "false")))
+          val result = controller(Some(emptyUserAnswers)).onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "false")))
           redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
         }
 
@@ -79,7 +79,7 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
 
         "redirect to check your answers page when the flag selected is 'false' and the mode is CheckMode for the externalFeature" in {
           val externalFeature = SolarPanels
-          val result = controller.onSubmit(externalFeature.toString, CheckMode)(requestWithForm(Map("value" -> "false")))
+          val result = controller(Some(emptyUserAnswers)).onSubmit(externalFeature.toString, CheckMode)(requestWithForm(Map("value" -> "false")))
           redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
         }
 
