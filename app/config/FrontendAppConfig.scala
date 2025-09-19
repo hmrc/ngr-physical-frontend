@@ -26,10 +26,14 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 trait AppConfig {
   val registrationHost: String
   val dashboardHost: String
+  val ngrPhysicalFrontendUrl: String
   val dashboardUrl: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
   val features: Features
+  val uploadRedirectTargetBase: String
+  val upscanHost: String
+  val callbackEndpointTarget: String
 }
 
 @Singleton
@@ -40,7 +44,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "ngr-physical-frontend"
-
+  override val ngrPhysicalFrontendUrl: String = s"$physicalHost/ngr-physical-frontend"
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
@@ -59,18 +63,23 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-
   override val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
   override val dashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
   override val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
   override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
   override val features = new Features()(configuration)
+  override val uploadRedirectTargetBase: String = getString("upscan.upload-redirect-target-base")
+  override val upscanHost: String = sc.baseUrl("upscan")
+  override val callbackEndpointTarget: String = getString("upscan.callback-endpoint")
+
 
   private def getString(key: String): String =
     configuration.getOptional[String](key).filter(!_.isBlank).getOrElse(throwConfigNotFoundError(key))
 
   private def throwConfigNotFoundError(key: String): String =
     throw new RuntimeException(s"Could not find config key '$key'")
+
+  lazy val physicalHost: String = getString("microservice.services.physical-frontend.host")
 
 }

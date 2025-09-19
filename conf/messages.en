@@ -452,3 +452,26 @@ notToldAnyChanges.ul1.li3 = external features
 notToldAnyChanges.p2 = If you do not have any changes to tell us about, you can go to your account home. We will not save any information or documents you have provided.
 notToldAnyChanges.p3 = Go to your account home
 
+
+uploadDocument.heading = Upload
+uploadDocument.p1 = Files must be PDF, JPG or PNG and must be smaller than 25MB.
+uploadDocument.p2 = You can send other file types or files larger than 25MB to
+uploadDocument.link = files@voa.gov.uk
+uploadDocument.p3 = Upload a file
+
+uploadedDocument.heading = Uploaded files
+uploadedDocument.uploadAnother = Upload another file
+
+uploadedDocument.uploaded = Uploaded
+uploadedDocument.uploading = Uploading
+uploadedDocument.failed = Failed
+
+uploadDocument.error.required = Select a document
+uploadDocument.error.virus = The selected file contains a virus
+uploadDocument.error.alreadyUploaded = The selected file has already been uploaded
+uploadDocument.error.upscanUnknownError = The selected file could not be uploaded - try again 
+uploadDocument.error.inProgress = The selected file has not fully uploaded
+uploadDocument.error.emptyFile = The selected file is empty
+uploadDocument.error.format = The selected file must be a PDF or image (PNG & JPG)
+uploadDocument.error.size = The selected file must be 25MB or smaller
+

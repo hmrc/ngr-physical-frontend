@@ -16,11 +16,13 @@
 
 package helpers
 
+import connectors.UpscanConnector
 import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
 import models.UserAnswers
 import navigation.Navigator
 import play.api.test.Helpers.stubMessagesControllerComponents
 import repositories.SessionRepository
+import services.UploadProgressTracker
 import uk.gov.hmrc.http.HeaderCarrier
 
 trait ControllerSpecSupport extends TestSupport with TestData {
@@ -29,6 +31,8 @@ trait ControllerSpecSupport extends TestSupport with TestData {
   val fakeReg = new FakeRegistrationAction(stubMessagesControllerComponents().parsers)
   def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
   def fakeRequireData(answers: Option[UserAnswers]) = new FakeDataRequiredAction(answers)
+  val mockUpscanConnector: UpscanConnector = mock[UpscanConnector]
+  val mockUploadProgressTracker: UploadProgressTracker = mock[UploadProgressTracker]
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   val navigator: Navigator = inject[Navigator]
   val emptyUserAnswers: UserAnswers = UserAnswers("id")
