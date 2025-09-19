@@ -67,15 +67,14 @@ class UploadDocumentController @Inject()(
     }
   }
 
-    def onPageLoad(errorCode: Option[String], evidence: Option[String]): Action[AnyContent] = (identify andThen getData).async {
+    def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData).async {
       implicit request =>
 
         val errorToDisplay: Option[String] = renderError(errorCode)
         val credId = CredId(request.userId)
         val uploadId = UploadId.generate()
-        val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(uploadId, evidence, None).url}"
-        val evidenceParameter = evidence.map(evidenceValue => s"?evidence=$evidenceValue").getOrElse("")
-        val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/supporting-document-upload$evidenceParameter"
+        val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(uploadId).url}"
+        val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/supporting-document-upload"
         for
           upscanInitiateResponse <- upScanConnector.initiate(Some(successRedirectUrl), Some(errorRedirectUrl))
           _ <- uploadProgressTracker.requestUpload(uploadId, Reference(upscanInitiateResponse.fileReference.reference))

@@ -75,7 +75,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
       "Return OK and the correct view" in {
 
-        val result: Future[Result] = controller().show(UploadId("12235"), None, None)(fakeRequest)
+        val result: Future[Result] = controller().show(UploadId("12235"))(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)

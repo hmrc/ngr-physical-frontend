@@ -44,6 +44,6 @@ class SupportingDocumentsController @Inject()(
 
   def next(): Action[AnyContent] =
     (identify andThen getData) {
-      Redirect(routes.UploadDocumentController.onPageLoad(None, None))
+      Redirect(routes.UploadDocumentController.onPageLoad(None))
     }
 }

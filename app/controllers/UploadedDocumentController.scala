@@ -53,14 +53,6 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
                                            val controllerComponents: MessagesControllerComponents)(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
-
-  private def renderError(errorCode: Option[String])(implicit messages: Messages): Option[String] = {
-    errorCode match {
-      case Some("INPROGRESS") => Some(Messages("uploadDocument.error.required"))
-      case None => None
-    }
-  }
-
   def showUploadProgress(allUploadStatus: Seq[UploadStatus])(implicit messages: Messages): SummaryList = {
     SummaryList(allUploadStatus.map(uploadStatus => createRow(uploadStatus)))
   }
@@ -97,7 +89,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     allUploadStatus.contains(UploadStatus.InProgress)
   }
 
-  def show(uploadId: UploadId, evidence: Option[String], errorCode: Option[String]): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def show(uploadId: UploadId): Action[AnyContent] = (identify andThen getData).async { implicit request =>
 
     val currentAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(UploadDocumentsPage) match {
       case None => Seq(uploadId.value)
@@ -121,7 +113,6 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
           request.property.addressFull,
           inProgress,
           routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
-          renderError(errorCode)
         ))
       }
 
@@ -129,10 +120,8 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
 
   def onSubmit(uploadId: UploadId, inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-
     if (inProgress)
-      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId, None, Some("INPROGRESS"))))
+      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))
     else Future.successful(Redirect(routes.IndexController.onPageLoad()))
 
   }

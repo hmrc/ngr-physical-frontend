@@ -76,7 +76,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
 
       def testErrorCase(errorCode: String, expectedMessage: String): Unit = {
-        val result: Future[Result] = controller().onPageLoad(Some(errorCode), None)(fakeRequest)
+        val result: Future[Result] = controller().onPageLoad(Some(errorCode))(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(Messages(expectedMessage))
@@ -84,7 +84,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
       "Return OK and the correct view with no upload errors" in {
 
-        val result: Future[Result] = controller().onPageLoad(None, None)(fakeRequest)
+        val result: Future[Result] = controller().onPageLoad(None)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
