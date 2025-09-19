@@ -77,17 +77,12 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
             case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(mode)))
             case CYAExternal if mode == NormalMode =>
 
-              request.userAnswers match {
-                case Some(answers) =>
-                  val nextPage = ChangeChecker.recheckForAnyChanges(answers, List(
-                    HaveYouChangedInternalPage,
-                    HaveYouChangedSpacePage,
-                    HaveYouChangedExternalPage
-                  ), routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
-                  Future.successful(Redirect(nextPage))
-
-                case None => Future.failed(new RuntimeException("Missing UserAnswers"))
-              }
+              val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
+                HaveYouChangedInternalPage,
+                HaveYouChangedSpacePage,
+                HaveYouChangedExternalPage
+              ), routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
+              Future.successful(Redirect(nextPage))
             case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
           }
         }
