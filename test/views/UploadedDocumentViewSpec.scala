@@ -53,8 +53,7 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
       SummaryList(Seq(summaryListRow)),
       address,
       false,
-      routes.UploadedDocumentController.onSubmit(UploadId("12345"), false),
-      None
+      routes.UploadedDocumentController.onSubmit(UploadId("12345"), false)
     )
 
     lazy implicit val document: Document = Jsoup.parse(pageView.body)

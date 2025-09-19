@@ -20,7 +20,7 @@ import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow}
 import uk.gov.hmrc.http.NotFoundException
-import actions.{AuthRetrievals, DataRetrievalAction, IdentifierAction, RegistrationAction}
+import actions.{AuthRetrievals, DataRequiredAction, DataRetrievalAction, IdentifierAction, RegistrationAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
@@ -48,18 +48,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgressTracker,
                                            view: UploadedDocumentView,
                                            identify: IdentifierAction,
+                                           requireData: DataRequiredAction,
                                            getData: DataRetrievalAction,
                                            sessionRepository: SessionRepository,
                                            val controllerComponents: MessagesControllerComponents)(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
-
-
-  private def renderError(errorCode: Option[String])(implicit messages: Messages): Option[String] = {
-    errorCode match {
-      case Some("INPROGRESS") => Some(Messages("uploadDocument.error.required"))
-      case None => None
-    }
-  }
 
   def showUploadProgress(allUploadStatus: Seq[UploadStatus])(implicit messages: Messages): SummaryList = {
     SummaryList(allUploadStatus.map(uploadStatus => createRow(uploadStatus)))
@@ -97,15 +90,15 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     allUploadStatus.contains(UploadStatus.InProgress)
   }
 
-  def show(uploadId: UploadId, evidence: Option[String], errorCode: Option[String]): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def show(uploadId: UploadId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
 
-    val currentAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(UploadDocumentsPage) match {
+    val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
       case None => Seq(uploadId.value)
       case Some(value) if value.contains(uploadId.value) => value
       case Some(value) => value :+ uploadId.value
     }
 
-    request.userAnswers.getOrElse(UserAnswers(request.userId)).set(UploadDocumentsPage, currentAnswers).map {
+    request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
       updatedAnswers => sessionRepository.set(updatedAnswers)
     }
 
@@ -121,7 +114,6 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
           request.property.addressFull,
           inProgress,
           routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
-          renderError(errorCode)
         ))
       }
 
@@ -129,10 +121,8 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
 
   def onSubmit(uploadId: UploadId, inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-
     if (inProgress)
-      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId, None, Some("INPROGRESS"))))
+      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))
     else Future.successful(Redirect(routes.IndexController.onPageLoad()))
 
   }

@@ -213,6 +213,6 @@ POST       /declaration-physical                                                
 GET        /property-change-details-sent                                         controllers.SubmissionConfirmationController.onPageLoad()
 
 GET        /not-told-us-about-any-changes-to-property                            controllers.NotToldAnyChangesController.show
-GET        /supporting-document-upload                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String], evidence: Option[String])
-GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId: models.upscan.UploadId, evidence: Option[String], errorCode: Option[String])
+GET        /supporting-document-upload                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String])
+GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId: models.upscan.UploadId)
 POST       /supporting-document-uploaded                                         controllers.UploadedDocumentController.onSubmit(uploadId : models.upscan.UploadId, inProgress: Boolean)

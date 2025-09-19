@@ -20,6 +20,7 @@ import base.SpecBase
 import connectors.UpscanConnector
 import forms.UploadForm
 import helpers.{ControllerSpecSupport, TestData}
+import models.UserAnswers
 import models.registration.CredId
 import models.upscan.UploadStatus.UploadedSuccessfully
 import models.upscan.{Reference, UploadId, UpscanFileReference, UpscanInitiateResponse}
@@ -43,9 +44,10 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
   private val fakeRequest = FakeRequest("GET", "/supporting-document-uploaded")
 
 
-  def controller() = new UploadedDocumentController(
+  def controller(userAnswers: Option[UserAnswers]) = new UploadedDocumentController(
     identify = fakeAuth,
     getData = fakeData(None),
+    requireData = fakeRequireData(userAnswers),
     uploadProgressTracker = mockUploadProgressTracker,
     controllerComponents = mcc,
     view = pageView,
@@ -75,7 +77,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
       "Return OK and the correct view" in {
 
-        val result: Future[Result] = controller().show(UploadId("12235"), None, None)(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).show(UploadId("12235"))(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
@@ -86,7 +88,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
     "method onSubmit" must {
       "Return OK and send user to correct location" in {
-        val result: Future[Result] = controller().onSubmit(UploadId("12235"), false)(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).onSubmit(UploadId("12235"), false)(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some("/ngr-physical-frontend")
       }

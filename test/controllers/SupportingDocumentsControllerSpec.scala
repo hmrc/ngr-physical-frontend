@@ -62,7 +62,7 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
 
     "method next" must {
       "Return SEE_OTHER and the correct view" in {
-        val result: Future[Result] = controller().next()(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).next()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some("/ngr-physical-frontend/supporting-document-upload")
       }
