@@ -52,7 +52,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
       running(application) {
         val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit().url)
 
