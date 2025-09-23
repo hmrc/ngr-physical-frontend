@@ -90,7 +90,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
       "Return OK and send user to correct location" in {
         val result: Future[Result] = controller(Some(emptyUserAnswers)).onSubmit(UploadId("12235"), false)(fakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some("/ngr-physical-frontend")
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
       }
 
     }
