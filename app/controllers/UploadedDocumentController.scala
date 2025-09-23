@@ -123,7 +123,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     implicit request =>
     if (inProgress)
       Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))
-    else Future.successful(Redirect(routes.IndexController.onPageLoad()))
+    else Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
 
   }
 }
