@@ -14,16 +14,15 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
+
 @this(
-    layout: templates.Layout
+    layout: Layout
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@()(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(
-    pageTitle = titleNoForm(messages("unauthorised.title")),
-    timeout   = false
-) {
+@layout(pageTitle = Some(titleNoForm(messages("unauthorised.title"))), showBackLink = false, navigationBarContent = None) {
 
     <h1 class="govuk-heading-l">@messages("unauthorised.heading")</h1>
 

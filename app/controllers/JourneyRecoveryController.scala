@@ -17,6 +17,8 @@
 package controllers
 
 import actions.IdentifierAction
+import config.AppConfig
+import models.NavBarPageContents.createDefaultNavBar
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -24,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.binders.*
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -32,7 +35,7 @@ class JourneyRecoveryController @Inject()(
                                            identify: IdentifierAction,
                                            continueView: JourneyRecoveryContinueView,
                                            startAgainView: JourneyRecoveryStartAgainView
-                                         ) extends FrontendBaseController with I18nSupport with Logging {
+                                         )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] = identify {
     implicit request =>
@@ -49,7 +52,7 @@ class JourneyRecoveryController @Inject()(
       }
 
       safeUrl
-        .map(url => Ok(continueView(url)))
-        .getOrElse(Ok(startAgainView()))
+        .map(url => Ok(continueView(url, createDefaultNavBar())))
+        .getOrElse(Ok(startAgainView(createDefaultNavBar())))
   }
 }

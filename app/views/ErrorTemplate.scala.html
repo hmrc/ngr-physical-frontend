@@ -14,13 +14,15 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
+
 @this(
-    layout: templates.Layout
+    layout: Layout
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader, messages: Messages)
+@(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader, messages: Messages, appConfig: AppConfig)
+@layout(pageTitle = Some(titleNoForm(pageTitle)), showBackLink = true, navigationBarContent = None) {
 
-@layout(pageTitle = titleNoForm(pageTitle)) {
     <h1 class="govuk-heading-l">@messages(heading)</h1>
 
     <p class="govuk-body">@messages(message)</p>

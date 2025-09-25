@@ -17,8 +17,10 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
+import models.NavBarPageContents.createDefaultNavBar
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
@@ -31,7 +33,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
       "must return OK and the continue view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
-
+        implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
         running(application) {
           val continueUrl = RedirectUrl("/foo")
           val request     = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
@@ -41,7 +43,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
           val continueView = application.injector.instanceOf[JourneyRecoveryContinueView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(request, messages(application)).toString
+          contentAsString(result) mustEqual continueView(continueUrl.unsafeValue, createDefaultNavBar())(request, messages(application), appConfig).toString
         }
       }
     }
@@ -51,7 +53,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
       "must return OK and the start again view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
-
+        implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
         running(application) {
           val continueUrl = RedirectUrl("https://foo.com")
           val request     = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
@@ -61,7 +63,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
+          contentAsString(result) mustEqual startAgainView(createDefaultNavBar())(request, messages(application), appConfig).toString
         }
       }
     }
@@ -71,7 +73,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
       "must return OK and the start again view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
-
+        implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
         running(application) {
           val request = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad().url)
 
@@ -80,7 +82,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
+          contentAsString(result) mustEqual startAgainView(createDefaultNavBar())(request, messages(application), appConfig).toString
         }
       }
     }

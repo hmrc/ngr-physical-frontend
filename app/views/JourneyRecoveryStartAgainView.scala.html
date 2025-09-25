@@ -14,14 +14,17 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
+@import models.NavigationBarContent
+
 @this(
-    layout: templates.Layout,
+    layout: Layout,
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.startAgain.title"))) {
+@layout(pageTitle = Some(titleNoForm(messages("journeyRecovery.startAgain.title"))), showBackLink = false, navigationBarContent = Some(navigationBarContent)) {
 
     <h1 class="govuk-heading-l">@messages("journeyRecovery.startAgain.heading")</h1>
 
