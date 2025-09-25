@@ -29,7 +29,7 @@ import viewmodels.govuk.summarylist.*
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CheckYourAnswersHelper @Inject()(uploadProgressTracker: UploadProgressTracker) {
+class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracker) {
 
 
   def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext): Future[Seq[Section]] = {
