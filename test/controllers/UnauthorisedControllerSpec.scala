@@ -17,8 +17,9 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import views.html.UnauthorisedView
 
 class UnauthorisedControllerSpec extends SpecBase {
@@ -26,11 +27,9 @@ class UnauthorisedControllerSpec extends SpecBase {
   "Unauthorised Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      
-      
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+      
       running(application) {
         val request = FakeRequest(GET, routes.UnauthorisedController.onPageLoad().url)
 
@@ -39,7 +38,7 @@ class UnauthorisedControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[UnauthorisedView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view()(request, messages(application), appConfig).toString
       }
     }
   }

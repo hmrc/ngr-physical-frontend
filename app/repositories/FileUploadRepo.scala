@@ -79,12 +79,11 @@ object FileUploadRepo:
       ~ (__ \ "uploadId" ).format[UploadId]
       ~ (__ \ "reference").format[Reference]
       ~ (__ \ "status"   ).format[UploadStatus]
-      )(UploadDetails.apply, Tuple.fromProductTyped _)
+      )(UploadDetails.apply, Tuple.fromProductTyped)
 
 @Singleton
 class FileUploadRepo @Inject()(
-                                       mongoComponent: MongoComponent,
-                                       config: AppConfig
+                                       mongoComponent: MongoComponent
                                      )(using
                                        ExecutionContext
                                      ) extends PlayMongoRepository[UploadDetails](

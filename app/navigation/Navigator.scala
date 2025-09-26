@@ -43,7 +43,7 @@ class Navigator @Inject()() {
     case HaveYouChangedExternalPage => answers =>
       answers.get(HaveYouChangedExternalPage) map {
         case true => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
-        case false => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage), 
+        case false => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage),
           routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
       }
     case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode))

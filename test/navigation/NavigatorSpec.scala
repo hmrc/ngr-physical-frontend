@@ -153,7 +153,7 @@ class NavigatorSpec extends SpecBase {
       "should throw RuntimeException when no selection is made" in {
         val userAnswers = UserAnswers("id").set(HaveYouChangedInternalPage, true).success.value
           .remove(HaveYouChangedInternalPage).success.value
-        
+
         val ex = intercept[RuntimeException] {
           navigator.nextPage(HaveYouChangedInternalPage, CheckMode, userAnswers)
         }

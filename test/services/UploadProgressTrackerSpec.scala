@@ -16,20 +16,20 @@
 
 package services
 
-import org.mongodb.scala.bson.BsonDocument
-import org.mongodb.scala.bson.collection.immutable.Document
-import uk.gov.hmrc.http.StringContextOps
-import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import helpers.{TestData, TestSupport}
 import models.upscan.{Reference, UploadDetails, UploadId, UploadStatus}
+import org.mongodb.scala.bson.BsonDocument
+import org.mongodb.scala.bson.collection.immutable.Document
 import repositories.FileUploadRepo
+import uk.gov.hmrc.http.StringContextOps
+import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class UploadProgressTrackerSpec extends TestSupport with TestData with DefaultPlayMongoRepositorySupport[UploadDetails]{
 
-  override val repository: FileUploadRepo = FileUploadRepo(mongoComponent, mockConfig)
+  override val repository: FileUploadRepo = FileUploadRepo(mongoComponent)
   val progressTracker = UploadProgressTracker(repository)
 
   override def beforeEach(): Unit = {
