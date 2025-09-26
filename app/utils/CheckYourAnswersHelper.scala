@@ -47,8 +47,7 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
       (staticSections :+ supportingDocumentsOpt).flatten
     }
   }
-
-
+  
   private def createDateOfChangeSection(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[Section] =
@@ -106,24 +105,21 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
 
   private def createSupportingDocuments(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext
   ): Future[Option[Section]] =
-    val a = userAnswers.get(UploadDocumentsPage)
-    val ans = a.map(value => value.map {
-      t => uploadProgressTracker.getUploadResult(UploadId(t))
+    val uploadResults = userAnswers.get(UploadDocumentsPage).map(value => value.map {
+      id => uploadProgressTracker.getUploadResult(UploadId(id))
     })
-    ans match {
-      case Some(futures) =>
-        val test = Future.sequence(futures).map(_.flatten)
-
+    uploadResults match {
+      case Some(futureUploadStatuses) =>
         for {
-          uploadStatuses <- test
+          uploadStatuses <- Future.sequence(futureUploadStatuses).map(_.flatten)
         } yield {
           buildSection(
             "checkYourAnswers.supportingDocuments.heading",
             UploadDocumentsSummary.rows(uploadStatuses).getOrElse(Seq.empty).map(Some(_))
           )
         }
+      case None => Future.successful(None)
     }
-
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows: Seq[SummaryListRow] = rows.flatten
