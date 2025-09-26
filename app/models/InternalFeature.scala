@@ -103,7 +103,7 @@ object InternalFeature extends Enumerable.Implicits {
     }
   }
 
-  val pageSet: Seq[Page] = Seq(
+  val pageSet: Seq[QuestionPage[? >: HowMuchOfProperty & Int]] = Seq(
     HowMuchOfPropertyAirConPage,
     HowMuchOfPropertyHeatingPage,
     HowMuchOfPropertySprinklersPage,

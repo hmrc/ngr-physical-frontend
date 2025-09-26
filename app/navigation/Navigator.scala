@@ -27,44 +27,29 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class Navigator @Inject()() {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case WhenCompleteChangePage => _ => routes.HaveYouChangedController.loadSpace(NormalMode)
+  private val normalRoutes: Page => UserAnswers => Option[Call] = {
+    case WhenCompleteChangePage => _ => Some(routes.HaveYouChangedController.loadSpace(NormalMode))
     case HaveYouChangedSpacePage => answers =>
-      answers.get(HaveYouChangedSpacePage) match {
-        case Some(true) => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
-        case Some(false) => routes.HaveYouChangedController.loadInternal(NormalMode)
-        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      answers.get(HaveYouChangedSpacePage) map {
+        case true => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
+        case false => routes.HaveYouChangedController.loadInternal(NormalMode)
       }
-    case ChangeToUseOfSpacePage => _ => routes.HaveYouChangedController.loadInternal(NormalMode)
+    case ChangeToUseOfSpacePage => _ => Some(routes.HaveYouChangedController.loadInternal(NormalMode))
     case HaveYouChangedInternalPage => answers =>
-      answers.get(HaveYouChangedInternalPage) match {
-        case Some(true) => routes.WhichInternalFeatureController.onPageLoad(NormalMode)
-        case Some(false) => routes.HaveYouChangedController.loadExternal(NormalMode)
-        case _ => throw new RuntimeException("No selection - should be caught by form validation")
+      answers.get(HaveYouChangedInternalPage) map {
+        case true => routes.WhichInternalFeatureController.onPageLoad(NormalMode)
+        case false => routes.HaveYouChangedController.loadExternal(NormalMode)
       }
     case HaveYouChangedExternalPage => answers =>
-      answers.get(HaveYouChangedExternalPage) match {
-        case Some(true) => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
-        case Some(false) => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage), 
+      answers.get(HaveYouChangedExternalPage) map {
+        case true => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
+        case false => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage), 
           routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
-        case _ => throw new RuntimeException("No selection - should be caught by form validation")
       }
-    case WhichInternalFeaturePage => answers =>
-      answers.get(WhichInternalFeaturePage) match {
-        case Some(feature) =>
-          routes.WhichInternalFeatureController.onPageLoad(NormalMode)
-        case None => throw new RuntimeException("No selection - should be caught by form validation")
-      }
-    case WhichExternalFeaturePage => answers =>
-      answers.get(WhichExternalFeaturePage) match {
-        case Some(feature) =>
-          routes.WhichExternalFeatureController.onPageLoad(NormalMode)
-        case None => throw new RuntimeException("No selection - should be caught by form validation")
-      }
-    case page if InternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode)
-    case page if ExternalFeature.pageSet.contains(page) => _ => routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode)
-    case AnythingElsePage => _ => routes.SupportingDocumentsController.onPageLoad()
-    case _ => _ => routes.IndexController.onPageLoad()
+    case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode))
+    case page if ExternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode))
+    case AnythingElsePage => _ => Some(routes.SupportingDocumentsController.onPageLoad())
+    case _ => _ => None
   }
 
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
@@ -85,13 +70,14 @@ class Navigator @Inject()() {
       }
     case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, CheckMode))
     case page if ExternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, CheckMode))
-    case _ => _ => Some(routes.CheckYourAnswersController.onPageLoad())
+    case page: Page => _ => Some(routes.CheckYourAnswersController.onPageLoad())
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(page)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
     case CheckMode =>
       checkRouteMap(page)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
   }
 }
+

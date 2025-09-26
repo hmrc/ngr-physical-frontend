@@ -11,7 +11,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[?], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, messages("$className;format="decap"$.title"))), navigationBarContent = Some(navigationBarContent)) {
 
