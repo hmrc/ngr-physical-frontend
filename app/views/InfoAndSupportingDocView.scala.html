@@ -102,6 +102,7 @@
         @govukButton(
         ButtonViewModel(messages("site.continue"))
         .asLink(routes.WhenCompleteChangeController.onPageLoad(NormalMode).url)
+        .withAttribute("id" -> "continue")
         )
     </p>
 
