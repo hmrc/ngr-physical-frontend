@@ -27,6 +27,8 @@ class UpscanCallbackDispatcher @Inject()(sessionStorage: UploadProgressTracker):
 
   private val allowedMimeTypes: Set[String] = Set(
     "application/pdf", // .pdf
+    "application/binary",
+    "application/octet-stream",
     "image/png",
     "image/jpg",
     "image/jpeg",
@@ -46,7 +48,7 @@ class UpscanCallbackDispatcher @Inject()(sessionStorage: UploadProgressTracker):
               size = Some(s.uploadDetails.size)
             )
           } else {
-            throw new BadRequestException("Incorrect file type uploaded")
+            throw new BadRequestException(s"Incorrect file type uploaded - ${s.uploadDetails.fileMimeType}")
           }
         case _: FailedCallbackBody =>
           UploadStatus.Failed
