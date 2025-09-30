@@ -45,5 +45,15 @@ class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFlue
         contentAsString(result) mustEqual view(property.addressFull, ref, createDefaultNavBar())(request, messages(application)).toString
       }
     }
+
+    "thrown an exception when the Declaration page is missing data" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad().url)
+      val result = intercept[Exception](running(application) {
+        route(application, request).value
+      })
+
+      result.getMessage mustBe ""
+    }
   }
 }

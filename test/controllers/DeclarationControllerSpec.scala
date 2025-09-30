@@ -48,10 +48,23 @@ class DeclarationControllerSpec extends SpecBase with TestData {
       }
     }
 
-    "redirect when accepted" in {
+    "redirect when accepted and DeclarationPage data is empty" in {
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.DeclarationController.next.url)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.SubmissionConfirmationController.onPageLoad().url
+      }
+    }
+
+    "redirect when accepted and DeclarationPage data is present" in {
+      val userAnswers = emptyUserAnswers.set(DeclarationPage, "some-reference").success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(POST, routes.DeclarationController.next.url)
