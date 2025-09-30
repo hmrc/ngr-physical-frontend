@@ -16,26 +16,38 @@
 
 package utils
 
+import models.upscan.UploadId
 import models.{CheckMode, External, ExternalFeature, HaveYouChangedControllerUse, Internal, InternalFeature, Space, UserAnswers}
+import pages.UploadDocumentsPage
 import play.api.i18n.Messages
+import services.UploadProgressTracker
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
 import viewmodels.checkAnswers.*
 import viewmodels.govuk.summarylist.*
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class CheckYourAnswersHelper @Inject()() {
+class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracker) {
 
-  def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages): Seq[Section] =
-    Seq(
+
+  def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext): Future[Seq[Section]] = {
+    val staticSections: Seq[Option[Section]] = Seq(
       createDateOfChangeSection(userAnswers),
       createUseOfSpaceSection(userAnswers),
       createInternalFeaturesSection(userAnswers),
       createExternalFeaturesSection(userAnswers),
-      createAdditionalInformationSection(userAnswers),
-    ).flatten
+      createAdditionalInformationSection(userAnswers)
+    )
 
+    val supportingDocumentsFuture: Future[Option[Section]] = createSupportingDocuments(userAnswers)
+
+    supportingDocumentsFuture.map { supportingDocumentsOpt =>
+      (staticSections :+ supportingDocumentsOpt).flatten
+    }
+  }
+  
   private def createDateOfChangeSection(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[Section] =
@@ -90,6 +102,24 @@ class CheckYourAnswersHelper @Inject()() {
       "checkYourAnswers.additionalInformation.heading",
       AnythingElseSummary.rows(userAnswers).getOrElse(Seq.empty).map(Some(_))
     )
+
+  private def createSupportingDocuments(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext
+  ): Future[Option[Section]] =
+    val uploadResults = userAnswers.get(UploadDocumentsPage).map(value => value.map {
+      id => uploadProgressTracker.getUploadResult(UploadId(id))
+    })
+    uploadResults match {
+      case Some(futureUploadStatuses) =>
+        for {
+          uploadStatuses <- Future.sequence(futureUploadStatuses).map(_.flatten)
+        } yield {
+          buildSection(
+            "checkYourAnswers.supportingDocuments.heading",
+            UploadDocumentsSummary.rows(uploadStatuses).getOrElse(Seq.empty).map(Some(_))
+          )
+        }
+      case None => Future.successful(None)
+    }
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows: Seq[SummaryListRow] = rows.flatten
