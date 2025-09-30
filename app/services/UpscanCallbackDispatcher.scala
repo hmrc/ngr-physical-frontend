@@ -27,8 +27,6 @@ class UpscanCallbackDispatcher @Inject()(sessionStorage: UploadProgressTracker):
 
   private val allowedMimeTypes: Set[String] = Set(
     "application/pdf", // .pdf
-    "application/binary",
-    "application/octet-stream",
     "image/png",
     "image/jpg",
     "image/jpeg",
