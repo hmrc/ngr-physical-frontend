@@ -303,10 +303,10 @@ whatHappenedTo.loadingBays.remove.some =  You removed some loading bays
 whatHappenedTo.loadingBays.remove.all = You removed all loading bays
 whatHappenedTo.loadingBays.error = Select what has happened to loading bays
 
-whatHappenedTo.lockupGarages.title = What has happened to lockup garages?
-whatHappenedTo.lockupGarages.added = You added lockup garages
-whatHappenedTo.lockupGarages.remove.some = You removed some lockup garages
-whatHappenedTo.lockupGarages.remove.all = You removed all lockup garages
+whatHappenedTo.lockupGarages.title = What has happened to lock-up garages?
+whatHappenedTo.lockupGarages.added = You added lock-up garages
+whatHappenedTo.lockupGarages.remove.some = You removed some lock-up garages
+whatHappenedTo.lockupGarages.remove.all = You removed all lock-up garages
 whatHappenedTo.lockupGarages.error = Select what has happened to lock-up garages
 
 whatHappenedTo.outdoorSeating.title = What has happened to outdoor seating?
