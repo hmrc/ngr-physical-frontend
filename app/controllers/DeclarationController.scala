@@ -49,7 +49,7 @@ class DeclarationController @Inject()(
     }
 
   val next: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData andThen requireData).async  {
+    (authenticate andThen isRegisteredCheck andThen getData andThen requireData).async {
       //TODO replace the current creating page object and storing number and  with adding with adding directly to model 
       // and then sending the completed PropertyChangesUserAnswers when backend code is complete
       implicit request =>
