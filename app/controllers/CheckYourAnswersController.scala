@@ -43,13 +43,13 @@ class CheckYourAnswersController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             cyaHelper: CheckYourAnswersHelper,
                                             view: CheckYourAnswersView
-                                          )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
+                                          )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val list: Seq[Section] = cyaHelper.createSectionList(request.userAnswers)
-
-      Ok(view(request.property.addressFull, createDefaultNavBar(), list))
+      cyaHelper.createSectionList(request.userAnswers).map { sectionList =>
+        Ok(view(request.property.addressFull, createDefaultNavBar(), sectionList))
+      }
   }
 
   def onSubmit(): Action[AnyContent] =
