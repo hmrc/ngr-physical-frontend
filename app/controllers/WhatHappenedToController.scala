@@ -62,9 +62,9 @@ class WhatHappenedToController @Inject()(
   def onPageLoadPortableBuildings(mode: Mode): Action[AnyContent] = onPageLoad(PortableBuildings, mode)
   def onPageLoadShippingContainers(mode: Mode): Action[AnyContent] = onPageLoad(ShippingContainers, mode)
 
-  def onPageLoad(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  private def onPageLoad(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      
+
       val form: Form[WhatHappenedTo] = formProvider(feature)
 
       val preparedForm = request.userAnswers.get(WhatHappenedTo.page(feature)) match {
@@ -96,7 +96,7 @@ class WhatHappenedToController @Inject()(
   def onPageSubmitShippingContainers(mode: Mode): Action[AnyContent] = onSubmit(ShippingContainers, mode)
   
 
-  def onSubmit(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  private def onSubmit(feature: ExternalFeature, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[WhatHappenedTo] = formProvider(feature)
 

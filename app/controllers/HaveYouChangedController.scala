@@ -49,7 +49,7 @@ class HaveYouChangedController @Inject()(
   def loadInternal(mode: Mode): Action[AnyContent] = onPageLoad(Internal, mode)
   def loadExternal(mode: Mode): Action[AnyContent] = onPageLoad(External, mode)
 
-  def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  private def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
       val preparedForm = request.userAnswers.get(pageType(use)) match {
@@ -70,7 +70,7 @@ class HaveYouChangedController @Inject()(
   def submitInternal(mode: Mode): Action[AnyContent] = onSubmit(Internal, mode)
   def submitExternal(mode: Mode): Action[AnyContent] = onSubmit(External, mode)
 
-  def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  private def onSubmit(use: HaveYouChangedControllerUse, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
       form.bindFromRequest().fold(

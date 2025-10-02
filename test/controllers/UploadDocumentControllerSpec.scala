@@ -78,7 +78,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
         val result: Future[Result] = controller().onPageLoad(Some(errorCode))(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
-        content must include(Messages(expectedMessage))
+        content must include(org.apache.commons.text.StringEscapeUtils.escapeHtml4(Messages(expectedMessage)))
       }
 
       "Return OK and the correct view with no upload errors" in {
@@ -103,12 +103,24 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
         testErrorCase("EntityTooSmall", "uploadDocument.error.emptyFile")
       }
 
+
+      "display 'file must be a PDF or image (PNG & JPG)' error for InvalidFileType reason" in {
+        testErrorCase("InvalidFileType", "uploadDocument.error.format")
+      }
+
       "display 'virus detected' error for QUARANTINE" in {
         testErrorCase("QUARANTINE", "uploadDocument.error.virus")
       }
 
       "display 'problem with upload' error for UNKNOWN reason" in {
         testErrorCase("UNKNOWN123", "uploadDocument.error.upscanUnknownError")
+      }
+
+      "throw runtime exception for unrecognisable error code" in {
+        val result = intercept[RuntimeException] {
+          await(controller().onPageLoad(Some("SOMEOTHERCODE"))(fakeRequest))
+        }
+        result.getMessage must include("unrecognisable error from upscan 'SOMEOTHERCODE'")
       }
 
     }
