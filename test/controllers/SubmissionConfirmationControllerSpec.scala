@@ -23,6 +23,7 @@ import models.NavBarPageContents.createDefaultNavBar
 import pages.DeclarationPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import uk.gov.hmrc.http.NotFoundException
 import viewmodels.govuk.SummaryListFluency
 import views.html.SubmissionConfirmationView
 
@@ -46,14 +47,15 @@ class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFlue
       }
     }
 
-    "thrown an exception when the Declaration page is missing data" in {
+    "must throw NotFoundException when DeclarationPage is missing" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-      val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad().url)
-      val result = intercept[Exception](running(application) {
-        route(application, request).value
-      })
-
-      result.getMessage mustBe ""
+      running(application) {
+        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad().url)
+        val thrown = intercept[NotFoundException] {
+          await(route(application, request).value)
+        }
+        thrown.getMessage must include("Reference number not found")
+      }
     }
   }
 }

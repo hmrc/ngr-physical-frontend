@@ -34,8 +34,7 @@ class UploadProgressTracker @Inject()(
   def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit] =
     repository.insert(UploadDetails(ObjectId.get(), uploadId, fileReference, UploadStatus.InProgress))
 
-  def registerUploadResult(fileReference: Reference, uploadStatus: UploadStatus)
-                          (using hc: HeaderCarrier): Future[Unit] =
+  def registerUploadResult(fileReference: Reference, uploadStatus: UploadStatus): Future[Unit] =
     for
       _ <- repository.updateStatus(fileReference, uploadStatus)
     yield

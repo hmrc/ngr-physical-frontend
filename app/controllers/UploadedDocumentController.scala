@@ -54,11 +54,11 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
                                            val controllerComponents: MessagesControllerComponents)(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
-  def showUploadProgress(allUploadStatus: Seq[UploadStatus])(implicit messages: Messages): SummaryList = {
+  private def showUploadProgress(allUploadStatus: Seq[UploadStatus])(implicit messages: Messages): SummaryList = {
     SummaryList(allUploadStatus.map(uploadStatus => createRow(uploadStatus)))
   }
 
-  def createRow(uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
+  private def createRow(uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
     uploadStatus match
       case UploadStatus.UploadedSuccessfully(name, mimeType, downloadUrl, size) =>
             SummaryListRowViewModel(
@@ -86,7 +86,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
       )
   }
 
-  def containsInProgress(allUploadStatus: Seq[UploadStatus]): Boolean = {
+  private def containsInProgress(allUploadStatus: Seq[UploadStatus]): Boolean = {
     allUploadStatus.contains(UploadStatus.InProgress)
   }
 
