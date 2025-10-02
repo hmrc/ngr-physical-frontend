@@ -20,12 +20,14 @@ import base.SpecBase
 import connectors.UpscanConnector
 import forms.UploadForm
 import helpers.{ControllerSpecSupport, TestData}
+import models.UserAnswers
 import models.registration.CredId
 import models.upscan.{Reference, UpscanFileReference, UpscanInitiateResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.i18n.Messages
+import play.api.mvc.Results.Redirect
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -43,9 +45,10 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
   val uploadFormData: UploadForm = inject[UploadForm]
 
 
-  def controller() = new UploadDocumentController(
+  def controller(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) = new UploadDocumentController(
     identify = fakeAuth,
     getData = fakeData(None),
+    requireData = fakeRequireData(userAnswers),
     upScanConnector = mockUpscanConnector,
     uploadProgressTracker = mockUploadProgressTracker,
     uploadForm = uploadFormData,
@@ -123,6 +126,14 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
         result.getMessage must include("unrecognisable error from upscan 'SOMEOTHERCODE'")
       }
 
+    }
+
+    "method onCancel" must {
+      "redirect to correct location" in {
+        val result: Future[Result] = controller().onCancel(None)(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UploadedDocumentController.show(None).url)
+      }
     }
   }
 }

@@ -51,7 +51,9 @@ class UploadDocumentViewSpec extends ViewBaseSpec {
         "data-min-file-size" -> "1000"),
       address,
       navBarContent(),
+      false
     )
+    
     lazy implicit val document: Document = Jsoup.parse(pageView.body)
 
 

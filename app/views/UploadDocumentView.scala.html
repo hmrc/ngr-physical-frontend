@@ -32,7 +32,7 @@
 )
 
 @( form: Form[String], upscanResponse: UpscanInitiateResponse, errorMessage: Option[String], attributes: Map[String, String],
-    address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+    address: String, navigationBarContent: NavigationBarContent, filesUploaded: Boolean)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @fileUploadFormClass = {
     @if(form.hasErrors) {
@@ -75,6 +75,12 @@
         @govukButton(
             ButtonViewModel(messages("site.continue"))
             .withAttribute("id" -> "continue")
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+                .withAttribute("id" -> "cancel")
+                .asLink(routes.UploadDocumentController.onCancel(None).url)
         )
 </form>
 

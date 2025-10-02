@@ -24,7 +24,7 @@ import actions.{AuthRetrievals, DataRequiredAction, DataRetrievalAction, Identif
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
-import models.requests.OptionalDataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import models.upscan.UploadStatus.{InProgress, UploadedSuccessfully}
 import models.upscan.{UploadId, UploadStatus}
 import pages.UploadDocumentsPage
@@ -90,36 +90,43 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     allUploadStatus.contains(UploadStatus.InProgress)
   }
 
-  def show(uploadId: UploadId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
 
-    val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
-      case None => Seq(uploadId.value)
-      case Some(value) if value.contains(uploadId.value) => value
-      case Some(value) => value :+ uploadId.value
+
+  def show(uploadId: Option[UploadId]): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+
+    val currentAnswers: Seq[String] = (request.userAnswers.get(UploadDocumentsPage), uploadId) match {
+      case (None, None) => Seq.empty[String]
+      case (None, Some(newUploadId)) => Seq(newUploadId.value)
+      case (Some(value), Some(newUploadId)) if value.contains(newUploadId.value) => value
+      case (Some(value), Some(newUploadId)) => value :+ newUploadId.value
+      case (Some(value), None) => value
     }
 
-    request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
-      updatedAnswers => sessionRepository.set(updatedAnswers)
-    }
-
-    val uploadStatusesCall: Seq[Future[Option[UploadStatus]]] = currentAnswers.map(value => uploadProgressTracker.getUploadResult(UploadId(value)))
-
-    Future.sequence(uploadStatusesCall).map(_.flatten) map {
-      UploadStatuses =>
-        val inProgress = containsInProgress(UploadStatuses)
-
-        Ok(view(
-          createDefaultNavBar,
-          showUploadProgress(UploadStatuses),
-          request.property.addressFull,
-          inProgress,
-          routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
-        ))
+    if (currentAnswers.isEmpty) {
+      Future.successful(BadRequest("no files uploaded"))
+    } else {
+      request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
+        updatedAnswers => sessionRepository.set(updatedAnswers)
       }
 
+      val uploadStatusesCall: Seq[Future[Option[UploadStatus]]] = currentAnswers.map(value => uploadProgressTracker.getUploadResult(UploadId(value)))
+
+      Future.sequence(uploadStatusesCall).map(_.flatten) map {
+        UploadStatuses =>
+          val inProgress = containsInProgress(UploadStatuses)
+
+          Ok(view(
+            createDefaultNavBar,
+            showUploadProgress(UploadStatuses),
+            request.property.addressFull,
+            inProgress,
+            routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
+          ))
+      }
+    }
   }
 
-  def onSubmit(uploadId: UploadId, inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(uploadId: Option[UploadId], inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
     if (inProgress)
       Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))

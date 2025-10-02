@@ -34,12 +34,14 @@ import forms.UploadForm
 import pages.{SecurityCamerasChangePage, UploadDocumentsPage}
 import repositories.SessionRepository
 import models.UserAnswers
+import viewmodels.govuk.all.ButtonViewModel
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UploadDocumentController @Inject()(
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
+                                          requireData: DataRequiredAction,
                                           upScanConnector: UpscanConnector,
                                           uploadProgressTracker: UploadProgressTracker,
                                           uploadForm: UploadForm,
@@ -65,13 +67,20 @@ class UploadDocumentController @Inject()(
     }
   }
 
-    def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData).async {
+    def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData andThen requireData).async {
       implicit request =>
 
         val errorToDisplay: Option[String] = renderError(errorCode)
         val uploadId = UploadId.generate()
-        val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(uploadId).url}"
+        val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(Some(uploadId)).url}"
         val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/supporting-document-upload"
+
+
+        val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
+          case None => Seq.empty[String]
+          case Some(value) => value
+        }
+        
         for
           upscanInitiateResponse <- upScanConnector.initiate(Some(successRedirectUrl), Some(errorRedirectUrl))
           _ <- uploadProgressTracker.requestUpload(uploadId, Reference(upscanInitiateResponse.fileReference.reference))
@@ -82,10 +91,14 @@ class UploadDocumentController @Inject()(
               errorToDisplay,
               attributes,
               request.property.addressFull,
-              createDefaultNavBar()
+              createDefaultNavBar(),
+              !currentAnswers.isEmpty
             )
           )
     }
 
-  
+  def onCancel(uploadId: Option[UploadId]): Action[AnyContent] = (identify andThen getData).async {
+    implicit request =>
+      Future.successful(Redirect(routes.UploadedDocumentController.show(None)))
+  }
 }
