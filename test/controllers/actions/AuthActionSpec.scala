@@ -39,151 +39,148 @@ class AuthActionSpec extends SpecBase {
   }
 
   "Auth Action" - {
+    "Auth Action" - {
 
-    "when the user hasn't logged in" - {
+      "when the user hasn't logged in" - {
 
-      "must redirect the user to log in " in {
+        "must fail with MissingBearerToken" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must startWith(appConfig.registrationHost)
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
+            val controller = new Harness(authAction)
+
+            intercept[MissingBearerToken] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user's session has expired" - {
+      "the user's session has expired" - {
 
-      "must redirect the user to log in " in {
+        "must fail with BearerTokenExpired" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must startWith(appConfig.registrationHost)
+            intercept[BearerTokenExpired] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user doesn't have sufficient enrolments" - {
+      "the user doesn't have sufficient enrolments" - {
 
-      "must redirect the user to the unauthorised page" in {
+        "must fail with InsufficientEnrolments" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad().url
+            intercept[InsufficientEnrolments] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user doesn't have sufficient confidence level" - {
+      "the user doesn't have sufficient confidence level" - {
 
-      "must redirect the user to the unauthorised page" in {
+        "must fail with InsufficientConfidenceLevel" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad().url
+            intercept[InsufficientConfidenceLevel] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user used an unaccepted auth provider" - {
+      "the user used an unaccepted auth provider" - {
 
-      "must redirect the user to the unauthorised page" in {
+        "must fail with UnsupportedAuthProvider" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad().url
+            intercept[UnsupportedAuthProvider] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user has an unsupported affinity group" - {
+      "the user has an unsupported affinity group" - {
 
-      "must redirect the user to the unauthorised page" in {
+        "must fail with UnsupportedAffinityGroup" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
+            intercept[UnsupportedAffinityGroup] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
-    }
 
-    "the user has an unsupported credential role" - {
+      "the user has an unsupported credential role" - {
 
-      "must redirect the user to the unauthorised page" in {
+        "must fail with UnsupportedCredentialRole" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+          val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), appConfig, bodyParsers)
-          val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), bodyParsers)
+            val controller = new Harness(authAction)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
+            intercept[UnsupportedCredentialRole] {
+              await(controller.onPageLoad()(FakeRequest()))
+            }
+          }
         }
       }
+
     }
   }
-}
 
-class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
-  val serviceUrl: String = ""
+  class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
+    val serviceUrl: String = ""
 
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-    Future.failed(exceptionToReturn)
+    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+      Future.failed(exceptionToReturn)
+  }
 }

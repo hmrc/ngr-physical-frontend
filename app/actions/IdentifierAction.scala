@@ -34,7 +34,6 @@ trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with
 
 class AuthenticatedIdentifierAction @Inject()(
                                                override val authConnector: AuthConnector,
-                                               config: FrontendAppConfig,
                                                val parser: BodyParsers.Default
                                              )
                                              (implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
@@ -57,10 +56,8 @@ class AuthenticatedIdentifierAction @Inject()(
       case _ ~ _ ~ confidenceLevel => throw new Exception("confidenceLevel not met")
         
     } recover {
-      case _: NoActiveSession =>
-        Redirect(s"${config.registrationHost}/ngr-login-register-frontend/register")
-      case _: AuthorisationException =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+      case ex: Throwable =>
+        throw ex
     }
   }
 }

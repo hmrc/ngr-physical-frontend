@@ -12,7 +12,8 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"    % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"            % hmrcMongoVersion,
     "uk.gov.hmrc"       %% "play-conditional-form-mapping-play-30"  % "3.3.0",
-    "com.beachape"      %% "enumeratum-play"               % enumeratumVersion
+    "com.beachape"      %% "enumeratum-play"               % enumeratumVersion,
+    "uk.gov.hmrc"       %% "centralised-authorisation-resource-client-play-30"  % "1.12.0"
   )
 
   val test: Seq[ModuleID] = Seq(
