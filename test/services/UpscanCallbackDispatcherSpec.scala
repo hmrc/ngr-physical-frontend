@@ -16,9 +16,11 @@
 
 package services
 
-import controllers.internal.{CallbackBody, ErrorDetails, FailedCallbackBody, ReadyCallbackBody, UploadDetails as callbackUD}
+import controllers.internal.{CallbackBody, ErrorDetails, FailedCallbackBody, ReadyCallbackBody}
 import helpers.{TestData, TestSupport}
-import models.upscan.{Reference, UploadDetails, UploadId, UploadStatus}
+import models.upscan.{Reference, UploadId, UploadStatus}
+import models.upscan.{UploadDetails => UploadRecord}
+import controllers.internal.{UploadDetails => CallbackUploadDetails}
 import org.bson.types.ObjectId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -35,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import play.api.test.Helpers.defaultAwaitTimeout
 
-class UpscanCallbackDispatcherSpec extends TestSupport with TestData with DefaultPlayMongoRepositorySupport[UploadDetails]{
+class UpscanCallbackDispatcherSpec extends TestSupport with TestData with DefaultPlayMongoRepositorySupport[UploadRecord]{
 
   override val repository: FileUploadRepo = FileUploadRepo(mongoComponent)
   val progressTracker = UploadProgressTracker(repository)
@@ -56,8 +58,8 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
       val callbackBody = ReadyCallbackBody(
         reference = testReference,
         downloadUrl = downloadUrl,
-        uploadDetails = callbackUD(
-          uploadTimestamp = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant(),
+        uploadDetails = CallbackUploadDetails(
+          uploadTimestamp = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant,
           checksum = "asdadsdeadead",
           fileMimeType = "image/png",
           fileName = "example1",
@@ -66,7 +68,7 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
       )
 
       repository.insert(
-        UploadDetails(
+        UploadRecord(
           id       = ObjectId.get(),
           uploadId = id,
           reference = testReference,
@@ -89,7 +91,7 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
       
 
       repository.insert(
-        UploadDetails(
+        UploadRecord(
           id = ObjectId.get(),
           uploadId = id,
           reference = testReference,
@@ -108,8 +110,8 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
       val callbackBody = ReadyCallbackBody(
         reference = testReference,
         downloadUrl = downloadUrl,
-        uploadDetails = callbackUD(
-          uploadTimestamp = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant(),
+        uploadDetails = CallbackUploadDetails(
+          uploadTimestamp = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant,
           checksum = "asdadsdeadead",
           fileMimeType = "image/notpng",
           fileName = "example1",
