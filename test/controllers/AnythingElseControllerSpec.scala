@@ -21,13 +21,14 @@ import helpers.ControllerSpecSupport
 import models.{AnythingElseData, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.{EitherValues, TryValues}
 import pages.AnythingElsePage
 import play.api.test.Helpers.*
 import views.html.AnythingElseView
 
 import scala.concurrent.Future
 
-class AnythingElseControllerSpec extends ControllerSpecSupport {
+class AnythingElseControllerSpec extends ControllerSpecSupport with TryValues {
   lazy val view: AnythingElseView = inject[AnythingElseView]
   lazy val formProvider: AnythingElseFormProvider = AnythingElseFormProvider()
   private def controller(userAnswers: Option[UserAnswers]): AnythingElseController = new AnythingElseController(
@@ -49,7 +50,14 @@ class AnythingElseControllerSpec extends ControllerSpecSupport {
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
       }
-      
+
+      "return 200 and pre-populate the values" in {
+        val userAnswers = emptyUserAnswers.set(AnythingElsePage, AnythingElseData(true, Some("Some text"))).success.value
+        val result = controller(Some(userAnswers)).onPageLoad(NormalMode)(authenticatedFakeRequest)
+        status(result) mustBe OK
+        contentAsString(result) must include ("Some text")
+      }
+
       "redirect to journey recovery for a GET if no existing data is found" in {
         val result = controller(None).onPageLoad(NormalMode)(authenticatedFakeRequest)
         status(result) mustBe 303

@@ -22,11 +22,13 @@ import forms.UploadForm
 import helpers.{ControllerSpecSupport, TestData}
 import models.UserAnswers
 import models.registration.CredId
-import models.upscan.UploadStatus.UploadedSuccessfully
+import models.upscan.UploadStatus.{Failed, InProgress, UploadedSuccessfully}
 import models.upscan.{Reference, UploadId, UpscanFileReference, UpscanInitiateResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import pages.UploadDocumentsPage
 import play.api.i18n.Messages
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
@@ -72,25 +74,70 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
         ))
 
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(UploadedSuccessfully("filename.png", ".png", url"http://example.com/dummyLink", Some(120L)))))
       when(mockUploadProgressTracker.requestUpload(any(), ArgumentMatchers.eq(Reference("ref")))).thenReturn(Future.successful(()))
 
-      "Return OK and the correct view" in {
-
-        val result: Future[Result] = controller(Some(emptyUserAnswers)).show(UploadId("12235"))(fakeRequest)
+      "Return OK and the correct view when UploadedSuccessfully" in {
+        when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(UploadedSuccessfully("filename.png", ".png", url"http://example.com/dummyLink", Some(120L)))))
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("12334")).success.value
+        val result: Future[Result] = controller(Some(userAnswers)).show(Some(UploadId("12334")))(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
         content must include(contentP)
+        content must include("Uploaded")
+      }
+
+      "Return OK and the correct view when Upload status is in progress" in {
+        when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(InProgress)))
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("111111")).success.value
+        val result: Future[Result] = controller(Some(userAnswers)).show(Some(UploadId("12235")))(fakeRequest)
+        status(result) mustBe OK
+        val content = contentAsString(result)
+        content must include(pageTitle)
+        content must include(contentP)
+        content must include("Uploading")
+      }
+
+      "Return OK and the correct view when Upload status Failed" in {
+        when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(Failed)))
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).show(Some(UploadId("12235")))(fakeRequest)
+        status(result) mustBe OK
+        val content = contentAsString(result)
+        content must include(pageTitle)
+        content must include(contentP)
+        content must include("Failed")
+      }
+
+      "Return BadRequest when no file has been uploaded with files present " in {
+        when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(InProgress)))
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("111111")).success.value
+        val result: Future[Result] = controller(Some(userAnswers)).show(None)(fakeRequest)
+        status(result) mustBe OK
+        val content = contentAsString(result)
+        content must include(pageTitle)
+        content must include(contentP)
+        content must include("Uploading")
+      }
+
+      "Return BadRequest when no file has been uploaded no files present" in {
+
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).show(None)(fakeRequest)
+        status(result) mustBe BAD_REQUEST
       }
 
     }
 
     "method onSubmit" must {
       "Return OK and send user to correct location" in {
-        val result: Future[Result] = controller(Some(emptyUserAnswers)).onSubmit(UploadId("12235"), false)(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).onSubmit(Some(UploadId("12235")), false)(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      }
+
+      "Return OK and send user to correct location when in progress is true" in {
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).onSubmit(Some(UploadId("12235")), true)(fakeRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UploadedDocumentController.show(Some(UploadId("12235"))).url)
       }
 
     }

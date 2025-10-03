@@ -21,6 +21,8 @@ import helpers.ControllerSpecSupport
 import models.{CheckMode, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import pages.SecurityCamerasChangePage
 import views.html.SecurityCamerasChangeView
 import play.api.test.Helpers.*
 
@@ -47,6 +49,12 @@ class SecurityCamerasChangeControllerSpec extends ControllerSpecSupport {
           charset(result) mustBe Some("utf-8")
         }
 
+        "return 200 with pre-populated data" in {
+          val userAnswers = emptyUserAnswers.set(SecurityCamerasChangePage, 10).success.value
+          val result = controller(Some(userAnswers)).onPageLoad(mode)(authenticatedFakeRequest)
+          status(result) mustBe 200
+        }
+        
         "redirect to journey recovery Expired for a GET if no existing data is found" in {
           val result = controller(None).onPageLoad(mode)(authenticatedFakeRequest)
           status(result) mustBe 303

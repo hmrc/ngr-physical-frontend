@@ -95,7 +95,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       val page: QuestionPage[?] = feature match {
         case Some(group1: InternalFeatureGroup1) => HowMuchOfProperty.page(group1)
         case Some(InternalFeature.SecurityCamera) => SecurityCamerasChangePage
-        case None => throw new RuntimeException("no feature chosen to remove")
+        case None => throw new RuntimeException("no internal feature chosen to remove")
       }
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
@@ -109,7 +109,7 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
 
   def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("feature not found"))
+      val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("no external feature chosen to remove"))
       val page: QuestionPage[?] = WhatHappenedTo.page(feature)
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
