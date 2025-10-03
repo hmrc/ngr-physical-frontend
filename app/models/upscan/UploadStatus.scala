@@ -16,10 +16,11 @@
 
 package models.upscan
 
-import org.bson.types.ObjectId
-import play.api.mvc.QueryStringBindable
 import models.registration.CredId
 import models.upscan.UploadStatus.{Failed, InProgress, UploadedSuccessfully}
+import org.bson.types.ObjectId
+import play.api.libs.json.*
+import play.api.mvc.QueryStringBindable
 
 import java.net.URL
 import java.util.UUID
@@ -44,9 +45,20 @@ case class UploadDetails(
 
 case class UploadId(value: String) extends AnyVal
 
-object UploadId:
+object UploadId {
   def generate(): UploadId =
-    UploadId(UUID.randomUUID().toString)
+    UploadId(java.util.UUID.randomUUID().toString)
 
-  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
-    stringBinder.transform(UploadId(_),_.value)
+  // Make sure this is *inside the companion object, but not inside generate()*
+  implicit val uploadIdFormat: Format[UploadId] = new Format[UploadId] {
+    override def reads(json: JsValue): JsResult[UploadId] =
+      json.validate[String].map(UploadId(_))
+
+    override def writes(id: UploadId): JsValue =
+      JsString(id.value)
+  }
+}
+
+
+implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
+  stringBinder.transform(UploadId(_),_.value)
