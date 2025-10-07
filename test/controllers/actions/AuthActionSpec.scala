@@ -21,12 +21,15 @@ import base.SpecBase
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,141 +42,187 @@ class AuthActionSpec extends SpecBase {
   }
 
   "Auth Action" - {
-    "Auth Action" - {
 
-      "when the user hasn't logged in" - {
+    "when the user is logged in" - {
+      "must succeed and return Ok" in {
 
-        "must fail with MissingBearerToken" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L250
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
-            val controller = new Harness(authAction)
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
 
-            intercept[MissingBearerToken] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
-          }
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, bodyParsers)
+          val controller = new Harness(action)
+          val result = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe OK
         }
       }
 
-      "the user's session has expired" - {
+      "must throw an exception if the confidence level is not met" in {
 
-        "must fail with BearerTokenExpired" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L50
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
-            val controller = new Harness(authAction)
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
 
-            intercept[BearerTokenExpired] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, bodyParsers)
+          val controller = new Harness(action)
+
+          val results = intercept[Exception] {
+            await(controller.onPageLoad()(FakeRequest("", "")))
+          }
+          results.getMessage mustBe "confidenceLevel not met"
+        }
+      }
+    }
+
+    "when the user hasn't logged in" - {
+
+      "must fail with MissingBearerToken" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
+          val controller = new Harness(authAction)
+
+          intercept[MissingBearerToken] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user doesn't have sufficient enrolments" - {
+    "the user's session has expired" - {
 
-        "must fail with InsufficientEnrolments" in {
+      "must fail with BearerTokenExpired" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[InsufficientEnrolments] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[BearerTokenExpired] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user doesn't have sufficient confidence level" - {
+    "the user doesn't have sufficient enrolments" - {
 
-        "must fail with InsufficientConfidenceLevel" in {
+      "must fail with InsufficientEnrolments" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[InsufficientConfidenceLevel] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[InsufficientEnrolments] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user used an unaccepted auth provider" - {
+    "the user doesn't have sufficient confidence level" - {
 
-        "must fail with UnsupportedAuthProvider" in {
+      "must fail with InsufficientConfidenceLevel" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedAuthProvider] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[InsufficientConfidenceLevel] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user has an unsupported affinity group" - {
+    "the user used an unaccepted auth provider" - {
 
-        "must fail with UnsupportedAffinityGroup" in {
+      "must fail with UnsupportedAuthProvider" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedAffinityGroup] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[UnsupportedAuthProvider] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user has an unsupported credential role" - {
+    "the user has an unsupported affinity group" - {
 
-        "must fail with UnsupportedCredentialRole" in {
+      "must fail with UnsupportedAffinityGroup" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedCredentialRole] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[UnsupportedAffinityGroup] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
+    "the user has an unsupported credential role" - {
+
+      "must fail with UnsupportedCredentialRole" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), bodyParsers)
+          val controller = new Harness(authAction)
+
+          intercept[UnsupportedCredentialRole] {
+            await(controller.onPageLoad()(FakeRequest()))
+          }
+        }
+      }
     }
   }
 

@@ -23,6 +23,7 @@ import models.requests.IdentifierRequest
 import play.api.mvc.*
 import play.api.mvc.Results.*
 import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.ConfidenceLevel.L250
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -38,7 +39,7 @@ class AuthenticatedIdentifierAction @Inject()(
                                              )
                                              (implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
 
-  type RetrievalsType = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
+  private type RetrievalsType = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
   
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -48,10 +49,9 @@ class AuthenticatedIdentifierAction @Inject()(
       Retrievals.credentials and
         Retrievals.internalId and
         Retrievals.confidenceLevel
-    
-    authorised(ConfidenceLevel.L250).retrieve(retrievals) {
 
-      case Some(credentials) ~ Some(internalId) ~ confidenceLevel =>
+    authorised().retrieve(retrievals) {
+      case Some(credentials) ~ Some(internalId) ~ L250 =>
         block(IdentifierRequest(request, internalId, credentials.providerId))
       case _ ~ _ ~ confidenceLevel => throw new Exception("confidenceLevel not met")
         
