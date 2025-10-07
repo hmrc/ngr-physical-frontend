@@ -67,16 +67,19 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
         )
       )
 
-      repository.insert(
-        UploadRecord(
-          id       = ObjectId.get(),
-          uploadId = id,
-          reference = testReference,
-          status   = UploadStatus.InProgress
+      await(
+        repository.insert(
+          UploadRecord(
+            id       = ObjectId.get(),
+            uploadId = id,
+            reference = testReference,
+            status   = UploadStatus.InProgress
+          )
         )
       )
 
-      repository.updateStatus(testReference, UploadStatus.InProgress)
+
+      await(repository.updateStatus(testReference, UploadStatus.InProgress))
 
       await(callbackDispatcher.handleCallback(callbackBody))
 
@@ -89,7 +92,7 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
         failureDetails = ErrorDetails("", "")
         )
       
-
+      await(
       repository.insert(
         UploadRecord(
           id = ObjectId.get(),
@@ -98,8 +101,9 @@ class UpscanCallbackDispatcherSpec extends TestSupport with TestData with Defaul
           status = UploadStatus.InProgress
         )
       )
+      )
 
-      repository.updateStatus(testReference, UploadStatus.Failed)
+      await(repository.updateStatus(testReference, UploadStatus.Failed))
 
       await(callbackDispatcher.handleCallback(callbackBody))
 
