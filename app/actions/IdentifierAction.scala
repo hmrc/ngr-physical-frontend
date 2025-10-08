@@ -55,7 +55,7 @@ class AuthenticatedIdentifierAction @Inject()(
         Retrievals.confidenceLevel
 
     authorised().retrieve(retrievals) {
-      case Some(credentials) ~ Some(internalId) ~ L250 =>
+      case Some(credentials) ~ Some(internalId) ~ confidenceLevel if confidenceLevel.level >= L250.level =>
         isRegistered(credentials.providerId).flatMap {
           case true => block(IdentifierRequest(request, internalId, credentials.providerId))
           case false => redirectToRegister()
