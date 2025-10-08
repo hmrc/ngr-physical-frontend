@@ -106,7 +106,7 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
         running(application) {
           val frontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
-          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L250
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L500
 
           when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
             retrieval
