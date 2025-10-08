@@ -75,7 +75,7 @@ class AuthenticatedIdentifierAction @Inject()(
   }
 
   private def redirectToRegister(): Future[Result] = {
-    Future.successful(Redirect(s"${appConfig.registrationHost}/ngr-login-register-frontend/register"))
+    Future.successful(Redirect(appConfig.registrationUrl))
   }
 }
 

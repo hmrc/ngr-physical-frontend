@@ -50,7 +50,7 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
     reset(mockNGRConnector, mockAppConfig, testBodyParser)
     super.beforeEach()
   }
-  
+
   val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
   val mockNGRConnector: NGRConnector = mock[NGRConnector]
   val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
@@ -61,18 +61,16 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
       "must succeed and return Ok" in {
 
         type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
-        
+
         val application = applicationBuilder(userAnswers = None)
           .overrides(
             bind[NGRConnector].toInstance(mockNGRConnector),
-            bind[FrontendAppConfig].toInstance(mockAppConfig),
             bind[BodyParsers.Default].toInstance(testBodyParser))
           .build()
 
         val registeredRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), Some(RatepayerRegistration(isRegistered = Some(true))))
-      
+
         when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(registeredRatepayer)))
-        when(mockAppConfig.registrationHost).thenReturn("")
 
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
@@ -94,21 +92,19 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
         type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
         lazy val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
         val mockNGRConnector: NGRConnector = mock[NGRConnector]
-        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
         val application = applicationBuilder(userAnswers = None)
           .overrides(
             bind[NGRConnector].toInstance(mockNGRConnector),
-            bind[FrontendAppConfig].toInstance(mockAppConfig),
             bind[BodyParsers.Default].toInstance(testBodyParser))
           .build()
 
         val emptyRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), None)
 
         when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(emptyRatepayer)))
-        when(mockAppConfig.registrationHost).thenReturn("")
 
         running(application) {
+          val frontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L250
 
@@ -116,11 +112,11 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
             retrieval
           ))
 
-          val action =  new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, testBodyParser)
+          val action =  new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, frontendAppConfig, testBodyParser)
           val controller = new Harness(action)
           val result = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some("/ngr-login-register-frontend/register")
+          redirectLocation(result) mustBe Some("http://localhost:1502/ngr-login-register-frontend/register")
         }
       }
 
