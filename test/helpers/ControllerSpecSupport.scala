@@ -17,7 +17,7 @@
 package helpers
 
 import connectors.UpscanConnector
-import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeRegistrationAction}
+import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction}
 import models.UserAnswers
 import navigation.Navigator
 import play.api.test.Helpers.stubMessagesControllerComponents
@@ -28,7 +28,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 trait ControllerSpecSupport extends TestSupport with TestData {
   
   val fakeAuth = new FakeIdentifierAction(stubMessagesControllerComponents().parsers)
-  val fakeReg = new FakeRegistrationAction(stubMessagesControllerComponents().parsers)
   def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
   def fakeRequireData(answers: Option[UserAnswers]) = new FakeDataRequiredAction(answers)
   val mockUpscanConnector: UpscanConnector = mock[UpscanConnector]

@@ -83,7 +83,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
 
     "must redirect when planning permission is true and reference is provided" in {
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

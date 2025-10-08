@@ -18,12 +18,16 @@ package controllers.actions
 
 import actions.{AuthenticatedIdentifierAction, IdentifierAction}
 import base.SpecBase
-import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.NGRConnector
 import controllers.routes
+import models.registration.{CredId, RatepayerRegistration, RatepayerRegistrationValuation}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.inject
+import play.api.inject.bind
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -32,14 +36,24 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase {
+class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
 
   class Harness(authAction: IdentifierAction) {
     def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
+
+  override def beforeEach(): Unit = {
+    reset(mockNGRConnector, mockAppConfig, testBodyParser)
+    super.beforeEach()
+  }
+  
+  val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
+  val mockNGRConnector: NGRConnector = mock[NGRConnector]
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   "Auth Action" - {
 
@@ -47,8 +61,18 @@ class AuthActionSpec extends SpecBase {
       "must succeed and return Ok" in {
 
         type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
+        
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[NGRConnector].toInstance(mockNGRConnector),
+            bind[FrontendAppConfig].toInstance(mockAppConfig),
+            bind[BodyParsers.Default].toInstance(testBodyParser))
+          .build()
 
-        val application = applicationBuilder(userAnswers = None).build()
+        val registeredRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), Some(RatepayerRegistration(isRegistered = Some(true))))
+      
+        when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(registeredRatepayer)))
+        when(mockAppConfig.registrationHost).thenReturn("")
 
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
@@ -59,10 +83,44 @@ class AuthActionSpec extends SpecBase {
             retrieval
           ))
 
-          val action = new AuthenticatedIdentifierAction(mockAuthConnector, bodyParsers)
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(action)
           val result = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
+        }
+      }
+
+      "must redirect to registration login service" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
+        lazy val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
+        val mockNGRConnector: NGRConnector = mock[NGRConnector]
+        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[NGRConnector].toInstance(mockNGRConnector),
+            bind[FrontendAppConfig].toInstance(mockAppConfig),
+            bind[BodyParsers.Default].toInstance(testBodyParser))
+          .build()
+
+        val emptyRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), None)
+
+        when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(emptyRatepayer)))
+        when(mockAppConfig.registrationHost).thenReturn("")
+
+        running(application) {
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L250
+
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
+
+          val action =  new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, testBodyParser)
+          val controller = new Harness(action)
+          val result = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some("/ngr-login-register-frontend/register")
         }
       }
 
@@ -81,7 +139,7 @@ class AuthActionSpec extends SpecBase {
             retrieval
           ))
 
-          val action = new AuthenticatedIdentifierAction(mockAuthConnector, bodyParsers)
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(action)
 
           val results = intercept[Exception] {
@@ -101,7 +159,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[MissingBearerToken] {
@@ -120,7 +178,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[BearerTokenExpired] {
@@ -139,7 +197,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[InsufficientEnrolments] {
@@ -158,7 +216,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[InsufficientConfidenceLevel] {
@@ -177,7 +235,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[UnsupportedAuthProvider] {
@@ -196,7 +254,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[UnsupportedAffinityGroup] {
@@ -215,7 +273,7 @@ class AuthActionSpec extends SpecBase {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), mockNGRConnector, mockAppConfig, bodyParsers)
           val controller = new Harness(authAction)
 
           intercept[UnsupportedCredentialRole] {

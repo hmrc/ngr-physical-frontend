@@ -18,7 +18,9 @@ package actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.NGRConnector
 import controllers.routes
+import models.registration.CredId
 import models.requests.IdentifierRequest
 import play.api.mvc.*
 import play.api.mvc.Results.*
@@ -35,12 +37,14 @@ trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with
 
 class AuthenticatedIdentifierAction @Inject()(
                                                override val authConnector: AuthConnector,
+                                               ngrConnector: NGRConnector,
+                                               appConfig: FrontendAppConfig,
                                                val parser: BodyParsers.Default
                                              )
                                              (implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
 
   private type RetrievalsType = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
-  
+
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -52,13 +56,26 @@ class AuthenticatedIdentifierAction @Inject()(
 
     authorised().retrieve(retrievals) {
       case Some(credentials) ~ Some(internalId) ~ L250 =>
-        block(IdentifierRequest(request, internalId, credentials.providerId))
+        isRegistered(credentials.providerId).flatMap {
+          case true => block(IdentifierRequest(request, internalId, credentials.providerId))
+          case false => redirectToRegister()
+        }
       case _ ~ _ ~ confidenceLevel => throw new Exception("confidenceLevel not met")
-        
+
     } recover {
       case ex: Throwable =>
         throw ex
     }
+  }
+
+  private def isRegistered(credId: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    ngrConnector.getRatepayer(CredId(credId)).flatMap { maybeRatepayer =>
+      Future.successful(maybeRatepayer.flatMap(_.ratepayerRegistration).flatMap(_.isRegistered).getOrElse(false))
+    }
+  }
+
+  private def redirectToRegister(): Future[Result] = {
+    Future.successful(Redirect(s"${appConfig.registrationHost}/ngr-login-register-frontend/register"))
   }
 }
 

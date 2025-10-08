@@ -16,7 +16,7 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
+import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.i18n.I18nSupport
@@ -31,17 +31,16 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   mcc: MessagesControllerComponents,
                                                   view: ChangedFeaturesOrSpaceView,
                                                   authenticate: IdentifierAction,
-                                                  isRegisteredCheck: RegistrationAction,
                                                   getData: DataRetrievalAction
                                                 )(implicit appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck andThen getData) { implicit request =>
+    (authenticate andThen getData) { implicit request =>
       Ok(view(request.property.addressFull, createDefaultNavBar()))
     }
 
   def next: Action[AnyContent] =
-    (authenticate andThen isRegisteredCheck).async { implicit request =>
+    (authenticate andThen getData).async { implicit request =>
       Future.successful(Redirect(routes.InfoAndSupportingDocController.show))
     }
 }
