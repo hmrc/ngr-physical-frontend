@@ -211,5 +211,6 @@ GET        /property-change-details-sent                                        
 
 GET        /not-told-us-about-any-changes-to-property                            controllers.NotToldAnyChangesController.show
 GET        /supporting-document-upload                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String])
-GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId: models.upscan.UploadId)
-POST       /supporting-document-uploaded                                         controllers.UploadedDocumentController.onSubmit(uploadId : models.upscan.UploadId, inProgress: Boolean)
+POST       /supporting-document-upload-cancel                                    controllers.UploadDocumentController.onCancel(uploadId : Option[models.upscan.UploadId])
+GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId : Option[models.upscan.UploadId])
+POST       /supporting-document-uploaded                                         controllers.UploadedDocumentController.onSubmit(uploadId : Option[models.upscan.UploadId], inProgress: Boolean)

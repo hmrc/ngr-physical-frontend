@@ -33,7 +33,7 @@ class UpscanCallbackDispatcher @Inject()(sessionStorage: UploadProgressTracker):
   )
   
   def handleCallback(callback: CallbackBody)
-                    (using HeaderCarrier): Future[Unit] =
+                    : Future[Unit] =
     
     val uploadStatus =
       callback match

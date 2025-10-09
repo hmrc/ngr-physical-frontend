@@ -17,11 +17,18 @@
 package base
 
 import actions.*
+import centralisedauthorisation.resourceclient.filters.ResourceClientFilter
+import centralisedauthorisation.resourceclient.modules.FrontendCentralisedAuthorisationModule
+import centralisedauthorisation.resourceclient.utils
+import config.AppConfig
 import controllers.actions.*
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -31,11 +38,11 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContent, BodyParser, Call, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, BodyParser, Call, EssentialAction, MessagesControllerComponents, RequestHeader, Result}
 import play.api.test.{FakeRequest, Injecting}
 import repositories.SessionRepository
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 trait SpecBase
   extends AnyFreeSpec
@@ -57,10 +64,17 @@ trait SpecBase
   
   def onwardRoute: Call = Call("GET", "/foo")
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
+  val fakeFilter: ResourceClientFilter = mock[ResourceClientFilter]
 
+  when(fakeFilter.apply(any[EssentialAction])).thenAnswer((invocation: InvocationOnMock) => {
+    val next: EssentialAction = invocation.getArgument(0, classOf[EssentialAction])
+    next
+  })
+  
+  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder = {
     new GuiceApplicationBuilder()
       .overrides(
+        bind[ResourceClientFilter].toInstance(fakeFilter),
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[RegistrationAction].to[FakeRegistrationAction],

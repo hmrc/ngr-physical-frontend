@@ -19,9 +19,13 @@ package controllers
 import base.SpecBase
 import forms.HowMuchOfPropertyFormProvider
 import helpers.ControllerSpecSupport
-import models.{HowMuchOfProperty, InternalFeatureGroup1, NormalMode, UserAnswers}
+import models.InternalFeature.{AirConditioning, CompressedAir, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers}
+import models.requests.IdentifierRequest
+import models.{HowMuchOfProperty, InternalFeatureGroup1, Mode, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.Helpers.*
 import views.html.HowMuchOfPropertyView
 
@@ -36,39 +40,44 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
 
   "HowMuchOfPropertyController" should {
     InternalFeatureGroup1.values.foreach { feature =>
-
       "onPageLoad" must {
         s"return 200: ${feature.toString}" in {
-          val result = controller(Some(emptyUserAnswers)).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          val result = onPageLoad(feature, Some(emptyUserAnswers), NormalMode)
           status(result) mustBe 200
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
+        }
+
+        s"return 200 with prepopulated data: ${feature.toString}" in {
+          val userAnswers = emptyUserAnswers.set(HowMuchOfProperty.page(feature), HowMuchOfProperty.values.head).success.value
+          val result = onPageLoad(feature, Some(userAnswers), NormalMode)
+          status(result) mustBe 200
         }
       }
       "onSubmit" must {
         s"redirect with valid form submission: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "some"))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
+          val result = onSubmit(feature, Some(emptyUserAnswers), NormalMode)(formRequest)
           status(result) mustBe 303
         }
 
         s"Bad request with invalid form: ${feature.toString}" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-          val formRequest = requestWithForm(Map("value" -> "wow"))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(feature, NormalMode)(formRequest)
+          val formRequest: IdentifierRequest[AnyContentAsFormUrlEncoded] = requestWithForm(Map("value" -> "wow"))
+          val result = onSubmit(feature, Some(emptyUserAnswers), NormalMode)(formRequest)
           status(result) mustBe 400
         }
 
         s"redirect to journey recovery Expired for a GET if no existing data is found for $feature" in {
-          val result = controller(None).onPageLoad(feature, NormalMode)(authenticatedFakeRequest)
+          val result = onPageLoad(feature, None, NormalMode)
           status(result) mustBe 303
           redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
 
         s"redirect to journey recovery for a POST if no existing data is found for $feature" in {
           val formRequest = requestWithForm(Map("value" -> "some"))
-          val result = controller(None).onSubmit(feature, NormalMode)(formRequest)
+          val result = onSubmit(feature, None, NormalMode)(formRequest)
           status(result) mustBe 303
           redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
@@ -76,4 +85,27 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
     }
   }
 
+  private def onPageLoad(feature: InternalFeatureGroup1, userAnswers: Option[UserAnswers], mode: Mode): Future[Result] = {
+    feature match {
+      case AirConditioning => controller(userAnswers).onPageLoadAirCon(mode)(authenticatedFakeRequest)
+      case Escalators => controller(userAnswers).onPageLoadEscalator(mode)(authenticatedFakeRequest)
+      case GoodsLift => controller(userAnswers).onPageLoadGoodsLift(mode)(authenticatedFakeRequest)
+      case PassengerLift => controller(userAnswers).onPageLoadPassengerLift(mode)(authenticatedFakeRequest)
+      case CompressedAir => controller(userAnswers).onPageLoadCompressedAir(mode)(authenticatedFakeRequest)
+      case Heating => controller(userAnswers).onPageLoadHeating(mode)(authenticatedFakeRequest)
+      case Sprinklers => controller(userAnswers).onPageLoadSprinklers(mode)(authenticatedFakeRequest)
+    }
+  }
+
+  private def onSubmit(feature: InternalFeatureGroup1, userAnswers: Option[UserAnswers], mode: Mode)(formRequest: IdentifierRequest[AnyContentAsFormUrlEncoded]): Future[Result] = {
+    feature match {
+      case AirConditioning => controller(userAnswers).onSubmitAirCon(mode)(formRequest)
+      case Escalators => controller(userAnswers).onSubmitEscalator(mode)(formRequest)
+      case GoodsLift => controller(userAnswers).onSubmitGoodsLift(mode)(formRequest)
+      case PassengerLift => controller(userAnswers).onSubmitPassengerLift(mode)(formRequest)
+      case CompressedAir => controller(userAnswers).onSubmitCompressedAir(mode)(formRequest)
+      case Heating => controller(userAnswers).onSubmitHeating(mode)(formRequest)
+      case Sprinklers => controller(userAnswers).onSubmitSprinklers(mode)(formRequest)
+    }
+  }
 }

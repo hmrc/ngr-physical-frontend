@@ -20,7 +20,7 @@ import forms.SureWantRemoveChangeFormProvider
 import helpers.ControllerSpecSupport
 import models.ExternalFeature.SolarPanels
 import models.InternalFeature.{AirConditioning, PassengerLift, SecurityCamera}
-import models.{CheckMode, NormalMode, UserAnswers}
+import models.{CYAInternal, CheckMode, NormalMode, UserAnswers}
 import play.api.test.Helpers.*
 import uk.gov.hmrc.http.NotFoundException
 import views.html.SureWantRemoveChangeView
@@ -69,6 +69,12 @@ class SureWantRemoveChangeControllerSpec extends ControllerSpecSupport {
           val internalFeature = AirConditioning
           val result = controller(Some(emptyUserAnswers)).onSubmit(internalFeature.toString, NormalMode)(requestWithForm(Map("value" -> "false")))
           redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+        }
+
+        "redirect to check your answers page when the flag selected is 'false' and the mode is CheckMode for the internalFeature and fromMiniCYA is `true`" in {
+          val internalFeature = AirConditioning
+          val result = controller(Some(emptyUserAnswers)).onSubmit(internalFeature.toString, mode, true)(requestWithForm(Map("value" -> "false")))
+          redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode).url)
         }
 
         "redirect to remove an external feature" in {

@@ -54,7 +54,7 @@ class HowMuchOfPropertyController @Inject()(
   def onPageLoadPassengerLift(mode: Mode): Action[AnyContent] = onPageLoad(PassengerLift, mode)
   def onPageLoadCompressedAir(mode: Mode): Action[AnyContent] = onPageLoad(CompressedAir, mode)
 
-  def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  private def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
@@ -78,7 +78,7 @@ class HowMuchOfPropertyController @Inject()(
   def onSubmitPassengerLift(mode: Mode): Action[AnyContent] = onSubmit(PassengerLift, mode)
   def onSubmitCompressedAir(mode: Mode): Action[AnyContent] = onSubmit(CompressedAir, mode)
 
-  def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  private def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)

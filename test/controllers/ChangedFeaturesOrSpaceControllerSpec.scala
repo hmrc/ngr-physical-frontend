@@ -32,12 +32,23 @@ class ChangedFeaturesOrSpaceControllerSpec
   lazy val view: ChangedFeaturesOrSpaceView = inject[ChangedFeaturesOrSpaceView]
   private val controller = new ChangedFeaturesOrSpaceController(mcc, view, fakeAuth, fakeReg, fakeData(None))(mockConfig)
 
-  "GET /" should :
-    
+  "GET /" should {
+
     when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
-    "return 200" in :
+    "return 200" in {
       val result: Future[Result] = controller.show(authenticatedFakeRequest)
       status(result) mustBe Status.OK
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
+    }
+
+  }
+  
+  "POST /" should {
+    "redirect to InfoAndSupportingDocController" in {
+      val result: Future[Result] = controller.next(authenticatedFakeRequest)
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.InfoAndSupportingDocController.show.url)
+    }
+  }
 }

@@ -17,29 +17,31 @@
 package controllers
 
 
-import config.AppConfig
-import models.NavBarPageContents.createDefaultNavBar
-import models.upscan.{Reference, UploadId}
-import services.UploadProgressTracker
-import connectors.UpscanConnector
 import actions.*
-
-import javax.inject.Inject
+import config.AppConfig
+import connectors.UpscanConnector
+import forms.UploadForm
+import models.NavBarPageContents.createDefaultNavBar
+import models.UserAnswers
+import models.registration.CredId
+import models.requests.DataRequest
+import models.upscan.{Reference, UploadId}
+import pages.{SecurityCamerasChangePage, UploadDocumentsPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.UploadDocumentView
-import models.registration.CredId
-import forms.UploadForm
-import pages.{SecurityCamerasChangePage, UploadDocumentsPage}
 import repositories.SessionRepository
-import models.UserAnswers
+import services.UploadProgressTracker
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.govuk.all.ButtonViewModel
+import views.html.UploadDocumentView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class UploadDocumentController @Inject()(
                                           identify: IdentifierAction,
                                           getData: DataRetrievalAction,
+                                          requireData: DataRequiredAction,
                                           upScanConnector: UpscanConnector,
                                           uploadProgressTracker: UploadProgressTracker,
                                           uploadForm: UploadForm,
@@ -65,27 +67,47 @@ class UploadDocumentController @Inject()(
     }
   }
 
-    def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData).async {
-      implicit request =>
+  def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
 
-        val errorToDisplay: Option[String] = renderError(errorCode)
-        val uploadId = UploadId.generate()
-        val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(uploadId).url}"
-        val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/supporting-document-upload"
-        for
-          upscanInitiateResponse <- upScanConnector.initiate(Some(successRedirectUrl), Some(errorRedirectUrl))
-          _ <- uploadProgressTracker.requestUpload(uploadId, Reference(upscanInitiateResponse.fileReference.reference))
-        yield Ok(
-          view(
-              uploadForm(),
-              upscanInitiateResponse,
-              errorToDisplay,
-              attributes,
-              request.property.addressFull,
-              createDefaultNavBar()
-            )
-          )
+      val errorToDisplay: Option[String] = renderError(errorCode)
+      val uploadId = UploadId.generate()
+      val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(Some(uploadId)).url}"
+      val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/supporting-document-upload"
+
+
+      val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
+        case None => Seq.empty[String]
+        case Some(value) => value
+      }
+
+      for
+        upscanInitiateResponse <- upScanConnector.initiate(Some(successRedirectUrl), Some(errorRedirectUrl))
+        _ <- uploadProgressTracker.requestUpload(uploadId, Reference(upscanInitiateResponse.fileReference.reference))
+      yield Ok(
+        view(
+          uploadForm(),
+          upscanInitiateResponse,
+          errorToDisplay,
+          attributes,
+          request.property.addressFull,
+          createDefaultNavBar(),
+          currentAnswers.nonEmpty,
+          hasUploaded()
+        )
+      )
+  }
+
+  private def hasUploaded()(implicit request: DataRequest[AnyContent]): Boolean = {
+    request.userAnswers.get(UploadDocumentsPage) match {
+      case Some(_) => true
+      case None => false
     }
+  }
 
-  
+
+  def onCancel(uploadId: Option[UploadId]): Action[AnyContent] = (identify andThen getData).async {
+    implicit request =>
+      Future.successful(Redirect(routes.UploadedDocumentController.show(None)))
+  }
 }

@@ -47,9 +47,9 @@ class UpscanConnector @Inject()(httpClientV2: HttpClientV2, appConfig: AppConfig
     val upscanInitiateUri = s"${appConfig.upscanHost}/upscan/v2/initiate"
 
     for
-      response <- httpClientV2.post(url"${upscanInitiateUri}")
+      response <- httpClientV2.post(url"$upscanInitiateUri")
         .withBody(Json.toJson(request))
-        .setHeader(headers.toSeq: _*)
+        .setHeader(headers.toSeq*)
         .execute[PreparedUpload]
       fileReference = UpscanFileReference(response.reference.value)
       postTarget = response.uploadRequest.href
