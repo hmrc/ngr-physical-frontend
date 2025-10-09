@@ -16,29 +16,29 @@
 
 package controllers
 
-import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow}
-import uk.gov.hmrc.http.NotFoundException
-import actions.{AuthRetrievals, DataRequiredAction, DataRetrievalAction, IdentifierAction, RegistrationAction}
+import actions.*
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
+import models.UserAnswers
 import models.registration.CredId
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.upscan.UploadStatus.{InProgress, UploadedSuccessfully}
 import models.upscan.{UploadId, UploadStatus}
 import pages.UploadDocumentsPage
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.UploadProgressTracker
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import views.html
-import views.html.UploadedDocumentView
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow}
+import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendBaseController, FrontendController}
 import viewmodels.govuk.all.{ActionItemViewModel, SummaryListRowViewModel}
 import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
-import models.UserAnswers
+import views.html
+import views.html.UploadedDocumentView
 
 import javax.inject.{Inject, Singleton}
 import scala.:+

@@ -77,7 +77,6 @@ trait SpecBase
         bind[ResourceClientFilter].toInstance(fakeFilter),
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[RegistrationAction].to[FakeRegistrationAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[SessionRepository].toInstance(mockSessionRepository)

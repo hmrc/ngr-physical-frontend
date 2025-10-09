@@ -16,10 +16,11 @@
 
 package controllers
 
-import actions.{DataRetrievalAction, IdentifierAction, RegistrationAction}
+import actions.{DataRetrievalAction, IdentifierAction}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -27,12 +28,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class KeepAliveController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
                                      authenticate: IdentifierAction,
-                                     isRegisteredCheck: RegistrationAction,
                                      getData: DataRetrievalAction,
                                      sessionRepository: SessionRepository
                                    )(implicit  ec: ExecutionContext) extends FrontendBaseController {
 
-  def keepAlive(): Action[AnyContent] = (authenticate andThen isRegisteredCheck andThen getData).async {
+  def keepAlive(): Action[AnyContent] = (authenticate andThen getData).async {
     implicit request =>
       request.userAnswers
         .map {

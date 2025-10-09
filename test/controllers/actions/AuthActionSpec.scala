@@ -18,162 +18,265 @@ package controllers.actions
 
 import actions.{AuthenticatedIdentifierAction, IdentifierAction}
 import base.SpecBase
-import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.NGRConnector
 import controllers.routes
+import models.registration.{CredId, RatepayerRegistration, RatepayerRegistrationValuation}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.inject
+import play.api.inject.bind
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase {
+class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
 
   class Harness(authAction: IdentifierAction) {
     def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
 
+  override def beforeEach(): Unit = {
+    reset(mockNGRConnector, mockAppConfig, testBodyParser)
+    super.beforeEach()
+  }
+
+  val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
+  val mockNGRConnector: NGRConnector = mock[NGRConnector]
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
   "Auth Action" - {
-    "Auth Action" - {
 
-      "when the user hasn't logged in" - {
+    "when the user is logged in" - {
+      "must succeed and return Ok" in {
 
-        "must fail with MissingBearerToken" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[NGRConnector].toInstance(mockNGRConnector),
+            bind[BodyParsers.Default].toInstance(testBodyParser))
+          .build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        val registeredRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), Some(RatepayerRegistration(isRegistered = Some(true))))
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
-            val controller = new Harness(authAction)
+        when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(registeredRatepayer)))
 
-            intercept[MissingBearerToken] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
-          }
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L250
+
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
+
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(action)
+          val result = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe OK
         }
       }
 
-      "the user's session has expired" - {
+      "must redirect to registration login service" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
+        lazy val testBodyParser: BodyParsers.Default = mock[BodyParsers.Default]
+        val mockNGRConnector: NGRConnector = mock[NGRConnector]
 
-        "must fail with BearerTokenExpired" in {
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[NGRConnector].toInstance(mockNGRConnector),
+            bind[BodyParsers.Default].toInstance(testBodyParser))
+          .build()
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val emptyRatepayer: RatepayerRegistrationValuation = RatepayerRegistrationValuation(CredId("1234"), None)
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        when(mockNGRConnector.getRatepayer(any())(any())).thenReturn(Future.successful(Some(emptyRatepayer)))
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
-            val controller = new Harness(authAction)
+        running(application) {
+          val frontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L500
 
-            intercept[BearerTokenExpired] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
-          }
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
+
+          val action =  new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, frontendAppConfig, testBodyParser)
+          val controller = new Harness(action)
+          val result = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some("http://localhost:1502/ngr-login-register-frontend/register")
         }
       }
 
-      "the user doesn't have sufficient enrolments" - {
+      "must throw an exception if the confidence level is not met" in {
 
-        "must fail with InsufficientEnrolments" in {
+        type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ None ~ ConfidenceLevel.L50
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
-            val controller = new Harness(authAction)
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
+            retrieval
+          ))
 
-            intercept[InsufficientEnrolments] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(action)
+
+          val results = intercept[Exception] {
+            await(controller.onPageLoad()(FakeRequest("", "")))
+          }
+          results.getMessage mustBe "Either the confidenceLevel of 250 not met 50 or credentials or internalId is missing"
+        }
+      }
+    }
+
+    "when the user hasn't logged in" - {
+
+      "must fail with MissingBearerToken" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
+
+          intercept[MissingBearerToken] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user doesn't have sufficient confidence level" - {
+    "the user's session has expired" - {
 
-        "must fail with InsufficientConfidenceLevel" in {
+      "must fail with BearerTokenExpired" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[InsufficientConfidenceLevel] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[BearerTokenExpired] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user used an unaccepted auth provider" - {
+    "the user doesn't have sufficient enrolments" - {
 
-        "must fail with UnsupportedAuthProvider" in {
+      "must fail with InsufficientEnrolments" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedAuthProvider] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[InsufficientEnrolments] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user has an unsupported affinity group" - {
+    "the user doesn't have sufficient confidence level" - {
 
-        "must fail with UnsupportedAffinityGroup" in {
+      "must fail with InsufficientConfidenceLevel" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedAffinityGroup] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[InsufficientConfidenceLevel] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
-      "the user has an unsupported credential role" - {
+    "the user used an unaccepted auth provider" - {
 
-        "must fail with UnsupportedCredentialRole" in {
+      "must fail with UnsupportedAuthProvider" in {
 
-          val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-          running(application) {
-            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
-            val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), bodyParsers)
-            val controller = new Harness(authAction)
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
 
-            intercept[UnsupportedCredentialRole] {
-              await(controller.onPageLoad()(FakeRequest()))
-            }
+          intercept[UnsupportedAuthProvider] {
+            await(controller.onPageLoad()(FakeRequest()))
           }
         }
       }
+    }
 
+    "the user has an unsupported affinity group" - {
+
+      "must fail with UnsupportedAffinityGroup" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
+
+          intercept[UnsupportedAffinityGroup] {
+            await(controller.onPageLoad()(FakeRequest()))
+          }
+        }
+      }
+    }
+
+    "the user has an unsupported credential role" - {
+
+      "must fail with UnsupportedCredentialRole" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), mockNGRConnector, mockAppConfig, bodyParsers)
+          val controller = new Harness(authAction)
+
+          intercept[UnsupportedCredentialRole] {
+            await(controller.onPageLoad()(FakeRequest()))
+          }
+        }
+      }
     }
   }
 

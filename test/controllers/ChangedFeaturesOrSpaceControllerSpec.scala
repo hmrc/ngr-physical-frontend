@@ -30,7 +30,7 @@ import scala.concurrent.Future
 class ChangedFeaturesOrSpaceControllerSpec
   extends ControllerSpecSupport {
   lazy val view: ChangedFeaturesOrSpaceView = inject[ChangedFeaturesOrSpaceView]
-  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, fakeAuth, fakeReg, fakeData(None))(mockConfig)
+  private val controller = new ChangedFeaturesOrSpaceController(mcc, view, fakeAuth, fakeData(None))(mockConfig)
 
   "GET /" should {
 
