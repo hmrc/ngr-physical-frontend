@@ -54,13 +54,13 @@ class AuthenticatedIdentifierAction @Inject()(
         Retrievals.internalId and
         Retrievals.confidenceLevel
 
-    authorised().retrieve(retrievals) {
-      case Some(credentials) ~ Some(internalId) ~ confidenceLevel if confidenceLevel.level >= L250.level =>
-        isRegistered(credentials.providerId).flatMap {
-          case true => block(IdentifierRequest(request, internalId, credentials.providerId))
+    authorised(ConfidenceLevel.L250).retrieve(retrievals) {
+      case Some(credentials) ~ Some(internalId) ~ confidenceLevel => 
+       isRegistered(credentials.providerId).flatMap {
+          case true => block(IdentifierRequest(request = request, userId = internalId, credId = credentials.providerId))
           case false => redirectToRegister()
         }
-      case _ ~ _ ~ confidenceLevel => throw new Exception("confidenceLevel not met")
+      case credentials ~ internalId ~ confidenceLevel => throw new Exception(s"Either the confidenceLevel of 250 not met $confidenceLevel or credentials or internalId is missing")
 
     } recover {
       case ex: Throwable =>

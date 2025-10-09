@@ -129,7 +129,7 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
-          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ Some("id") ~ ConfidenceLevel.L50
+          val retrieval: AuthRetrievals = Some(Credentials("id", "provider")) ~ None ~ ConfidenceLevel.L50
 
           when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())).thenReturn(Future.successful(
             retrieval
@@ -141,7 +141,7 @@ class AuthActionSpec extends SpecBase with BeforeAndAfterEach {
           val results = intercept[Exception] {
             await(controller.onPageLoad()(FakeRequest("", "")))
           }
-          results.getMessage mustBe "confidenceLevel not met"
+          results.getMessage mustBe "Either the confidenceLevel of 250 not met 50 or credentials or internalId is missing"
         }
       }
     }

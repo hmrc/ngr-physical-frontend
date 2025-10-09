@@ -38,7 +38,7 @@ class DataRetrievalActionImpl @Inject()(
     sessionRepository.get(request.credId).flatMap { userAnswersOpt =>
       ngrConnector.getLinkedProperty(CredId(request.credId)).map {
         case Some(property) =>
-          OptionalDataRequest(request.request, request.credId, userAnswersOpt, property)
+          OptionalDataRequest(request = request.request, userId = request.credId, userAnswers = userAnswersOpt, property = property)
         case None => throw new NotFoundException("Property not found")
       }
     }
