@@ -47,5 +47,6 @@ content = HtmlContent(hintHtml)
 value = form(name).value,
 errorMessage = errorMessage.map(error => ErrorMessage(content = Text(error))),
 attributes = attributes,
+multiple = Some(false),
 javascript = Some(true)
 ))

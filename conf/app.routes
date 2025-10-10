@@ -210,7 +210,7 @@ POST       /declaration-physical                                                
 GET        /property-change-details-sent                                         controllers.SubmissionConfirmationController.onPageLoad()
 
 GET        /not-told-us-about-any-changes-to-property                            controllers.NotToldAnyChangesController.show
-GET        /supporting-document-upload                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String])
-POST       /supporting-document-upload-cancel                                    controllers.UploadDocumentController.onCancel(uploadId : Option[models.upscan.UploadId])
-GET        /supporting-document-uploaded                                         controllers.UploadedDocumentController.show(uploadId : Option[models.upscan.UploadId])
-POST       /supporting-document-uploaded                                         controllers.UploadedDocumentController.onSubmit(uploadId : Option[models.upscan.UploadId], inProgress: Boolean)
+GET        /upload-supporting-document                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String])
+POST       /upload-supporting-document-upload                                    controllers.UploadDocumentController.onCancel(uploadId : Option[models.upscan.UploadId])
+GET        /uploaded-supporting-document                                         controllers.UploadedDocumentController.show(uploadId : Option[models.upscan.UploadId])
+POST       /uploaded-supporting-document                                         controllers.UploadedDocumentController.onSubmit(uploadId : Option[models.upscan.UploadId], inProgress: Boolean)

@@ -39,6 +39,7 @@ import viewmodels.govuk.all.{ActionItemViewModel, SummaryListRowViewModel}
 import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
 import models.UserAnswers
+import scala.concurrent.blocking
 
 import javax.inject.{Inject, Singleton}
 import scala.:+
@@ -114,18 +115,22 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
       Future.sequence(uploadStatusesCall).map(_.flatten) map {
         UploadStatuses =>
           val inProgress = containsInProgress(UploadStatuses)
-
-          Ok(view(
-            createDefaultNavBar,
-            showUploadProgress(UploadStatuses),
-            request.property.addressFull,
-            inProgress,
-            routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
-          ))
+//          if (inProgress) {
+//            blocking(Thread.sleep(1000))
+//            Redirect(routes.UploadedDocumentController.show(uploadId))
+//          } else {
+            Ok(view(
+              createDefaultNavBar,
+              showUploadProgress(UploadStatuses),
+              request.property.addressFull,
+              inProgress,
+              routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
+            ))
+//          }
       }
     }
   }
-
+  
   def onSubmit(uploadId: Option[UploadId], inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
     if (inProgress)
