@@ -214,3 +214,6 @@ GET        /upload-supporting-document                                          
 POST       /upload-supporting-document-upload                                    controllers.UploadDocumentController.onCancel(uploadId : Option[models.upscan.UploadId])
 GET        /uploaded-supporting-document                                         controllers.UploadedDocumentController.show(uploadId : Option[models.upscan.UploadId])
 POST       /uploaded-supporting-document                                         controllers.UploadedDocumentController.onSubmit(uploadId : Option[models.upscan.UploadId], inProgress: Boolean)
+
+GET        /removeFile                                                           controllers.RemoveFileController.onPageLoad(uploadId: String)
+POST       /removeFile                                                           controllers.RemoveFileController.onSubmit(uploadId: String)

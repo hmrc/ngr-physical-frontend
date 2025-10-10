@@ -49,7 +49,6 @@ object UploadId {
   def generate(): UploadId =
     UploadId(java.util.UUID.randomUUID().toString)
 
-  // Make sure this is *inside the companion object, but not inside generate()*
   implicit val uploadIdFormat: Format[UploadId] = new Format[UploadId] {
     override def reads(json: JsValue): JsResult[UploadId] =
       json.validate[String].map(UploadId(_))
