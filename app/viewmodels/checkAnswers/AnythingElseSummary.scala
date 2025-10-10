@@ -42,11 +42,11 @@ object AnythingElseSummary {
             ))),
           answer.text map { info =>
             SummaryListRowViewModel(
-              key = "anythingElse.heading",
+              key = "anythingElse.inputTitle",
               value = ValueViewModel(info),
               actions = Seq(
                 ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
-                  .withVisuallyHiddenText(messages("anythingElse.heading"))
+                  .withVisuallyHiddenText(messages("anythingElse.inputTitle"))
               )
             )
           }
