@@ -127,7 +127,7 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false and userAnswers is not empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage, HowMuchOfProperty.AllOf).success.value
+        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage, HowMuchOfProperty.NoneOf).success.value
         val result = controller(Some(userAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)

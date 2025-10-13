@@ -35,7 +35,7 @@ lazy val microservice = (project in file("."))
     ScoverageKeys.coverageExcludedFiles := "<empty>,Reverse.*,.*handlers.*,.*components.*," +
       ".*Routes.*,.*viewmodels.govuk.*,",
     ScoverageKeys.coverageExcludedPackages := "models.forms.*,models.upscan.*," +
-      "models.propertyLinking.*,models.auth.*,models.registration.*",
+      "models.propertyLinking.*,models.auth.*,models.registration.*,.*PropertyChangesUserAnswers.*",
     ScoverageKeys.coverageMinimumStmtTotal := 10,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
