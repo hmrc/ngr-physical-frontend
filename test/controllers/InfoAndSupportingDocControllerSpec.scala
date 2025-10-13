@@ -37,7 +37,6 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
     mcc,
     view,
     fakeAuth,
-    fakeReg,
     fakeData(None)
   )(mockConfig)
 

@@ -24,10 +24,9 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
-  val registrationHost: String
-  val dashboardHost: String
-  val ngrPhysicalFrontendUrl: String
+  val registrationUrl: String
   val dashboardUrl: String
+  val ngrPhysicalFrontendUrl: String
   val ngrLogoutUrl: String
   val nextGenerationRatesUrl: String
   val features: Features
@@ -42,14 +41,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val contactFormServiceIdentifier = "ngr-physical-frontend"
-  override val ngrPhysicalFrontendUrl: String = s"$physicalHost/ngr-physical-frontend"
-  def feedbackUrl(implicit request: RequestHeader): String =
-    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
-
-  private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/ngr-physical-frontend"
+  private lazy val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  private lazy val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
+  private lazy val physicalHost: String = getString("microservice.services.physical-frontend.host")
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
@@ -63,9 +57,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  override val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
+  override val registrationUrl: String = s"$registrationHost/ngr-login-register-frontend/register"
+  override val ngrPhysicalFrontendUrl: String = s"$physicalHost/ngr-physical-frontend"
   override val dashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
-  override val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
   override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
   override val features = new Features()(configuration)
@@ -73,13 +67,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   override val upscanHost: String = sc.baseUrl("upscan")
   override val callbackEndpointTarget: String = getString("upscan.callback-endpoint")
 
-
-  private def getString(key: String): String =
-    configuration.getOptional[String](key).filter(!_.isBlank).getOrElse(throwConfigNotFoundError(key))
-
-  private def throwConfigNotFoundError(key: String): String =
-    throw new RuntimeException(s"Could not find config key '$key'")
-
-  lazy val physicalHost: String = getString("microservice.services.physical-frontend.host")
+  def getString(key: String): String =
+    configuration.get[String](key)
 
 }

@@ -32,7 +32,7 @@ import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.test.{FakeRequest, Helpers}
 import services.UploadProgressTracker
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryList, Text, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, Key, SummaryListRow}
 import viewmodels.Section
 
@@ -83,6 +83,7 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers {
       sections(3).rows.rows.size mustBe 2
       sections(4).title mustBe Some("checkYourAnswers.additionalInformation.heading")
       sections(4).rows.rows.size mustBe 2
+      sections(4).rows.rows.tail.head.key.content mustBe Text("anythingElse.inputTitle")
       sections(5).title mustBe Some("checkYourAnswers.supportingDocuments.heading")
       sections(5).rows.rows.size mustBe 2
     }
