@@ -33,6 +33,8 @@ trait AppConfig {
   val uploadRedirectTargetBase: String
   val upscanHost: String
   val callbackEndpointTarget: String
+  val timeout: Int
+  val countdown: Int
 }
 
 @Singleton
@@ -53,8 +55,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
     "cy" -> Lang("cy")
   )
 
-  val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
-  val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
+  override val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
+  override val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   override val registrationUrl: String = s"$registrationHost/ngr-login-register-frontend/register"
