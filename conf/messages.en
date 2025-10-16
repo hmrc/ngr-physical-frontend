@@ -476,3 +476,6 @@ uploadDocument.error.emptyFile = The selected file is empty
 uploadDocument.error.format = The selected file must be a PDF or image (PNG & JPG)
 uploadDocument.error.size = The selected file must be 25MB or smaller
 
+removeFile.heading = Are you sure you want to remove the file {0}
+removeFile.error.required = Select yes if you are sure you want to remove the file
+removeFile.change.hidden = remove uploaded file

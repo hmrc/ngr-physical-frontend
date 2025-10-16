@@ -27,6 +27,7 @@
 
 @(navigationBarContent: NavigationBarContent, summaryList: SummaryList, addressFull: String, inProgress: Boolean, action: play.api.mvc.Call)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
+
 @refreshHeader = {
     <meta http-equiv="refresh" content="1"/>
 }
@@ -36,32 +37,34 @@ pageTitle = Some("ngr-physical-frontend"),
 showBackLink = true,
 navigationBarContent = Some(navigationBarContent),
 additionalHeadBlock = inProgress match {
-case true => Some(refreshHeader)
-case _                       => None
-}
+        case true => Some(refreshHeader)
+        case _                       => None
+    }
 ) {
-@formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None)) {
-<span class="govuk-caption-m">@addressFull</span>
-@h1(msg = messages("uploadedDocument.heading"), size = "l", id = Some("page-heading"))
+    @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None)) {
+        <span class="govuk-caption-m">@addressFull</span>
+        @h1(msg = messages("uploadedDocument.heading"), size = "l", id = Some("page-heading"))
 
-@p(id = Some("para-1")) { @messages("uploadDocument.p1") }
+        @p(id = Some("para-1")) { @messages("uploadDocument.p1") }
 
-@link(label = messages("uploadDocument.link"), hrefUrl="", afterLinkContent=".", beforeLinkContent= messages("uploadDocument.p2"))
+        @link(label = messages("uploadDocument.link"), hrefUrl="", afterLinkContent=".", beforeLinkContent= messages("uploadDocument.p2"))
 
-@govukButton(ButtonViewModel(messages("uploadedDocument.uploadAnother")).asSecondaryButton())
+        @govukButton(ButtonViewModel(messages("uploadedDocument.uploadAnother")).asSecondaryButton())
 
-@govukSummaryList(summaryList)
+        @govukSummaryList(summaryList)
+    }
+
+    @formHelper(action = action) {
+        @if(inProgress){
+        @govukButton(
+        ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue").disabled()
+        )
+        } else {
+            @govukButton(
+                ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
+            )
+        }
+    }
 
 }
-@formHelper(action = action) {
-@if(inProgress){
-@govukButton(
-ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue").disabled()
-)
-}else{
-@govukButton(
-ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
-)
-}
-}
-}
+
