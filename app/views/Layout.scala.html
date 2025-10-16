@@ -32,6 +32,7 @@
     standardBetaBanner: StandardBetaBanner,
     fullWidthLayout: FullWidthLayout,
     twoThirdsLayout: TwoThirdsLayout,
+    hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcStandardPage: HmrcStandardPage,
     stylesheets: Stylesheets,
     navigationBarComponent: navigationBarComponent
@@ -41,12 +42,26 @@
     showBackLink: Boolean = false,
     fullWidth: Boolean = false,
     navigationBarContent: Option[NavigationBarContent] = None,
-additionalHeadBlock: Option[Html] = None
+    additionalHeadBlock: Option[Html] = None,
+    timeout: Boolean = true
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages,  appConfig: AppConfig)
 
 @headScripts = {
     @stylesheets()
-@additionalHeadBlock
+    @additionalHeadBlock
+    @if(timeout) {
+        @hmrcTimeoutDialog(TimeoutDialog(
+            timeout             = Some(appConfig.timeout),
+            countdown           = Some(appConfig.countdown),
+            keepAliveUrl        = Some(routes.KeepAliveController.keepAlive().url),
+            keepAliveButtonText = Some(messages("timeout.keepAlive")),
+            signOutUrl          = Some(controllers.auth.routes.AuthController.signOut().url),
+            signOutButtonText   = Some(messages("timeout.signOut")),
+            title               = Some(messages("timeout.title")),
+            message             = Some(messages("timeout.message")),
+            language            = Some(messages.lang.code)
+        ))
+    }
 }
 
 @navbar = {
