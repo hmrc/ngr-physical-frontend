@@ -28,10 +28,18 @@
 @(navigationBarContent: NavigationBarContent, summaryList: SummaryList, addressFull: String, inProgress: Boolean, action: play.api.mvc.Call)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 
+@refreshHeader = {
+    <meta http-equiv="refresh" content="1"/>
+}
+
 @layout(
 pageTitle = Some("ngr-physical-frontend"),
 showBackLink = true,
-navigationBarContent = Some(navigationBarContent)
+navigationBarContent = Some(navigationBarContent),
+additionalHeadBlock = inProgress match {
+        case true => Some(refreshHeader)
+        case _                       => None
+    }
 ) {
     @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None)) {
         <span class="govuk-caption-m">@addressFull</span>
