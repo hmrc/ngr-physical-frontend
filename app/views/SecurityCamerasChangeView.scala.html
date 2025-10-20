@@ -19,6 +19,7 @@
 @import config.AppConfig
 @import views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import viewmodels.LabelSize
 
 @this(
     layout: Layout,
@@ -39,12 +40,11 @@
         }
 
         <span class="govuk-caption-m">@address</span>
-        <h1 class="govuk-heading-l">@messages("securityCamerasChange.heading")</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label()
+                label = LabelViewModel(messages("securityCamerasChange.title")).asPageHeading(LabelSize.Large)
             )
             .asNumeric()
             .withWidth(Fixed4)
