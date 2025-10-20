@@ -31,7 +31,7 @@ class SecurityCamerasChangeViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
-    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > h1"
+    val heading = "#main-content > div > div.govuk-grid-column-two-thirds > form > div > h1 > label"
     val input = "#value"
     val button = "#continue"
   }
