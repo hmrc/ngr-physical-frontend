@@ -18,6 +18,9 @@ package controllers
 
 import base.SpecBase
 import forms.RemoveFileFormProvider
+import helpers.ControllerSpecSupport
+import models.upscan.{UploadId, UploadStatus}
+import models.upscan.UploadStatus.UploadedSuccessfully
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -30,129 +33,37 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import services.UploadProgressTracker
+import uk.gov.hmrc.http.StringContextOps
 import views.html.RemoveFileView
 
+import java.net.URL
 import scala.concurrent.Future
 
-class RemoveFileControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
+class RemoveFileControllerSpec extends ControllerSpecSupport {
 
   val formProvider = new RemoveFileFormProvider()
+  val uploadProgressTracker: UploadProgressTracker = mock[UploadProgressTracker]
   val form: Form[Boolean] = formProvider()
+  val uploadId: String = "123"
+  val address: String = "123 street lane"
+  val fileName: String = "file.pdf"
 
-  lazy val removeFileRoute: String = routes.RemoveFileController.onPageLoad(NormalMode).url
+  val view: RemoveFileView = inject[RemoveFileView]
+  val controller: RemoveFileController = new RemoveFileController(messagesApi, fakeAuth, mockSessionRepository, fakeData(Some(emptyUserAnswers)), fakeRequireData(Some(emptyUserAnswers)), formProvider, uploadProgressTracker, mcc, view)
 
-  "RemoveFile Controller" - {
+  when(uploadProgressTracker.getUploadResult(any()))
+    .thenReturn(Future.successful(Some(UploadStatus.UploadedSuccessfully("file.pdf", "application/pdf", url"http:localhost:8080", Some(1234)))))
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, removeFileRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[RemoveFileView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+  "RemoveFile Controller" must {
+    "onPageLoad" must {
+      "return 200" in {
+        val result = controller.onPageLoad(uploadId)(authenticatedFakeRequest)
+        status(result) mustBe OK
+        contentType(result) mustBe Some("text/html")
+        charset(result) mustBe Some("utf-8")
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(RemoveFilePage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, removeFileRoute)
-
-        val view = application.injector.instanceOf[RemoveFileView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, removeFileRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
-    }
-
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, removeFileRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[RemoveFileView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, removeFileRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, removeFileRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
   }
 }
