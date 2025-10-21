@@ -42,7 +42,7 @@ import views.html.UploadedDocumentView
 
 import javax.inject.{Inject, Singleton}
 import scala.:+
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, blocking}
 
 @Singleton
 class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgressTracker,
@@ -54,11 +54,13 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
                                            val controllerComponents: MessagesControllerComponents)(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
-  private def showUploadProgress(allUploadStatus: Seq[UploadStatus])(implicit messages: Messages): SummaryList = {
-    SummaryList(allUploadStatus.map(uploadStatus => createRow(uploadStatus)))
+  private def showUploadProgress(allUploadStatus: Map[String, UploadStatus])(implicit messages: Messages): SummaryList = {
+    SummaryList(allUploadStatus.map { case (uploadId, uploadStatus) =>
+      createRow(uploadId, uploadStatus)
+    }.toSeq)
   }
 
-  private def createRow(uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
+  private def createRow(uploadId: String, uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
     uploadStatus match
       case UploadStatus.UploadedSuccessfully(name, mimeType, downloadUrl, size) =>
             SummaryListRowViewModel(
@@ -66,7 +68,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
               value = Value(
                 HtmlContent(s"""<span class="govuk-tag govuk-tag--green govuk-!-margin-0">${messages("uploadedDocument.uploaded").mkString} </span> """)
               ).withCssClass("govuk-!-text-align-right"),
-              actions = Seq(ActionItemViewModel(messages("site.remove"), ""))
+              actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url))
             )
       case UploadStatus.InProgress =>
           SummaryListRowViewModel(
@@ -74,7 +76,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
             value = ValueViewModel(
               HtmlContent(s"""<span class="govuk-tag govuk-tag--yellow govuk-!-margin-0">${messages("uploadedDocument.uploading").mkString} </span> """)
             ).withCssClass("govuk-!-text-align-right"),
-            actions = Seq(ActionItemViewModel(messages("site.remove"), ""))
+            actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url))
       )
       case UploadStatus.Failed =>
         SummaryListRowViewModel(
@@ -82,7 +84,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
           value =  ValueViewModel(
             HtmlContent(s"""<span class="govuk-tag govuk-tag--red govuk-!-margin-0">${messages("uploadedDocument.failed").mkString} </span> """)
           ).withCssClass("govuk-!-text-align-right"),
-          actions = Seq(ActionItemViewModel(messages("site.remove"), "").withCssClass("govuk-grid-column-one-quarter"))
+          actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url).withCssClass("govuk-grid-column-one-quarter"))
       )
   }
 
@@ -103,25 +105,28 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     }
 
     if (currentAnswers.isEmpty) {
-      Future.successful(BadRequest("no files uploaded"))
+      Future.successful(Redirect(routes.UploadDocumentController.onPageLoad(None)))
     } else {
       request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
         updatedAnswers => sessionRepository.set(updatedAnswers)
       }
 
-      val uploadStatusesCall: Seq[Future[Option[UploadStatus]]] = currentAnswers.map(value => uploadProgressTracker.getUploadResult(UploadId(value)))
+      val uploadStatusCalls: Seq[Future[Option[(String, UploadStatus)]]] =
+        currentAnswers.map { uploadId =>
+          uploadProgressTracker.getUploadResult(UploadId(uploadId)).map {
+            _.map(status => uploadId -> status)
+          }
+        }
 
-      Future.sequence(uploadStatusesCall).map(_.flatten) map {
-        UploadStatuses =>
-          val inProgress = containsInProgress(UploadStatuses)
-
-          Ok(view(
-            createDefaultNavBar,
-            showUploadProgress(UploadStatuses),
-            request.property.addressFull,
-            inProgress,
-            routes.UploadedDocumentController.onSubmit(uploadId, inProgress),
-          ))
+      Future.sequence(uploadStatusCalls).map(_.flatten.toMap).map { uploadStatuses =>
+        val inProgress = containsInProgress(uploadStatuses.values.toSeq)
+        Ok(view(
+          createDefaultNavBar,
+          showUploadProgress(uploadStatuses),
+          request.property.addressFull,
+          inProgress,
+          routes.UploadedDocumentController.onSubmit(uploadId, inProgress)
+        ))
       }
     }
   }

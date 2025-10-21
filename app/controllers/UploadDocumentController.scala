@@ -100,8 +100,8 @@ class UploadDocumentController @Inject()(
 
   private def hasUploaded()(implicit request: DataRequest[AnyContent]): Boolean = {
     request.userAnswers.get(UploadDocumentsPage) match {
-      case Some(_) => true
-      case None => false
+      case Some(uploads) if uploads.nonEmpty => true
+      case _ => false
     }
   }
 

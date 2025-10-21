@@ -122,7 +122,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
       "Return BadRequest when no file has been uploaded no files present" in {
 
         val result: Future[Result] = controller(Some(emptyUserAnswers)).show(None)(fakeRequest)
-        status(result) mustBe BAD_REQUEST
+        status(result) mustBe 303
       }
 
     }
