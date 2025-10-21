@@ -43,7 +43,7 @@ import scala.concurrent.Future
 class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
   lazy val pageView: UploadedDocumentView = inject[UploadedDocumentView]
-  private val fakeRequest = FakeRequest("GET", "/supporting-document-uploaded")
+  private val fakeRequest = FakeRequest("GET", "/upload-supporting-document")
 
 
   def controller(userAnswers: Option[UserAnswers]) = new UploadedDocumentController(
