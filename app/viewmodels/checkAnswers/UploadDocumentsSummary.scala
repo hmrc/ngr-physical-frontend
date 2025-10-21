@@ -34,7 +34,7 @@ object UploadDocumentsSummary  {
         key = name,
         value = Value(),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.UploadDocumentController.onPageLoad(None).url)
+          ActionItemViewModel("site.change", routes.UploadedDocumentController.show(None).url)
         )
       )
     }
