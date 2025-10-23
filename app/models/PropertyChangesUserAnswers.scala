@@ -17,6 +17,7 @@
 package models
 
 import models.registration.CredId
+import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage}
 import play.api.libs.json.{Format, Json, OFormat}
 
 import java.time.LocalDate
@@ -25,8 +26,8 @@ import java.time.LocalDate
 case class PropertyChangesUserAnswers(credId: CredId,
                                       dateOfChange: LocalDate,
                                       useOfSpace: Option[ChangeToUseOfSpace] = None,
-                                      internalFeatures: Option[InternalFeature] = None,
-                                      externalFeatures: Option[ExternalFeature] = None,
+                                      internalFeatures: Seq[(InternalFeature, String)],
+                                      externalFeatures: Seq[(ExternalFeature, String)],
                                       additionalInfo: Option[AnythingElseData] = None
                                      )
 

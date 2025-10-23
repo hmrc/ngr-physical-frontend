@@ -25,11 +25,14 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
-import models.UserAnswers
-import pages.{DeclarationPage, WhenCompleteChangePage}
+import models.registration.CredId
+import models.{ExternalFeature, InternalFeature, PropertyChangesUserAnswers, UserAnswers}
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, WhenCompleteChangePage}
+import play.api.libs.json.Json
 import repositories.SessionRepository
 import utils.UniqueIdGenerator
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationController @Inject()(
@@ -59,7 +62,8 @@ class DeclarationController @Inject()(
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef)) 
               _ <- sessionRepository.set(updatedAnswers)
             } yield Redirect(routes.SubmissionConfirmationController.onPageLoad()) 
-          case Some(value) => Future.successful(Redirect(routes.SubmissionConfirmationController.onPageLoad()))
+          case Some(value) =>
+            Future.successful(Redirect(routes.SubmissionConfirmationController.onPageLoad()))
         }
     }
 }

@@ -101,6 +101,11 @@ object ExternalFeature extends Enumerable.Implicits {
 
   }
 
+  def getAnswersToSend(userAnswers: UserAnswers): Seq[(ExternalFeature, String)] = {
+    ExternalFeature.values.map(feature => (feature, userAnswers.get(WhatHappenedTo.page(feature)).getOrElse("").toString()))
+      .filter {case (_, v) => v != ""}
+  }
+
   val pageSet: Seq[QuestionPage[WhatHappenedTo]] = Seq(
     WhatHappenedToLoadingBaysPage,
     WhatHappenedToLockupGaragesPage,
