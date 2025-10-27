@@ -50,7 +50,7 @@ class UploadDocumentController @Inject()(
 
   val attributes: Map[String, String] = Map(
     "accept" -> ".pdf,.png,.jpg,.jpeg",
-    "data-max-file-size" -> "100000000",
+    "data-max-file-size" -> "25000000",
     "data-min-file-size" -> "1000"
   )
 

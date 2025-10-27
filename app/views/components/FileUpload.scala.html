@@ -19,34 +19,34 @@
 @this(govukFileUpload : GovukFileUpload)
 
 @(
-form: Form[?],
-errorMessage: Option[String],
-id: String,
-name: String,
-label: String,
-isPageHeading: Boolean,
-headingMessageArgs: Seq[String] = Seq(),
-hint: Option[Html] = None,
-classes: Option[String] = None,
-labelHidden: Boolean = true,
-attributes: Map[String, String] = Map.empty
+    form: Form[?],
+    errorMessage: Option[String],
+    id: String,
+    name: String,
+    label: String,
+    isPageHeading: Boolean,
+    headingMessageArgs: Seq[String] = Seq(),
+    hint: Option[Html] = None,
+    classes: Option[String] = None,
+    labelHidden: Boolean = true,
+    attributes: Map[String, String] = Map.empty
 )(implicit messages: Messages)
 
 @govukFileUpload(uk.gov.hmrc.govukfrontend.views.html.components.FileUpload(
-id,
-name,
-classes = classes.fold("")(x => x),
-label = Label(
-content = Text(messages(label, headingMessageArgs*)),
-isPageHeading = isPageHeading,
-classes = if(isPageHeading) "govuk-label--l" else if (labelHidden) "govuk-visually-hidden" else ""
-),
-hint = hint.map(hintHtml => Hint(
-content = HtmlContent(hintHtml)
-)),
-value = form(name).value,
-errorMessage = errorMessage.map(error => ErrorMessage(content = Text(error))),
-attributes = attributes,
-multiple = Some(false),
-javascript = Some(true)
+    id,
+    name,
+    classes = classes.fold("")(x => x),
+    label = Label(
+    content = Text(messages(label, headingMessageArgs*)),
+    isPageHeading = isPageHeading,
+    classes = if(isPageHeading) "govuk-label--l" else if (labelHidden) "govuk-visually-hidden" else ""
+    ),
+    hint = hint.map(hintHtml => Hint(
+    content = HtmlContent(hintHtml)
+    )),
+    value = form(name).value,
+    errorMessage = errorMessage.map(error => ErrorMessage(content = Text(error))),
+    attributes = attributes,
+    multiple = Some(false),
+    javascript = Some(true)
 ))
