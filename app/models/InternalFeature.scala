@@ -60,6 +60,14 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
+  def getAnswersToSend(userAnswers: UserAnswers): Seq[(InternalFeature, String)] = {
+    InternalFeature.values.map {
+      case feature: InternalFeatureGroup1 => (feature, userAnswers.get(HowMuchOfProperty.page(feature)).getOrElse("").toString())
+      case SecurityCamera => (SecurityCamera, userAnswers.get(SecurityCamerasChangePage).getOrElse("").toString())
+    }.filter {case (_, v) => v != ""}
+  }
+
+
   def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
     InternalFeature.values.flatMap {
       case feature: InternalFeatureGroup1 =>
