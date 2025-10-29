@@ -57,7 +57,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
   private def showUploadProgress(allUploadStatus: Map[String, UploadStatus])(implicit messages: Messages): SummaryList = {
     SummaryList(allUploadStatus.map { case (uploadId, uploadStatus) =>
       createRow(uploadId, uploadStatus)
-    }.toSeq)
+    }.toSeq).withCssClass("govuk-summary-list--long-key")
   }
 
   private def createRow(uploadId: String, uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
