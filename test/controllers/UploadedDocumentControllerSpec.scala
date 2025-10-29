@@ -94,6 +94,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
+        content must include ("govuk-summary-list--long-key")
         content must include(contentP)
         content must include("Uploading")
       }
