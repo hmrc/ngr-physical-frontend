@@ -18,11 +18,12 @@ package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
+import helpers.TestData
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.UnauthorisedView
 
-class UnauthorisedControllerSpec extends SpecBase {
+class UnauthorisedControllerSpec extends SpecBase with TestData {
 
   "Unauthorised Controller" - {
 

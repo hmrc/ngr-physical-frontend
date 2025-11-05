@@ -22,13 +22,13 @@ import play.api.libs.json.{Format, Json, OFormat}
 
 import java.time.LocalDate
 
-//TODO add upload to model NGR-419
 case class PropertyChangesUserAnswers(credId: CredId,
                                       dateOfChange: LocalDate,
                                       useOfSpace: Option[ChangeToUseOfSpace] = None,
                                       internalFeatures: Seq[(InternalFeature, String)],
                                       externalFeatures: Seq[(ExternalFeature, String)],
-                                      additionalInfo: Option[AnythingElseData] = None
+                                      additionalInfo: Option[AnythingElseData] = None,
+                                      declarationRef: Option[String] = None
                                      )
 
 object PropertyChangesUserAnswers {

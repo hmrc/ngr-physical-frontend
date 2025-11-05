@@ -18,19 +18,19 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import helpers.TestData
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 
 import java.net.URLEncoder
-
 import scala.concurrent.Future
 
-class AuthControllerSpec extends SpecBase with MockitoSugar {
+class AuthControllerSpec extends SpecBase with MockitoSugar with TestData {
 
   "signOut" - {
 

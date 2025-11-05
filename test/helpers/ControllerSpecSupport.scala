@@ -16,7 +16,7 @@
 
 package helpers
 
-import connectors.UpscanConnector
+import connectors.{NGRNotifyConnector, UpscanConnector}
 import controllers.actions.{FakeDataRequiredAction, FakeDataRetrievalAction, FakeIdentifierAction}
 import models.UserAnswers
 import navigation.Navigator
@@ -31,10 +31,10 @@ trait ControllerSpecSupport extends TestSupport with TestData {
   def fakeData(answers: Option[UserAnswers]) = new FakeDataRetrievalAction(answers)
   def fakeRequireData(answers: Option[UserAnswers]) = new FakeDataRequiredAction(answers)
   val mockUpscanConnector: UpscanConnector = mock[UpscanConnector]
+  val mockNGRNotifyConnector: NGRNotifyConnector = mock[NGRNotifyConnector]
   val mockUploadProgressTracker: UploadProgressTracker = mock[UploadProgressTracker]
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   val navigator: Navigator = inject[Navigator]
-  val emptyUserAnswers: UserAnswers = UserAnswers("id")
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   

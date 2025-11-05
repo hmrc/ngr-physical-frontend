@@ -35,6 +35,7 @@ trait AppConfig {
   val callbackEndpointTarget: String
   val timeout: Int
   val countdown: Int
+  val nextGenerationRatesNotifyUrl: String
 }
 
 @Singleton
@@ -64,6 +65,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   override val dashboardUrl: String = s"$dashboardHost/ngr-dashboard-frontend/dashboard"
   override val ngrLogoutUrl: String = s"$dashboardHost/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = sc.baseUrl("next-generation-rates")
+  override val nextGenerationRatesNotifyUrl: String = sc.baseUrl("ngr-notify")
   override val features = new Features()(configuration)
   override val uploadRedirectTargetBase: String = getString("upscan.upload-redirect-target-base")
   override val upscanHost: String = sc.baseUrl("upscan")

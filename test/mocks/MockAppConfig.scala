@@ -33,4 +33,5 @@ class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   override val ngrPhysicalFrontendUrl: String = "http://localhost:1506"
   override val callbackEndpointTarget: String = "http://localhost:1506/internal/callback-from-upscan"
   override val uploadRedirectTargetBase: String = "http://localhost:1504"
+  override val nextGenerationRatesNotifyUrl: String = "http://localhost:1515"
 }

@@ -19,60 +19,101 @@ package controllers
 import base.SpecBase
 import config.FrontendAppConfig
 import helpers.{ControllerSpecSupport, TestData}
+import models.ExternalFeature.LoadingBays
+import models.InternalFeature.AirConditioning
 import models.NavBarPageContents.createDefaultNavBar
+import models.{AnythingElseData, ChangeToUseOfSpace, HowMuchOfProperty, NotifyPropertyChangeResponse, UseOfSpaces, UserAnswers, WhatHappenedTo}
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import pages.DeclarationPage
+import org.scalatest.TryValues
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedSpacePage, SecurityCamerasChangePage, WhenCompleteChangePage}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.DeclarationView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
-class DeclarationControllerSpec extends SpecBase with TestData {
+class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
-  "Declaration Controller" - {
-    "Return OK and the correct view" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+  lazy val view: DeclarationView = inject[DeclarationView]
 
-      implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
-      running(application) {
-        val request = FakeRequest(GET, routes.DeclarationController.show.url)
-        val result = route(application, request).value
-        val view = application.injector.instanceOf[DeclarationView]
+  def minUserAnswers: UserAnswers =
+    emptyUserAnswers
+      .set(DeclarationPage, "some-reference").success.value
+      .set(AnythingElsePage, AnythingElseData(false, None)).success.value
+      .set(
+        ChangeToUseOfSpacePage,
+        ChangeToUseOfSpace(
+          selectUseOfSpace = Set.empty[UseOfSpaces],
+          hasPlanningPermission = false,
+          permissionReference = None
+        )).success.value
+      .set(HaveYouChangedSpacePage, false).success.value
+      .set(HowMuchOfProperty.page(AirConditioning), HowMuchOfProperty.values.head).success.value
+      .set(SecurityCamerasChangePage, 0).success.value
+      .set(WhatHappenedTo.page(LoadingBays), WhatHappenedTo.Added).success.value
+      .set(WhenCompleteChangePage, LocalDate.of(2025, 8, 12)).success.value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar())(request, messages(application)).toString
+  def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = DeclarationController(
+    mcc,
+    view,
+    fakeAuth,
+    fakeData(userAnswers),
+    fakeRequireData(userAnswers),
+    mockSessionRepository,
+    mockNGRNotifyConnector
+  )
+
+  "Declaration Controller" must {
+
+    ".show" should {
+      "correctly render page" in {
+        val result = controllerWithUserAnswers(Some(minUserAnswers)).show(authenticatedFakeRequest)
+        status(result) mustBe 200
+        contentType(result) mustBe Some("text/html")
+        charset(result) mustBe Some("utf-8")
       }
+
     }
 
-    "redirect when accepted and DeclarationPage data is empty" in {
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+    ".next" should {
+      "redirect when accepted and DeclarationPage data is empty" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val result = controllerWithUserAnswers(Some(emptyUserAnswers)).next(authenticatedFakeRequest)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(POST, routes.DeclarationController.next.url)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.SubmissionConfirmationController.onPageLoad().url
+        status(result) mustBe BAD_REQUEST
       }
-    }
 
-    "redirect when accepted and DeclarationPage data is present" in {
-      val userAnswers = emptyUserAnswers.set(DeclarationPage, "some-reference").success.value
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      "redirect when accepted and DeclarationPage data is present without generated Reference" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        when(mockNGRNotifyConnector.postPropertyChanges(any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(DeclarationPage).success.value)).next(authenticatedFakeRequest)
 
-      running(application) {
-        val request = FakeRequest(POST, routes.DeclarationController.next.url)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.SubmissionConfirmationController.onPageLoad().url
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad().url
       }
+
+      "redirect when accepted and DeclarationPage data is present without mandatory field when change completed" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        when(mockNGRNotifyConnector.postPropertyChanges(any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(WhenCompleteChangePage).success.value)).next(authenticatedFakeRequest)
+
+        status(result) mustBe BAD_REQUEST
+      }
+
+      "redirect when accepted and DeclarationPage data is present with generated Reference" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        when(mockNGRNotifyConnector.postPropertyChanges(any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        val result = controllerWithUserAnswers(Some(minUserAnswers)).next(authenticatedFakeRequest)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad().url
+      }
+
     }
   }
+  
 }

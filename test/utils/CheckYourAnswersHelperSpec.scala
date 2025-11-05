@@ -17,6 +17,7 @@
 package utils
 
 import base.SpecBase
+import helpers.TestData
 import models.{AnythingElseData, ChangeToUseOfSpace}
 import models.HowMuchOfProperty.{AllOf, SomeOf}
 import models.UseOfSpaces.Rearrangedtheuseofspace
@@ -46,7 +47,7 @@ import java.net.URL
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.DurationInt
 
-class CheckYourAnswersHelperSpec extends SpecBase with Matchers {
+class CheckYourAnswersHelperSpec extends SpecBase with Matchers with TestData {
 
   implicit val messages: Messages = Helpers.stubMessagesApi().preferred(FakeRequest())
 

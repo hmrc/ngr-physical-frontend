@@ -16,7 +16,9 @@
 
 package helpers
 
+import models.UserAnswers
 import models.propertyLinking.{VMVProperty, Valuation}
+import pages.DeclarationPage
 
 import java.time.LocalDate
 
@@ -49,4 +51,8 @@ trait TestData {
       )
     )
   )
+
+  val userAnswersId: String = "id"
+
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 }
