@@ -21,8 +21,11 @@ import centralisedauthorisation.resourceclient.filters.ResourceClientFilter
 import centralisedauthorisation.resourceclient.modules.FrontendCentralisedAuthorisationModule
 import centralisedauthorisation.resourceclient.utils
 import config.AppConfig
+import connectors.NGRNotifyConnector
 import controllers.actions.*
-import models.UserAnswers
+import models.ExternalFeature.LoadingBays
+import models.InternalFeature.AirConditioning
+import models.{AnythingElseData, ChangeToUseOfSpace, HowMuchOfProperty, UseOfSpaces, UserAnswers, WhatHappenedTo}
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -34,6 +37,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar.mock
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedSpacePage, SecurityCamerasChangePage, UploadDocumentsPage, WhenCompleteChangePage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -42,6 +46,7 @@ import play.api.mvc.{AnyContent, BodyParser, Call, EssentialAction, MessagesCont
 import play.api.test.{FakeRequest, Injecting}
 import repositories.SessionRepository
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 trait SpecBase
@@ -51,10 +56,6 @@ trait SpecBase
     with OptionValues
     with ScalaFutures
     with IntegrationPatience {
-
-  val userAnswersId: String = "id"
-
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())

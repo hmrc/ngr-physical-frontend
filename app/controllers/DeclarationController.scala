@@ -18,6 +18,7 @@ package controllers
 
 import actions.*
 import config.AppConfig
+import connectors.NGRNotifyConnector
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -26,10 +27,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
-import models.{ExternalFeature, InternalFeature, PropertyChangesUserAnswers, UserAnswers}
+import models.{ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
 import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, WhenCompleteChangePage}
+import play.api.Logging
 import play.api.libs.json.Json
 import repositories.SessionRepository
+import sun.util.logging.resources.logging
 import utils.UniqueIdGenerator
 
 import java.time.LocalDate
@@ -41,8 +44,9 @@ class DeclarationController @Inject()(
                                        authenticate: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
-                                       sessionRepository: SessionRepository
-                                     )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
+                                       sessionRepository: SessionRepository,
+                                       connector: NGRNotifyConnector
+                                     )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport with Logging {
 
   val show: Action[AnyContent] =
     (authenticate andThen getData andThen requireData) {
@@ -52,18 +56,47 @@ class DeclarationController @Inject()(
 
   val next: Action[AnyContent] =
     (authenticate andThen getData andThen requireData).async  {
-      //TODO replace the current creating page object and storing number 
-      // and then sending the completed PropertyChangesUserAnswers when backend code is complete
       implicit request =>
-        request.userAnswers.get(DeclarationPage) match {
-          case None => 
-            val generateRef =  UniqueIdGenerator.generateId
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef)) 
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(routes.SubmissionConfirmationController.onPageLoad()) 
-          case Some(value) =>
-            Future.successful(Redirect(routes.SubmissionConfirmationController.onPageLoad()))
+
+        request.userAnswers.get(WhenCompleteChangePage) match {
+          case Some(date) =>
+            val userAnswers = PropertyChangesUserAnswers(
+              CredId(request.credId),
+              dateOfChange = date,
+              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage),
+              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers),
+              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers),
+              additionalInfo = request.userAnswers.get(AnythingElsePage)
+            )
+
+            request.userAnswers.get(DeclarationPage) match {
+              case None =>
+                val generateRef =  UniqueIdGenerator.generateId
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef))
+                  _ <- sessionRepository.set(updatedAnswers)
+                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)))
+                } yield response.error match {
+                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                  case Some(e) =>
+                    logger.error(s"[DeclarationController] error occurred: $e")
+                    BadRequest
+                }
+              case Some(value) =>
+                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value))).map {
+                  response => response.error match {
+                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                    case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
+                      BadRequest
+                  }
+                }
+            }
+
+          case None => logger.error(s"[DeclarationController] missing date of completion")
+            Future.successful(BadRequest)
         }
+        
+        
+      
     }
 }

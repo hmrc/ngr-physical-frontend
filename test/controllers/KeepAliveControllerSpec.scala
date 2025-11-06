@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import helpers.TestData
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -28,7 +29,7 @@ import repositories.SessionRepository
 
 import scala.concurrent.Future
 
-class KeepAliveControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class KeepAliveControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with TestData {
 
   override def beforeEach(): Unit = {
     reset(mockSessionRepository)
