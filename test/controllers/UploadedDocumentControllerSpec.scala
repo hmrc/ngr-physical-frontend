@@ -143,6 +143,14 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
     }
 
+    "method statusFragment" must {
+
+      "Return Ok" in {
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).statusFragment()(fakeRequest)
+        status(result) mustBe OK
+      }
+    }
+
 
   }
 }

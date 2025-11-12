@@ -19,7 +19,7 @@
 @import config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import views.html.components.*
-
+@import views.html.helper.CSPNonce
 
 
 
@@ -27,20 +27,12 @@
 
 @(navigationBarContent: NavigationBarContent, summaryList: SummaryList, addressFull: String, inProgress: Boolean, action: play.api.mvc.Call)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
-
-@refreshHeader = {
-    <meta http-equiv="refresh" content="1"/>
-}
-
 @layout(
 pageTitle = Some(messages("uploadedDocument.heading")),
 showBackLink = true,
-navigationBarContent = Some(navigationBarContent),
-additionalHeadBlock = inProgress match {
-        case true => Some(refreshHeader)
-        case _                       => None
-    }
+navigationBarContent = Some(navigationBarContent)
 ) {
+
     @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None)) {
         <span class="govuk-caption-m">@addressFull</span>
         @h1(msg = messages("uploadedDocument.heading"), size = "l", id = Some("page-heading"))
@@ -51,13 +43,16 @@ additionalHeadBlock = inProgress match {
 
         @govukButton(ButtonViewModel(messages("uploadedDocument.uploadAnother")).asSecondaryButton())
 
-        @govukSummaryList(summaryList)
+        <div role="region" aria-live="polite" aria-atomic="true" role="status" id="uploadStatusTable">
+            @govukSummaryList(summaryList)
+        </div>
+
     }
 
     @formHelper(action = action) {
         @if(inProgress){
         @govukButton(
-        ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue").disabled()
+            ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue").disabled()
         )
         } else {
             @govukButton(
@@ -65,6 +60,8 @@ additionalHeadBlock = inProgress match {
             )
         }
     }
+
+    <script @CSPNonce.attr  src='@routes.Assets.versioned("upload.js")'></script>
 
 }
 

@@ -213,6 +213,7 @@ GET        /not-told-us-about-any-changes-to-property                           
 GET        /upload-supporting-document                                           controllers.UploadDocumentController.onPageLoad(errorCode: Option[String])
 POST       /upload-supporting-document-upload                                    controllers.UploadDocumentController.onCancel(uploadId : Option[models.upscan.UploadId])
 GET        /uploaded-supporting-document                                         controllers.UploadedDocumentController.show(uploadId : Option[models.upscan.UploadId])
+GET        /uploaded-status-fragment                                             controllers.UploadedDocumentController.statusFragment()
 POST       /uploaded-supporting-document                                         controllers.UploadedDocumentController.onSubmit(uploadId : Option[models.upscan.UploadId], inProgress: Boolean)
 
 GET        /removeFile                                                           controllers.RemoveFileController.onPageLoad(uploadId: String)
