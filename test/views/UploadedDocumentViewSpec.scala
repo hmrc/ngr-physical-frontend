@@ -37,9 +37,10 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
     val secondParagraph = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(4)"
     val uploadAnotherFileButton = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
     val continueButton = "#continue"
-    val rowKey = "#main-content > div > div.govuk-grid-column-two-thirds > form > dl > div:nth-child(1) > dt"
+    val rowKey = "#uploadStatusTable > dl > div:nth-child(1) > dt"
   }
-  
+
+
   lazy val summaryListRow: SummaryListRow = SummaryListRow(
     Key(HtmlContent(messages("exampleFile"))),
     Value(HtmlContent(messages("uploadedDocument.uploaded"))),

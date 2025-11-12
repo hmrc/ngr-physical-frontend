@@ -30,6 +30,7 @@ import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.UploadProgressTracker
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow}
 import uk.gov.hmrc.http.NotFoundException
@@ -137,5 +138,26 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
       Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))
     else Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
 
+  }
+  
+  def statusFragment(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val currentAnswers: Seq[String] = request.userAnswers.get(UploadDocumentsPage) match {
+      case Some(value)  => value
+      case None => Seq.empty[String]
+    }
+    
+    val uploadStatusCalls: Seq[Future[Option[(String, UploadStatus)]]] = {
+      currentAnswers.map { uploadId =>
+        uploadProgressTracker.getUploadResult(UploadId(uploadId)).map {
+          _.map(status => uploadId -> status)
+        }
+      }
+    }
+
+      Future.sequence(uploadStatusCalls).map(_.flatten.toMap).map { uploadStatuses =>
+        val html = showUploadProgress(uploadStatuses)
+        Ok(GovukSummaryList().render(html))
+      }
+    
   }
 }
