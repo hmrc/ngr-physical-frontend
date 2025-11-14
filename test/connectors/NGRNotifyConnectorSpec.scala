@@ -42,6 +42,11 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
     declarationRef = None
   )
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    mockConfig.features.bridgeEndpointEnabled(true)
+  }
+
   "postPropertyChanges" when {
     "Successfully return a response  when provided correct body" in {
       val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(None)
