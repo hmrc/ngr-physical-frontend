@@ -21,6 +21,7 @@ import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFe
 import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
 import models.registration.*
 import models.registration.ReferenceType.TRN
+import org.mockito.Mockito.when
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 
@@ -54,7 +55,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
 
     "endpoint returns an error" in {
       val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(Some("an error happened"))
-      
+      sys.props += "features.bridgeEnabled" -> "true"
       setupMockHttpV2PostWithHeaderCarrier(
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical",
         Seq("Content-Type" -> "application/json")
