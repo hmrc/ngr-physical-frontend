@@ -17,6 +17,8 @@ function refreshUploadStatus() {
 
     if(!statuses.includes('Uploading')) {
         continueButton = document.getElementById('continue')
+        form = continueButton.form;
+        form.action = form.action.replace(true, false);
         continueButton.disabled = false;
         clearInterval(refreshInterval);
 
