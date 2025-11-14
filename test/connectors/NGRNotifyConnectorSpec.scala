@@ -60,7 +60,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
 
     "endpoint returns an error" in {
       val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(Some("an error happened"))
-      sys.props += "features.bridgeEnabled" -> "true"
+      mockConfig.features.bridgeEndpointEnabled(true)
       setupMockHttpV2PostWithHeaderCarrier(
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical",
         Seq("Content-Type" -> "application/json")
