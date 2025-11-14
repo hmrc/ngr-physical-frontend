@@ -43,11 +43,14 @@ class NGRNotifyConnector @Inject()(http: HttpClientV2,
   private def url(path: String): URL = url"${appConfig.nextGenerationRatesNotifyUrl}/ngr-notify/$path"
 
   def postPropertyChanges(userAnswers: PropertyChangesUserAnswers)(implicit hc: HeaderCarrier): Future[NotifyPropertyChangeResponse] = {
-
-    http.post(url("physical"))
-     .withBody(Json.toJson(userAnswers))
-      .setHeader(headers.toSeq*)
-      .execute[NotifyPropertyChangeResponse]
+    if (appConfig.features.bridgeEndpointEnabled()) {
+      http.post(url("physical"))
+        .withBody(Json.toJson(userAnswers))
+        .setHeader(headers.toSeq *)
+        .execute[NotifyPropertyChangeResponse]
+    } else {
+      Future.successful(NotifyPropertyChangeResponse(None))
+    }
   }
 
 }
