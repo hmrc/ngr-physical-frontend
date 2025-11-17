@@ -34,7 +34,7 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
 
   object Selectors {
     val firstParagraph = "#para-1"
-    val secondParagraph = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(4)"
+    val secondParagraph = "#main-content > div > div.govuk-grid-column-two-thirds > form > p:nth-child(5)"
     val uploadAnotherFileButton = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
     val continueButton = "#continue"
     val rowKey = "#uploadStatusTable > dl > div:nth-child(1) > dt"

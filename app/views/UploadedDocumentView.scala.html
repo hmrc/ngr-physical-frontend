@@ -32,6 +32,7 @@ pageTitle = Some(messages("uploadedDocument.heading")),
 showBackLink = true,
 navigationBarContent = Some(navigationBarContent)
 ) {
+   <input type="hidden" id="statusFragmentUrl" value="@controllers.routes.UploadedDocumentController.statusFragment(assessmentId).url" />
 
     @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None, assessmentId)) {
         <span class="govuk-caption-m">@addressFull</span>

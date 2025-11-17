@@ -5,7 +5,8 @@ const refreshTime = 1000;
 let refreshInterval = null;
 
 function refreshUploadStatus() {
-    fetch('/ngr-physical-frontend/uploaded-status-fragment')
+    const statusFragmentUrl = document.getElementById('statusFragmentUrl').value;
+    fetch(statusFragmentUrl)
         .then(response => response.text())
         .then(html => {
             document.getElementById('uploadStatusTable').innerHTML = html;
