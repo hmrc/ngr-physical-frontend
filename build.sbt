@@ -10,6 +10,7 @@ ThisBuild / scalaVersion := "3.6.4"
 
 lazy val microservice = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
+  .settings(RoutesKeys.routesImport ++= Seq("models.AssessmentId"))
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings)*)
   .settings(ThisBuild / useSuperShell := false)

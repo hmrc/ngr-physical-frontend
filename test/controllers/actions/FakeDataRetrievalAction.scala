@@ -29,7 +29,7 @@ class FakeDataRetrievalAction(answers: Option[UserAnswers]) extends DataRetrieva
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     Future.successful(
-      OptionalDataRequest(request.request, request.credId, answers, property)
+      OptionalDataRequest(request.request, request.credId, answers, property, Some(assessmentId))
     )
   }
 }

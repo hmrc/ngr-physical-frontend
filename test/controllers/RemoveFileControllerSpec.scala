@@ -58,7 +58,7 @@ class RemoveFileControllerSpec extends ControllerSpecSupport {
   "RemoveFile Controller" must {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(uploadId)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(uploadId, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe OK
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")

@@ -20,7 +20,7 @@ import actions.*
 import config.AppConfig
 import forms.WhenCompleteChangeFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.{Mode, UserAnswers}
+import models.{AssessmentId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.WhenCompleteChangePage
 import play.api.i18n.I18nSupport
@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhenCompleteChangeView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +43,7 @@ class WhenCompleteChangeController @Inject()(
                                               view: WhenCompleteChangeView
                                             )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form = formProvider()
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhenCompleteChangePage) match {
@@ -50,23 +51,23 @@ class WhenCompleteChangeController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Future.successful(Ok(view(request.property.addressFull, preparedForm, mode, createDefaultNavBar())))
+      Future.successful(Ok(view(assessmentId, request.property.addressFull, preparedForm, mode, createDefaultNavBar())))
 
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       
       val form = formProvider()
 
       form.bindFromRequest()(request.request).fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, mode, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, mode, createDefaultNavBar()))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenCompleteChangePage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhenCompleteChangePage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(WhenCompleteChangePage, mode, updatedAnswers, assessmentId))
       )
 
   }

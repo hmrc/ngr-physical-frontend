@@ -25,7 +25,7 @@ import connectors.NGRNotifyConnector
 import controllers.actions.*
 import models.ExternalFeature.LoadingBays
 import models.InternalFeature.AirConditioning
-import models.{AnythingElseData, ChangeToUseOfSpace, HowMuchOfProperty, UseOfSpaces, UserAnswers, WhatHappenedTo}
+import models.{AnythingElseData, AssessmentId, ChangeToUseOfSpace, HowMuchOfProperty, UseOfSpaces, UserAnswers, WhatHappenedTo}
 import navigation.{FakeNavigator, Navigator}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -62,7 +62,6 @@ trait SpecBase
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
-  
   def onwardRoute: Call = Call("GET", "/foo")
 
   val fakeFilter: ResourceClientFilter = mock[ResourceClientFilter]

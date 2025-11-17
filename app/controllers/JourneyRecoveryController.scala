@@ -18,6 +18,7 @@ package controllers
 
 import actions.IdentifierAction
 import config.AppConfig
+import models.AssessmentId
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -37,7 +38,7 @@ class JourneyRecoveryController @Inject()(
                                            startAgainView: JourneyRecoveryStartAgainView
                                          )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] = identify {
+  def onPageLoad(assessmentId: AssessmentId, continueUrl: Option[RedirectUrl] = None): Action[AnyContent] = identify {
     implicit request =>
 
       val safeUrl: Option[String] = continueUrl.flatMap {
@@ -53,6 +54,6 @@ class JourneyRecoveryController @Inject()(
 
       safeUrl
         .map(url => Ok(continueView(url, createDefaultNavBar())))
-        .getOrElse(Ok(startAgainView(createDefaultNavBar())))
+        .getOrElse(Ok(startAgainView(assessmentId, createDefaultNavBar())))
   }
 }

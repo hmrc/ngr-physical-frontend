@@ -16,10 +16,10 @@
 
 package models.requests
 
-import models.UserAnswers
+import models.{AssessmentId, UserAnswers}
 import models.propertyLinking.VMVProperty
 import play.api.mvc.{Request, WrappedRequest}
 
-case class OptionalDataRequest[A] (request: Request[A], userId: String, userAnswers: Option[UserAnswers], property: VMVProperty) extends WrappedRequest[A](request)
+case class OptionalDataRequest[A] (request: Request[A], userId: String, userAnswers: Option[UserAnswers], property: VMVProperty, assessmentId: Option[AssessmentId]) extends WrappedRequest[A](request)
 
 case class DataRequest[A] (request: Request[A], credId: String, userAnswers: UserAnswers, property: VMVProperty) extends WrappedRequest[A](request)

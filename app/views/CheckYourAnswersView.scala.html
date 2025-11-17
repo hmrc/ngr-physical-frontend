@@ -24,7 +24,7 @@
     formHelper: FormWithCSRF
 )
 
-@(address: String, navigationBarContent: NavigationBarContent, list: Seq[Section])(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, navigationBarContent: NavigationBarContent, list: Seq[Section])(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle =  Some(titleNoForm(messages("checkYourAnswers.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
     <span class="govuk-caption-m">@address</span>
@@ -38,7 +38,7 @@
         @govukSummaryList(section.rows)
     }
 
-    @formHelper(action = routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit(assessmentId), Symbol("autoComplete") -> "off") {
         @govukButton(
             ButtonViewModel(messages("site.continue")).withAttribute("id" -> "submit").preventingDoubleClick()
         )

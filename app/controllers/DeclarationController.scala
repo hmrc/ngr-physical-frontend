@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
-import models.{ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
+import models.{AssessmentId, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
 import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, WhenCompleteChangePage}
 import play.api.Logging
 import play.api.libs.json.Json
@@ -48,13 +48,13 @@ class DeclarationController @Inject()(
                                        connector: NGRNotifyConnector
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport with Logging {
 
-  val show: Action[AnyContent] =
+  def show(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData andThen requireData) {
       implicit request =>
-        Ok(view(request.property.addressFull, createDefaultNavBar()))
+        Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar()))
     }
 
-  val next: Action[AnyContent] =
+  def next(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData andThen requireData).async  {
       implicit request =>
 
@@ -77,7 +77,7 @@ class DeclarationController @Inject()(
                   _ <- sessionRepository.set(updatedAnswers)
                   response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)))
                 } yield response.error match {
-                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad)
                   case Some(e) =>
                     logger.error(s"[DeclarationController] error occurred: $e")
                     BadRequest
@@ -85,7 +85,7 @@ class DeclarationController @Inject()(
               case Some(value) =>
                 connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value))).map {
                   response => response.error match {
-                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad)
                     case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
                       BadRequest
                   }

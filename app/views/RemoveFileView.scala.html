@@ -26,11 +26,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[?], address: String, fileName: String, uploadId: String, navBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(form: Form[?], assessmentId: AssessmentId, address: String, fileName: String, uploadId: String, navBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("removeFile.heading", fileName)), showBackLink = true, navigationBarContent = Some(navBarContent)) {
 
-    @formHelper(action = routes.RemoveFileController.onSubmit(uploadId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.RemoveFileController.onSubmit(uploadId, assessmentId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

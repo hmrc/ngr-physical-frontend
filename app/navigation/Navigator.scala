@@ -27,57 +27,57 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class Navigator @Inject()() {
 
-  private val normalRoutes: Page => UserAnswers => Option[Call] = {
-    case WhenCompleteChangePage => _ => Some(routes.HaveYouChangedController.loadSpace(NormalMode))
-    case HaveYouChangedSpacePage => answers =>
+  private val normalRoutes: Page => AssessmentId => UserAnswers => Option[Call] = {
+    case WhenCompleteChangePage => id => _ => Some(routes.HaveYouChangedController.loadSpace(NormalMode, id))
+    case HaveYouChangedSpacePage => id => answers =>
       answers.get(HaveYouChangedSpacePage) map {
-        case true => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode)
-        case false => routes.HaveYouChangedController.loadInternal(NormalMode)
+        case true => routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode, id)
+        case false => routes.HaveYouChangedController.loadInternal(NormalMode, id)
       }
-    case ChangeToUseOfSpacePage => _ => Some(routes.HaveYouChangedController.loadInternal(NormalMode))
-    case HaveYouChangedInternalPage => answers =>
+    case ChangeToUseOfSpacePage => id => _ => Some(routes.HaveYouChangedController.loadInternal(NormalMode, id))
+    case HaveYouChangedInternalPage => id => answers =>
       answers.get(HaveYouChangedInternalPage) map {
-        case true => routes.WhichInternalFeatureController.onPageLoad(NormalMode)
-        case false => routes.HaveYouChangedController.loadExternal(NormalMode)
+        case true => routes.WhichInternalFeatureController.onPageLoad(NormalMode, id)
+        case false => routes.HaveYouChangedController.loadExternal(NormalMode, id)
       }
-    case HaveYouChangedExternalPage => answers =>
+    case HaveYouChangedExternalPage => id => answers =>
       answers.get(HaveYouChangedExternalPage) map {
-        case true => routes.WhichExternalFeatureController.onPageLoad(NormalMode)
+        case true => routes.WhichExternalFeatureController.onPageLoad(NormalMode, id)
         case false => ChangeChecker.recheckForAnyChanges(answers, List(HaveYouChangedInternalPage, HaveYouChangedSpacePage),
-          routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
+          routes.AnythingElseController.onPageLoad(NormalMode, id), routes.NotToldAnyChangesController.show(id))
       }
-    case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode))
-    case page if ExternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode))
-    case AnythingElsePage => _ => Some(routes.SupportingDocumentsController.onPageLoad())
-    case _ => _ => None
+    case page if InternalFeature.pageSet.contains(page) => id => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode, id))
+    case page if ExternalFeature.pageSet.contains(page) => id => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode, id))
+    case AnythingElsePage => id => _ => Some(routes.SupportingDocumentsController.onPageLoad(id))
+    case _ => _ => _ => None
   }
 
-  private val checkRouteMap: Page => UserAnswers => Option[Call] = {
-    case HaveYouChangedSpacePage => answers =>
+  private val checkRouteMap: Page => AssessmentId => UserAnswers => Option[Call] = {
+    case HaveYouChangedSpacePage => id => answers =>
       answers.get(HaveYouChangedSpacePage) map {
-        case true => routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode)
-        case false => routes.CheckYourAnswersController.onPageLoad()
+        case true => routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode, id)
+        case false => routes.CheckYourAnswersController.onPageLoad(id)
       }
-    case HaveYouChangedInternalPage => answers =>
+    case HaveYouChangedInternalPage => id => answers =>
       answers.get(HaveYouChangedInternalPage) map {
-        case true => routes.WhichInternalFeatureController.onPageLoad(CheckMode)
-        case false => routes.HaveYouChangedController.loadExternal(CheckMode)
+        case true => routes.WhichInternalFeatureController.onPageLoad(CheckMode, id)
+        case false => routes.HaveYouChangedController.loadExternal(CheckMode, id)
       }
-    case HaveYouChangedExternalPage => answers =>
+    case HaveYouChangedExternalPage => id => answers =>
       answers.get(HaveYouChangedExternalPage) map {
-        case true => routes.WhichExternalFeatureController.onPageLoad(CheckMode)
-        case false => routes.CheckYourAnswersController.onPageLoad()
+        case true => routes.WhichExternalFeatureController.onPageLoad(CheckMode, id)
+        case false => routes.CheckYourAnswersController.onPageLoad(id)
       }
-    case page if InternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, CheckMode))
-    case page if ExternalFeature.pageSet.contains(page) => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, CheckMode))
-    case page: Page => _ => Some(routes.CheckYourAnswersController.onPageLoad())
+    case page if InternalFeature.pageSet.contains(page) => id => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, CheckMode, id))
+    case page if ExternalFeature.pageSet.contains(page) => id => _ => Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, CheckMode, id))
+    case page: Page => id => _ => Some(routes.CheckYourAnswersController.onPageLoad(id))
   }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, assessmentId: AssessmentId): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
+      normalRoutes(page)(assessmentId)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
     case CheckMode =>
-      checkRouteMap(page)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
+      checkRouteMap(page)(assessmentId)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
   }
 }
 

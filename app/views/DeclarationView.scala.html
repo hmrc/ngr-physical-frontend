@@ -27,10 +27,10 @@
         govukButton: GovukButton
 )
 
-@(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some("ngr-physical-frontend"), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
-    @formHelper(action = routes.DeclarationController.next, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.DeclarationController.next(assessmentId), Symbol("autoComplete") -> "off") {
         <span class="govuk-caption-m">@address</span>
         @h1(msg = messages("declaration.heading"), size = "l", id = Some("page-heading"))
         @p(id = Some("para-1")) { @messages("declaration.p1") }

@@ -21,7 +21,7 @@ import config.AppConfig
 import connectors.NGRConnector
 import forms.AnythingElseFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.{AnythingElseData, Mode}
+import models.{AnythingElseData, AssessmentId, Mode}
 import navigation.Navigator
 import pages.AnythingElsePage
 import play.api.data.Form
@@ -48,7 +48,7 @@ class AnythingElseController @Inject()(
 
   val form: Form[AnythingElseData] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AnythingElsePage) match {
@@ -56,21 +56,21 @@ class AnythingElseController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(request.property.addressFull, preparedForm, createDefaultNavBar(), mode))
+      Ok(view(assessmentId, request.property.addressFull, preparedForm, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
 
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AnythingElsePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AnythingElsePage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(AnythingElsePage, mode, updatedAnswers, assessmentId))
       )
   }
 }

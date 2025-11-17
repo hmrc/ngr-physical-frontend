@@ -33,7 +33,7 @@ class NotToldAnyChangesControllerSpec
 
   "GET /" should {
     "return 200 and HTML content with UTF-8 charset" in {
-      val result = controller.show(authenticatedFakeRequest)
+      val result = controller.show(assessmentId)(authenticatedFakeRequest)
 
       status(result) mustBe Status.OK
       contentType(result) mustBe Some("text/html")

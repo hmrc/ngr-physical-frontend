@@ -16,13 +16,17 @@
 
 package helpers
 
-import models.UserAnswers
-import models.propertyLinking.{VMVProperty, Valuation}
+import models.{AssessmentId, UserAnswers}
+import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty, Valuation}
+import models.registration.CredId
 import pages.DeclarationPage
 
 import java.time.LocalDate
 
 trait TestData {
+  
+  val assessmentId = AssessmentId("85141561000L")
+
   val property: VMVProperty = VMVProperty(
     uarn = 11905603000L,
     localAuthorityReference = "2191322564521",
@@ -50,6 +54,11 @@ trait TestData {
         listType = "current"
       )
     )
+  )
+
+  val propertyLinkingUserAnswers = PropertyLinkingUserAnswers(credId = CredId("Identifier"),
+    vmvProperty = property,
+    requestSentReference = Some(assessmentId.value)
   )
 
   val userAnswersId: String = "id"

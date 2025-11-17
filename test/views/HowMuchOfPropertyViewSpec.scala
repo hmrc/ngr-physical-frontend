@@ -43,7 +43,7 @@ class HowMuchOfPropertyViewSpec extends ViewBaseSpec {
     InternalFeatureGroup1.values.foreach { feature =>
       
       val strings = HowMuchOfProperty.messageKeys(feature)
-      val action = HowMuchOfProperty.submitAction(feature, NormalMode)
+      val action = HowMuchOfProperty.submitAction(feature, NormalMode, assessmentId)
       val radioItems = HowMuchOfProperty.options(feature)
       implicit val document: Document = Jsoup.parse(view(address, strings, action, radioItems, formProvider(feature), NormalMode, navBarContent()).body)
       

@@ -42,7 +42,7 @@ class WhatHappenedToViewSpec extends ViewBaseSpec {
     ExternalFeature.values.foreach { feature =>
 
       val strings = WhatHappenedTo.messageKeys(feature)
-      val action = WhatHappenedTo.submitAction(feature, NormalMode)
+      val action = WhatHappenedTo.submitAction(feature, NormalMode, assessmentId)
       val radioItems = WhatHappenedTo.options(feature)
       implicit val document: Document = Jsoup.parse(view(address, strings, action, radioItems, formProvider(feature), NormalMode, navBarContent()).body)
 

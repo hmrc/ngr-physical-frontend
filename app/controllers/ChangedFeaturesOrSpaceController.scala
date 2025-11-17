@@ -18,11 +18,13 @@ package controllers
 
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
+import models.AssessmentId
 import models.NavBarPageContents.createDefaultNavBar
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.ChangedFeaturesOrSpaceView
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
@@ -34,14 +36,14 @@ class ChangedFeaturesOrSpaceController @Inject()(
                                                   getData: DataRetrievalAction
                                                 )(implicit appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
-  def show: Action[AnyContent] =
+  def show(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData) { implicit request =>
-      Ok(view(request.property.addressFull, createDefaultNavBar()))
+      Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar()))
     }
 
-  def next: Action[AnyContent] =
+  def next(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData).async { implicit request =>
-      Future.successful(Redirect(routes.InfoAndSupportingDocController.show))
+      Future.successful(Redirect(routes.InfoAndSupportingDocController.show(assessmentId)))
     }
 }
 

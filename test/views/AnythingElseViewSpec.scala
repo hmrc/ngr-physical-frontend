@@ -27,7 +27,7 @@ class AnythingElseViewSpec extends ViewBaseSpec{
   val view: AnythingElseView = inject[AnythingElseView]
   val address = "123 street lane"
   val formProvider: AnythingElseFormProvider = inject[AnythingElseFormProvider]
-  implicit val document: Document = Jsoup.parse(view(address = address, form = formProvider(), navigationBarContent = navBarContent(), mode = NormalMode).body)
+  implicit val document: Document = Jsoup.parse(view(assessmentId, address = address, form = formProvider(), navigationBarContent = navBarContent(), mode = NormalMode).body)
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"

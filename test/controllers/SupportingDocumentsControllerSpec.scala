@@ -46,7 +46,7 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
   "Supporting Documents Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller(Some(emptyUserAnswers)).onPageLoad()(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).onPageLoad(assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
@@ -54,17 +54,17 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
       }
 
       "redirect to Journey Recovery for a GET if no existing data is found" in {
-        val result = controller(None).onPageLoad()(fakeRequest)
+        val result = controller(None).onPageLoad(assessmentId)(fakeRequest)
         status(result) mustBe 303
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 
     "method next" must {
       "Return SEE_OTHER and the correct view" in {
-        val result: Future[Result] = controller(Some(emptyUserAnswers)).next()(fakeRequest)
+        val result: Future[Result] = controller(Some(emptyUserAnswers)).next(assessmentId)(fakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some("/ngr-physical-frontend/upload-supporting-document")
+        redirectLocation(result) mustBe Some(s"/ngr-physical-frontend/upload-supporting-document/$assessmentId")
       }
     }
   }

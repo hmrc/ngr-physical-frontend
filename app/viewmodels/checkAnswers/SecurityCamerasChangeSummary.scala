@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{AssessmentId, CheckMode, UserAnswers}
 import pages.SecurityCamerasChangePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits.*
 
 object SecurityCamerasChangeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(SecurityCamerasChangePage).map {
       answer =>
 
@@ -34,7 +34,7 @@ object SecurityCamerasChangeSummary  {
           key     = "securityCamerasChange.checkYourAnswersLabel",
           value   = ValueViewModel(answer.toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.SecurityCamerasChangeController.onPageLoad(CheckMode).url)
+            ActionItemViewModel("site.change", routes.SecurityCamerasChangeController.onPageLoad(CheckMode, assessmentId).url)
               .withVisuallyHiddenText(messages("securityCamerasChange.change.hidden"))
           )
         )

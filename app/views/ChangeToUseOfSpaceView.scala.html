@@ -30,6 +30,7 @@
 )
 
 @(
+    assessmentId: AssessmentId,
     address: String,
     navigationBarContent: NavigationBarContent,
     form: Form[ChangeToUseOfSpace],
@@ -38,7 +39,7 @@
 
 @layout(pageTitle = Some(title(form, messages("changeToUseOfSpace.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.ChangeToUseOfSpaceController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ChangeToUseOfSpaceController.onSubmit(mode, assessmentId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

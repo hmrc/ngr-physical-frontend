@@ -61,7 +61,7 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
         view
       )
 
-      val result = filledController.onPageLoad(NormalMode)(authenticatedFakeRequest)
+      val result = filledController.onPageLoad(NormalMode, assessmentId)(authenticatedFakeRequest)
       contentAsString(result) must include("12")
       contentAsString(result) must include("8")
       contentAsString(result) must include("2025")
@@ -75,7 +75,7 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
           "value.month" -> "12", 
           "value.year" -> "2025"
         )
-      val result = controller.onSubmit(NormalMode)(formRequest)
+      val result = controller.onSubmit(NormalMode, assessmentId)(formRequest)
       status(result) mustBe 303
     }
 
@@ -87,20 +87,20 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
           "value.month" -> "12",
           "value.year" -> "1888"
         )
-      val result = controller.onSubmit(NormalMode)(formRequest)
+      val result = controller.onSubmit(NormalMode, assessmentId)(formRequest)
       status(result) mustBe 400
     }
 
     "should error if no selection" in {
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val result = controller.onSubmit(NormalMode)(authenticatedFakeRequest)
+      val result = controller.onSubmit(NormalMode, assessmentId)(authenticatedFakeRequest)
       status(result) mustBe BAD_REQUEST
     }
 
   }
 
   def checkForOkPageLoad(mode: Mode): Assertion =
-    val result = controller.onPageLoad(mode)(authenticatedFakeRequest)
+    val result = controller.onPageLoad(mode, assessmentId)(authenticatedFakeRequest)
     status(result) mustBe OK
     contentType(result) mustBe Some("text/html")
     charset(result) mustBe Some("utf-8")

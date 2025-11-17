@@ -25,7 +25,7 @@
 
 @this(layout: Layout, govukSummaryList: GovukSummaryList, govukButton: GovukButton,  h1: h1, link: LinkComponent, p: p, formHelper: FormWithCSRF)
 
-@(navigationBarContent: NavigationBarContent, summaryList: SummaryList, addressFull: String, inProgress: Boolean, action: play.api.mvc.Call)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, navigationBarContent: NavigationBarContent, summaryList: SummaryList, addressFull: String, inProgress: Boolean, action: play.api.mvc.Call)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(
 pageTitle = Some(messages("uploadedDocument.heading")),
@@ -33,7 +33,7 @@ showBackLink = true,
 navigationBarContent = Some(navigationBarContent)
 ) {
 
-    @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None)) {
+    @formHelper(action = controllers.routes.UploadDocumentController.onPageLoad(None, assessmentId)) {
         <span class="govuk-caption-m">@addressFull</span>
         @h1(msg = messages("uploadedDocument.heading"), size = "l", id = Some("page-heading"))
 

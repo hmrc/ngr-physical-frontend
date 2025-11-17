@@ -43,7 +43,7 @@ class SecurityCamerasChangeControllerSpec extends ControllerSpecSupport {
     Seq(NormalMode, CheckMode).foreach { mode =>
       s"onPageLoad in $mode" must {
         "return 200" in {
-          val result = controller(Some(emptyUserAnswers)).onPageLoad(mode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onPageLoad(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 200
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
@@ -51,38 +51,38 @@ class SecurityCamerasChangeControllerSpec extends ControllerSpecSupport {
 
         "return 200 with pre-populated data" in {
           val userAnswers = emptyUserAnswers.set(SecurityCamerasChangePage, 10).success.value
-          val result = controller(Some(userAnswers)).onPageLoad(mode)(authenticatedFakeRequest)
+          val result = controller(Some(userAnswers)).onPageLoad(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 200
         }
         
         "redirect to journey recovery Expired for a GET if no existing data is found" in {
-          val result = controller(None).onPageLoad(mode)(authenticatedFakeRequest)
+          val result = controller(None).onPageLoad(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
 
       s"onSubmit in $mode" must {
         "redirect when valid entry" in {
           val formRequest = requestWithForm(Map("value" -> "10"))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(mode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
         "invalid form data" in {
           val formRequest = requestWithForm(Map("value" -> "hello"))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(mode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(mode, assessmentId)(formRequest)
           status(result) mustBe 400
         }
         "BadRequest when no form data" in {
-          val result = controller(Some(emptyUserAnswers)).onSubmit(mode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 400
         }
 
         "redirect to journey recovery for a POST if no existing data is found" in {
           val formRequest = requestWithForm(Map("value" -> "10"))
-          val result = controller(None).onSubmit(mode)(formRequest)
+          val result = controller(None).onSubmit(mode, assessmentId)(formRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }

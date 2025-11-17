@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{AssessmentId, CheckMode, UserAnswers}
 import pages.WhenCompleteChangePage
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,7 +27,7 @@ import viewmodels.implicits.*
 
 object WhenCompleteChangeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(WhenCompleteChangePage).map {
       answer =>
 
@@ -37,7 +37,7 @@ object WhenCompleteChangeSummary  {
           key     = "whenCompleteChange.checkYourAnswersLabel",
           value   = ValueViewModel(answer.format(dateTimeFormat())),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.WhenCompleteChangeController.onPageLoad(CheckMode).url)
+            ActionItemViewModel("site.change", routes.WhenCompleteChangeController.onPageLoad(CheckMode, assessmentId).url)
               .withVisuallyHiddenText(messages("whenCompleteChange.change.hidden"))
           )
         )

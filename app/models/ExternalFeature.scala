@@ -102,7 +102,7 @@ object ExternalFeature extends Enumerable.Implicits {
   }
 
   def getAnswersToSend(userAnswers: UserAnswers): Seq[(ExternalFeature, String)] = {
-    ExternalFeature.values.map(feature => (feature, userAnswers.get(WhatHappenedTo.page(feature)).getOrElse("").toString()))
+    ExternalFeature.values.map(feature => (feature, userAnswers.get(WhatHappenedTo.page(feature)).getOrElse("").toString))
       .filter {case (_, v) => v != ""}
   }
 
@@ -133,36 +133,36 @@ object ExternalFeature extends Enumerable.Implicits {
     }
   }
 
-  def changeLink(feature: ExternalFeature, mode: Mode): Call = {
+  def changeLink(feature: ExternalFeature, mode: Mode, assessmentId:AssessmentId): Call = {
     feature match {
-      case LoadingBays => routes.WhatHappenedToController.onPageLoadLoadingBays(mode)
-      case LockupGarages => routes.WhatHappenedToController.onPageLoadLockupGarage(mode)
-      case OutdoorSeating => routes.WhatHappenedToController.onPageLoadOutdoorSeating(mode)
-      case Parking => routes.WhatHappenedToController.onPageLoadParking(mode)
-      case SolarPanels => routes.WhatHappenedToController.onPageLoadSolarPanels(mode)
-      case AdvertisingDisplays => routes.WhatHappenedToController.onPageLoadAdvertisingDisplays(mode)
-      case BikeSheds => routes.WhatHappenedToController.onPageLoadBikeSheds(mode)
-      case Canopies => routes.WhatHappenedToController.onPageLoadCanopies(mode)
-      case LandHardSurfacedFenced => routes.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(mode)
-      case LandHardSurfacedOpen => routes.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(mode)
-      case LandGravelledFenced => routes.WhatHappenedToController.onPageLoadLandGravelledFenced(mode)
-      case LandGravelledOpen => routes.WhatHappenedToController.onPageLoadLandGravelledOpen(mode)
-      case LandUnsurfacedFenced => routes.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(mode)
-      case LandUnsurfacedOpen => routes.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(mode)
-      case PortableBuildings => routes.WhatHappenedToController.onPageLoadPortableBuildings(mode)
-      case ShippingContainers => routes.WhatHappenedToController.onPageLoadShippingContainers(mode)
+      case LoadingBays => routes.WhatHappenedToController.onPageLoadLoadingBays(mode, assessmentId)
+      case LockupGarages => routes.WhatHappenedToController.onPageLoadLockupGarage(mode, assessmentId)
+      case OutdoorSeating => routes.WhatHappenedToController.onPageLoadOutdoorSeating(mode, assessmentId)
+      case Parking => routes.WhatHappenedToController.onPageLoadParking(mode, assessmentId)
+      case SolarPanels => routes.WhatHappenedToController.onPageLoadSolarPanels(mode, assessmentId)
+      case AdvertisingDisplays => routes.WhatHappenedToController.onPageLoadAdvertisingDisplays(mode, assessmentId)
+      case BikeSheds => routes.WhatHappenedToController.onPageLoadBikeSheds(mode, assessmentId)
+      case Canopies => routes.WhatHappenedToController.onPageLoadCanopies(mode, assessmentId)
+      case LandHardSurfacedFenced => routes.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(mode, assessmentId)
+      case LandHardSurfacedOpen => routes.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(mode, assessmentId)
+      case LandGravelledFenced => routes.WhatHappenedToController.onPageLoadLandGravelledFenced(mode, assessmentId)
+      case LandGravelledOpen => routes.WhatHappenedToController.onPageLoadLandGravelledOpen(mode, assessmentId)
+      case LandUnsurfacedFenced => routes.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(mode, assessmentId)
+      case LandUnsurfacedOpen => routes.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(mode, assessmentId)
+      case PortableBuildings => routes.WhatHappenedToController.onPageLoadPortableBuildings(mode, assessmentId)
+      case ShippingContainers => routes.WhatHappenedToController.onPageLoadShippingContainers(mode, assessmentId)
     }
   }
 
-  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false, assessmentId: AssessmentId)(implicit messages: Messages): Seq[SummaryListRow] = {
     ExternalFeature.values.flatMap { feature =>
       userAnswers.get(WhatHappenedTo.page(feature)).map { value =>
         SummaryListRowViewModel(
           key = s"externalFeature.${feature.toString}",
           value = ValueViewModel(valueString(feature, value.toString)),
           actions = Seq(
-            ActionItemViewModel("site.change", changeLink(feature, mode).url),
-            ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
+            ActionItemViewModel("site.change", changeLink(feature, mode, assessmentId).url),
+            ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA, assessmentId).url)
           ),
           actionClasses = "govuk-!-width-one-third"
         )

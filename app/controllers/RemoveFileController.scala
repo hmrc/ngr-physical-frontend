@@ -20,9 +20,9 @@ import actions.*
 import config.AppConfig
 import connectors.NGRConnector
 import forms.RemoveFileFormProvider
-import models.Mode
 import models.NavBarPageContents.createDefaultNavBar
 import models.upscan.{UploadId, UploadStatus}
+import models.{AssessmentId, Mode}
 import navigation.Navigator
 import pages.{RemoveFilePage, UploadDocumentsPage}
 import play.api.data.Form
@@ -50,26 +50,26 @@ class RemoveFileController @Inject()(
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad(uploadId: String): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(uploadId: String, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       uploadProgressTracker.getUploadResult(UploadId(uploadId)).map {
         case Some(UploadStatus.UploadedSuccessfully(name, _, _, _)) =>
-          Ok(view(form, request.property.addressFull, name, uploadId, createDefaultNavBar()))
+          Ok(view(form, assessmentId, request.property.addressFull, name, uploadId, createDefaultNavBar()))
         case _ =>
-          Ok(view(form, request.property.addressFull, "", uploadId,createDefaultNavBar()))
+          Ok(view(form, assessmentId, request.property.addressFull, "", uploadId,createDefaultNavBar()))
       }
   }
 
-  def onSubmit(uploadId: String): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(uploadId: String, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
           uploadProgressTracker.getUploadResult(UploadId(uploadId)).map {
             case Some(UploadStatus.UploadedSuccessfully(name, _, _, _)) =>
-              BadRequest(view(formWithErrors, request.property.addressFull, name, uploadId, createDefaultNavBar()))
+              BadRequest(view(formWithErrors, assessmentId, request.property.addressFull, name, uploadId, createDefaultNavBar()))
             case _ =>
-              BadRequest(view(formWithErrors, request.property.addressFull, "", uploadId, createDefaultNavBar()))
+              BadRequest(view(formWithErrors, assessmentId, request.property.addressFull, "", uploadId, createDefaultNavBar()))
           },
         value =>
           if (value) {
@@ -81,7 +81,7 @@ class RemoveFileController @Inject()(
               updatedAnswers => sessionRepository.set(updatedAnswers)
             }
           }
-          Future.successful(Redirect(routes.UploadedDocumentController.show(None)))
+          Future.successful(Redirect(routes.UploadedDocumentController.show(None, assessmentId)))
       )
   }
 }

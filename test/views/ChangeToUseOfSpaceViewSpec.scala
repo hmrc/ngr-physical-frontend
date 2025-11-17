@@ -61,7 +61,7 @@ class ChangeToUseOfSpaceViewSpec extends ViewBaseSpec {
 
   "WhenCompleteChange with errors view" must {
     
-    val changeToUseSpaceView = view(address, navBarContent(), formWithError("changeToUseOfSpace.selectUseOfSpace.error.required"), NormalMode)
+    val changeToUseSpaceView = view(assessmentId, address, navBarContent(), formWithError("changeToUseOfSpace.selectUseOfSpace.error.required"), NormalMode)
     lazy implicit val document: Document = Jsoup.parse(changeToUseSpaceView.body)
 
 

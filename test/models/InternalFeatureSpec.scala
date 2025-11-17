@@ -33,43 +33,43 @@ class InternalFeatureSpec extends TestSupport with TestData {
   "changeLink" should {
 
     "return correct Call for AirConditioning" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.AirConditioning, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadAirCon(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.AirConditioning, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadAirCon(NormalMode, assessmentId)
     }
 
     "return correct Call for Escalators" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.Escalators, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadEscalator(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.Escalators, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadEscalator(NormalMode, assessmentId)
     }
 
     "return correct Call for GoodsLift" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.GoodsLift, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadGoodsLift(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.GoodsLift, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadGoodsLift(NormalMode, assessmentId)
     }
 
     "return correct Call for PassengerLift" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.PassengerLift, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadPassengerLift(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.PassengerLift, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadPassengerLift(NormalMode, assessmentId)
     }
 
     "return correct Call for SecurityCamera" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.SecurityCamera, NormalMode)
-      result shouldBe routes.SecurityCamerasChangeController.onPageLoad(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.SecurityCamera, NormalMode, assessmentId)
+      result shouldBe routes.SecurityCamerasChangeController.onPageLoad(NormalMode, assessmentId)
     }
 
     "return correct Call for CompressedAir" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.CompressedAir, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadCompressedAir(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.CompressedAir, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadCompressedAir(NormalMode, assessmentId)
     }
 
     "return correct Call for Heating" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.Heating, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadHeating(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.Heating, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadHeating(NormalMode, assessmentId)
     }
 
     "return correct Call for Sprinklers" in {
-      val result: Call = InternalFeature.changeLink(InternalFeature.Sprinklers, NormalMode)
-      result shouldBe routes.HowMuchOfPropertyController.onPageLoadSprinklers(NormalMode)
+      val result: Call = InternalFeature.changeLink(InternalFeature.Sprinklers, NormalMode, assessmentId)
+      result shouldBe routes.HowMuchOfPropertyController.onPageLoadSprinklers(NormalMode, assessmentId)
     }
   }
 
@@ -80,13 +80,13 @@ class InternalFeatureSpec extends TestSupport with TestData {
       val userAnswers = UserAnswers("id").set(SecurityCamerasChangePage, 50).success.value
 
       val result: Seq[SummaryListRow] =
-        InternalFeature.getAnswers(userAnswers, NormalMode)
+        InternalFeature.getAnswers(userAnswers, NormalMode, assessmentId = assessmentId)
 
       result.size shouldBe 1
       val row = result.head
       
       row.value.content.asHtml.body should include("50")
-      row.actions.get.items.map(_.href) should contain(routes.SecurityCamerasChangeController.onPageLoad(NormalMode).url)
+      row.actions.get.items.map(_.href) should contain(routes.SecurityCamerasChangeController.onPageLoad(NormalMode, assessmentId).url)
     }
     
   }

@@ -29,11 +29,11 @@
     govukInput: GovukInput
 )
 
-@(address: String, form: Form[Int], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, form: Form[Int], mode: Mode, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(title(form, messages("securityCamerasChange.title"))), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SecurityCamerasChangeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SecurityCamerasChangeController.onSubmit(mode, assessmentId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

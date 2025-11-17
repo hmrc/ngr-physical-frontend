@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{AssessmentId, CheckMode, UserAnswers}
 import pages.AnythingElsePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits.*
 
 object AnythingElseSummary {
 
-  def rows(answers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+  def rows(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     answers.get(AnythingElsePage).map {
       answer =>
 
@@ -37,7 +37,7 @@ object AnythingElseSummary {
             key = "anythingElse.heading",
             value = ValueViewModel(value),
             actions = Seq(
-              ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
+              ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode, assessmentId).url)
                 .withVisuallyHiddenText(messages("anythingElse.heading"))
             ))),
           answer.text map { info =>
@@ -45,7 +45,7 @@ object AnythingElseSummary {
               key = "anythingElse.inputTitle",
               value = ValueViewModel(info),
               actions = Seq(
-                ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode).url)
+                ActionItemViewModel("site.change", routes.AnythingElseController.onPageLoad(CheckMode, assessmentId).url)
                   .withVisuallyHiddenText(messages("anythingElse.inputTitle"))
               )
             )

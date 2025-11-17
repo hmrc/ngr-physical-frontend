@@ -59,26 +59,26 @@ object HowMuchOfProperty extends Enumerable.Implicits {
 
   def errorKey(feature: InternalFeatureGroup1): String = s"howMuchOfProperty.${feature.toString}.error"
 
-  def pageLoadAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+  def pageLoadAction(feature: InternalFeatureGroup1, mode: Mode, assessmentId: AssessmentId): Call =
     feature match {
-      case AirConditioning => onPageLoadAirCon(mode)
-      case Escalators => onPageLoadEscalator(mode)
-      case GoodsLift => onPageLoadGoodsLift(mode)
-      case PassengerLift => onPageLoadPassengerLift(mode)
-      case CompressedAir => onPageLoadCompressedAir(mode)
-      case Heating => onPageLoadHeating(mode)
-      case Sprinklers => onPageLoadSprinklers(mode)
+      case AirConditioning => onPageLoadAirCon(mode, assessmentId)
+      case Escalators => onPageLoadEscalator(mode, assessmentId)
+      case GoodsLift => onPageLoadGoodsLift(mode, assessmentId)
+      case PassengerLift => onPageLoadPassengerLift(mode, assessmentId)
+      case CompressedAir => onPageLoadCompressedAir(mode, assessmentId)
+      case Heating => onPageLoadHeating(mode, assessmentId)
+      case Sprinklers => onPageLoadSprinklers(mode, assessmentId)
     }
 
-  def submitAction(feature: InternalFeatureGroup1, mode: Mode): Call =
+  def submitAction(feature: InternalFeatureGroup1, mode: Mode, assessmentId: AssessmentId): Call =
     feature match {
-      case AirConditioning => onSubmitAirCon(mode)
-      case Escalators => onSubmitEscalator(mode)
-      case GoodsLift => onSubmitGoodsLift(mode)
-      case PassengerLift => onSubmitPassengerLift(mode)
-      case CompressedAir => onSubmitCompressedAir(mode)
-      case Heating => onSubmitHeating(mode)
-      case Sprinklers => onSubmitSprinklers(mode)
+      case AirConditioning => onSubmitAirCon(mode, assessmentId)
+      case Escalators => onSubmitEscalator(mode, assessmentId)
+      case GoodsLift => onSubmitGoodsLift(mode, assessmentId)
+      case PassengerLift => onSubmitPassengerLift(mode, assessmentId)
+      case CompressedAir => onSubmitCompressedAir(mode, assessmentId)
+      case Heating => onSubmitHeating(mode, assessmentId)
+      case Sprinklers => onSubmitSprinklers(mode, assessmentId)
     }
 
   def page(feature: InternalFeatureGroup1): QuestionPage[HowMuchOfProperty] =

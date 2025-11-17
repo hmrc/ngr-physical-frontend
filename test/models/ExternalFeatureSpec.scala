@@ -26,6 +26,8 @@ import play.api.mvc.Call
 
 class ExternalFeatureSpec extends AnyFreeSpec with Matchers {
 
+  private val assessmentId = AssessmentId("test-assessment-id")
+  
   "ExternalFeature" - {
     "should contain all the pageSet" in {
       ExternalFeature.pageSet mustBe List(
@@ -51,22 +53,22 @@ class ExternalFeatureSpec extends AnyFreeSpec with Matchers {
 
   "changeLink" - {
     "should return correct Call for each ExternalFeature" in {
-      ExternalFeature.changeLink(ExternalFeature.LoadingBays, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLoadingBays(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LockupGarages, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLockupGarage(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.OutdoorSeating, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadOutdoorSeating(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.Parking, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadParking(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.SolarPanels, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadSolarPanels(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.AdvertisingDisplays, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadAdvertisingDisplays(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.BikeSheds, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadBikeSheds(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.Canopies, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadCanopies(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandHardSurfacedFenced, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandHardSurfacedOpen, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandGravelledFenced, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandGravelledFenced(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandGravelledOpen, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandGravelledOpen(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandUnsurfacedFenced, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.LandUnsurfacedOpen, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.PortableBuildings, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadPortableBuildings(NormalMode)
-      ExternalFeature.changeLink(ExternalFeature.ShippingContainers, NormalMode) shouldBe routes.WhatHappenedToController.onPageLoadShippingContainers(NormalMode)
+      ExternalFeature.changeLink(ExternalFeature.LoadingBays, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLoadingBays(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LockupGarages, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLockupGarage(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.OutdoorSeating, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadOutdoorSeating(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.Parking, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadParking(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.SolarPanels, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadSolarPanels(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.AdvertisingDisplays, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadAdvertisingDisplays(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.BikeSheds, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadBikeSheds(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.Canopies, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadCanopies(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandHardSurfacedFenced, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandHardSurfacedFenced(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandHardSurfacedOpen, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandHardSurfacedOpen(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandGravelledFenced, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandGravelledFenced(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandGravelledOpen, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandGravelledOpen(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandUnsurfacedFenced, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandUnsurfacedFenced(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.LandUnsurfacedOpen, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadLandUnsurfacedOpen(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.PortableBuildings, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadPortableBuildings(NormalMode, assessmentId)
+      ExternalFeature.changeLink(ExternalFeature.ShippingContainers, NormalMode, assessmentId) shouldBe routes.WhatHappenedToController.onPageLoadShippingContainers(NormalMode, assessmentId)
     }
   }
 }

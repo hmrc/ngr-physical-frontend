@@ -18,6 +18,7 @@ package controllers
 
 import actions.*
 import config.AppConfig
+import models.AssessmentId
 import models.NavBarPageContents.createDefaultNavBar
 import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}

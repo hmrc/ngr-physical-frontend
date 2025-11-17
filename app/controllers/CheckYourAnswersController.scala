@@ -20,7 +20,7 @@ import actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import com.google.inject.{Inject, Singleton}
 import config.{AppConfig, FrontendAppConfig}
 import models.NavBarPageContents.createDefaultNavBar
-import models.{NormalMode, UserAnswers}
+import models.{AssessmentId, NormalMode, UserAnswers}
 import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, WhenCompleteChangePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -45,21 +45,21 @@ class CheckYourAnswersController @Inject()(
                                             view: CheckYourAnswersView
                                           )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      cyaHelper.createSectionList(request.userAnswers).map { sectionList =>
-        Ok(view(request.property.addressFull, createDefaultNavBar(), sectionList))
+      cyaHelper.createSectionList(request.userAnswers, assessmentId).map { sectionList =>
+        Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar(), sectionList))
       }
   }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit(assessmentId: AssessmentId): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
           HaveYouChangedInternalPage,
           HaveYouChangedSpacePage,
           HaveYouChangedExternalPage
-        ), routes.DeclarationController.show, routes.NotToldAnyChangesController.show)
+        ), routes.DeclarationController.show(assessmentId), routes.NotToldAnyChangesController.show(assessmentId))
         Redirect(nextPage)
     }
 }

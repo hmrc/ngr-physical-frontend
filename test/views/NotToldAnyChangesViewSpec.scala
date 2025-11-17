@@ -40,7 +40,7 @@ class NotToldAnyChangesViewSpec extends ViewBaseSpec {
 
   "NotToldAnyChangesView" must {
     "render correctly" in {
-      val document = Jsoup.parse(view("123 street", createDefaultNavBar(), NormalMode).body)
+      val document = Jsoup.parse(view(assessmentId, "123 street", createDefaultNavBar(), NormalMode).body)
 
       elementText(Selectors.address)(document) mustBe "123 street"
       elementText(Selectors.heading)(document) mustBe "You have not told us about any changes to your property"

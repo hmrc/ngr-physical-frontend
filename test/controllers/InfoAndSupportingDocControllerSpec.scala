@@ -46,7 +46,7 @@ class InfoAndSupportingDocControllerSpec extends ControllerSpecSupport with Test
   "Info and supporting Controller" must {
     "method show" must {
       "Return OK and the correct view" in {
-        val result: Future[Result] = controller().show(fakeRequest)
+        val result: Future[Result] = controller().show(assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)

@@ -72,7 +72,7 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers with TestData {
         .set(AnythingElsePage, AnythingElseData(true, Some("info"))).success.value
         .set(UploadDocumentsPage, Seq("1111", "1112")).success.value
 
-      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers), 5.seconds)
+      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers, assessmentId), 5.seconds)
       sections.size mustBe 6
       sections.head.title mustBe Some("checkYourAnswers.dateOfChange.heading")
       sections.head.rows.rows.size mustBe 1
@@ -99,7 +99,7 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers with TestData {
         .set(HaveYouChangedExternalPage, false).success.value
         .set(UploadDocumentsPage, Seq("1111")).success.value
 
-      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers), 5.seconds)
+      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers, assessmentId), 5.seconds)
       sections.size mustBe 5
       sections(1).title mustBe Some("checkYourAnswers.useOfSpace.heading")
       sections(2).title mustBe Some("checkYourAnswers.internalFeature.heading")

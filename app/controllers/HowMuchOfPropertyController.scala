@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.HowMuchOfPropertyFormProvider
 import models.InternalFeature.{AirConditioning, CompressedAir, Escalators, GoodsLift, Heating, PassengerLift, Sprinklers}
 import models.NavBarPageContents.createDefaultNavBar
-import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, UserAnswers}
+import models.{AssessmentId, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, UserAnswers}
 import navigation.Navigator
 import pages.*
 import play.api.data.Form
@@ -46,15 +46,15 @@ class HowMuchOfPropertyController @Inject()(
                                        view: HowMuchOfPropertyView
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
   
-  def onPageLoadAirCon(mode: Mode): Action[AnyContent] = onPageLoad(AirConditioning, mode)
-  def onPageLoadHeating(mode: Mode): Action[AnyContent] = onPageLoad(Heating, mode)
-  def onPageLoadSprinklers(mode: Mode): Action[AnyContent] = onPageLoad(Sprinklers, mode)
-  def onPageLoadGoodsLift(mode: Mode): Action[AnyContent] = onPageLoad(GoodsLift, mode)
-  def onPageLoadEscalator(mode: Mode): Action[AnyContent] = onPageLoad(Escalators, mode)
-  def onPageLoadPassengerLift(mode: Mode): Action[AnyContent] = onPageLoad(PassengerLift, mode)
-  def onPageLoadCompressedAir(mode: Mode): Action[AnyContent] = onPageLoad(CompressedAir, mode)
+  def onPageLoadAirCon(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(AirConditioning, mode, assessmentId)
+  def onPageLoadHeating(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(Heating, mode, assessmentId)
+  def onPageLoadSprinklers(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(Sprinklers, mode, assessmentId)
+  def onPageLoadGoodsLift(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(GoodsLift, mode, assessmentId)
+  def onPageLoadEscalator(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(Escalators, mode, assessmentId)
+  def onPageLoadPassengerLift(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(PassengerLift, mode, assessmentId)
+  def onPageLoadCompressedAir(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onPageLoad(CompressedAir, mode, assessmentId)
 
-  private def onPageLoad(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  private def onPageLoad(feature: InternalFeatureGroup1, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
@@ -65,20 +65,20 @@ class HowMuchOfPropertyController @Inject()(
       }
 
       val radioItems = HowMuchOfProperty.options(feature)
-      val action = HowMuchOfProperty.submitAction(feature, mode)
+      val action = HowMuchOfProperty.submitAction(feature, mode, assessmentId)
       val strings = HowMuchOfProperty.messageKeys(feature)
       Ok(view(request.property.addressFull, strings, action, radioItems, preparedForm, mode, createDefaultNavBar()))
   }
 
-  def onSubmitAirCon(mode: Mode): Action[AnyContent] = onSubmit(AirConditioning, mode)
-  def onSubmitHeating(mode: Mode): Action[AnyContent] = onSubmit(Heating, mode)
-  def onSubmitSprinklers(mode: Mode): Action[AnyContent] = onSubmit(Sprinklers, mode)
-  def onSubmitGoodsLift(mode: Mode): Action[AnyContent] = onSubmit(GoodsLift, mode)
-  def onSubmitEscalator(mode: Mode): Action[AnyContent] = onSubmit(Escalators, mode)
-  def onSubmitPassengerLift(mode: Mode): Action[AnyContent] = onSubmit(PassengerLift, mode)
-  def onSubmitCompressedAir(mode: Mode): Action[AnyContent] = onSubmit(CompressedAir, mode)
+  def onSubmitAirCon(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(AirConditioning, mode, assessmentId)
+  def onSubmitHeating(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(Heating, mode, assessmentId)
+  def onSubmitSprinklers(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(Sprinklers, mode, assessmentId)
+  def onSubmitGoodsLift(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(GoodsLift, mode, assessmentId)
+  def onSubmitEscalator(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(Escalators, mode, assessmentId)
+  def onSubmitPassengerLift(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(PassengerLift, mode, assessmentId)
+  def onSubmitCompressedAir(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = onSubmit(CompressedAir, mode, assessmentId)
 
-  private def onSubmit(feature: InternalFeatureGroup1, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  private def onSubmit(feature: InternalFeatureGroup1, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
@@ -86,7 +86,7 @@ class HowMuchOfPropertyController @Inject()(
       form.bindFromRequest().fold(
         formWithErrors =>
           val radioItems = HowMuchOfProperty.options(feature)
-          val action = HowMuchOfProperty.submitAction(feature, mode)
+          val action = HowMuchOfProperty.submitAction(feature, mode, assessmentId)
           val strings = HowMuchOfProperty.messageKeys(feature)
           Future.successful(BadRequest(view(request.property.addressFull, strings, action, radioItems, formWithErrors, mode, createDefaultNavBar()))),
 
@@ -94,7 +94,7 @@ class HowMuchOfPropertyController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(HowMuchOfProperty.page(feature), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers, assessmentId))
       )
   }
 }

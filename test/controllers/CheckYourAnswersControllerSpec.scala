@@ -36,7 +36,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
       implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
 
         val result = route(application, request).value
 
@@ -44,7 +44,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
         val list = Seq.empty
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(assessmentId, property.addressFull, createDefaultNavBar(), list)(request, messages(application)).toString
       }
     }
 
@@ -53,12 +53,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit().url)
+        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(assessmentId).url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.NotToldAnyChangesController.show.url)
+        redirectLocation(result) mustBe Some(routes.NotToldAnyChangesController.show(assessmentId).url)
       }
     }
 
@@ -67,12 +67,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 
@@ -81,12 +81,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit().url)
+        val request = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(assessmentId).url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
   }

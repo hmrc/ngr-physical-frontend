@@ -20,7 +20,7 @@ import actions.*
 import config.AppConfig
 import forms.ChangeToUseOfSpaceFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.{ChangeToUseOfSpace, Mode, UserAnswers}
+import models.{AssessmentId, ChangeToUseOfSpace, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ChangeToUseOfSpacePage
 import play.api.data.Form
@@ -47,26 +47,26 @@ class ChangeToUseOfSpaceController @Inject()(
 
   val form: Form[ChangeToUseOfSpace] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.get(ChangeToUseOfSpacePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(request.property.addressFull, createDefaultNavBar(), preparedForm, mode))
+      Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar(), preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest()(request.request).fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, createDefaultNavBar(), formWithErrors, mode))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, createDefaultNavBar(), formWithErrors, mode))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ChangeToUseOfSpacePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ChangeToUseOfSpacePage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(ChangeToUseOfSpacePage, mode, updatedAnswers, assessmentId))
       )
   }
 }

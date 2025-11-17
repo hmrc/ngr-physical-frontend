@@ -45,7 +45,7 @@ class SureWantRemoveChangeViewSpec extends ViewBaseSpec {
   private def testViewRendering(feature: String): Unit = {
     val form = formWithError(feature)
     val expectedHeading = s"Are you sure you want to remove the change to $feature"
-    val document = Jsoup.parse(view("123 street", expectedHeading, feature, form, createDefaultNavBar(), NormalMode, false).body)
+    val document = Jsoup.parse(view(assessmentId, "123 street", expectedHeading, feature, form, createDefaultNavBar(), NormalMode, false).body)
 
     elementText(Selectors.address)(document) mustBe "123 street"
     elementText(Selectors.heading)(document) mustBe expectedHeading

@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.SmallCheckYourAnswersFormProvider
 import models.NavBarPageContents.createDefaultNavBar
 import models.requests.{DataRequest, OptionalDataRequest}
-import models.{CYAExternal, CYAInternal, CYAViewType, CheckMode, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode, WhatHappenedTo}
+import models.{AssessmentId, CYAExternal, CYAInternal, CYAViewType, CheckMode, ExternalFeature, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode, WhatHappenedTo}
 import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, QuestionPage, SecurityCamerasChangePage}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -46,50 +46,50 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
                                                 view: SmallCheckYourAnswersView
                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private def getRows(viewType: CYAViewType, mode: Mode)(implicit request: DataRequest[AnyContent]): SummaryList = {
+  private def getRows(viewType: CYAViewType, mode: Mode, assessmentId: AssessmentId)(implicit request: DataRequest[AnyContent]): SummaryList = {
     viewType match {
-      case CYAInternal => SummaryListViewModel(InternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true))
-      case CYAExternal => SummaryListViewModel(ExternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true))
+      case CYAInternal => SummaryListViewModel(InternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true, assessmentId))
+      case CYAExternal => SummaryListViewModel(ExternalFeature.getAnswers(request.userAnswers, mode, fromMiniCYA = true, assessmentId))
     }
   }
 
-  def onPageLoad(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(viewType: CYAViewType, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(viewType)
-      val rows = getRows(viewType, mode)
-      Ok(view(viewType, request.property.addressFull, rows, form, createDefaultNavBar(), mode))
+      val rows = getRows(viewType, mode, assessmentId)
+      Ok(view(assessmentId, viewType, request.property.addressFull, rows, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(viewType: CYAViewType, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(viewType: CYAViewType, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val form: Form[Boolean] = formProvider(viewType)
       
       form.bindFromRequest().fold(
         formWithErrors =>
-          val rows = getRows(viewType, mode)
-          Future.successful(BadRequest(view(viewType, request.property.addressFull, rows, formWithErrors, createDefaultNavBar(), mode))),
+          val rows = getRows(viewType, mode, assessmentId)
+          Future.successful(BadRequest(view(assessmentId, viewType, request.property.addressFull, rows, formWithErrors, createDefaultNavBar(), mode))),
         {
           case true => viewType match {
-            case CYAInternal => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad(mode)))
-            case CYAExternal => Future.successful(Redirect(routes.WhichExternalFeatureController.onPageLoad(mode)))
+            case CYAInternal => Future.successful(Redirect(routes.WhichInternalFeatureController.onPageLoad(mode, assessmentId)))
+            case CYAExternal => Future.successful(Redirect(routes.WhichExternalFeatureController.onPageLoad(mode, assessmentId)))
           }
           case false => viewType match {
-            case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(mode)))
+            case CYAInternal if mode == NormalMode => Future.successful(Redirect(routes.HaveYouChangedController.loadExternal(mode, assessmentId)))
             case CYAExternal if mode == NormalMode =>
 
               val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
                 HaveYouChangedInternalPage,
                 HaveYouChangedSpacePage,
                 HaveYouChangedExternalPage
-              ), routes.AnythingElseController.onPageLoad(NormalMode), routes.NotToldAnyChangesController.show)
+              ), routes.AnythingElseController.onPageLoad(NormalMode, assessmentId), routes.NotToldAnyChangesController.show(assessmentId))
               Future.successful(Redirect(nextPage))
-            case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
+            case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad(assessmentId)))
           }
         }
       )
   }
 
-  def removeInternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def removeInternal(featureString: String, mode: Mode, fromMiniCYA: Boolean, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val feature = InternalFeature.withNameOption(featureString)
       val page: QuestionPage[?] = feature match {
@@ -99,25 +99,25 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
       }
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
-        newUpdatedAnswers <- if(InternalFeature.getAnswers(updatedAnswers, mode, fromMiniCYA).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
+        newUpdatedAnswers <- if(InternalFeature.getAnswers(updatedAnswers, mode, fromMiniCYA, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
-        if (fromMiniCYA) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode)
-        else routes.CheckYourAnswersController.onPageLoad()
+        if (fromMiniCYA) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode, assessmentId)
+        else routes.CheckYourAnswersController.onPageLoad(assessmentId)
       )
   }
 
-  def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("no external feature chosen to remove"))
       val page: QuestionPage[?] = WhatHappenedTo.page(feature)
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
-        newUpdatedAnswers <- if(ExternalFeature.getAnswers(updatedAnswers, mode).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
+        newUpdatedAnswers <- if(ExternalFeature.getAnswers(updatedAnswers, mode, false, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
-        if (fromMiniCYA)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode)
-        else routes.CheckYourAnswersController.onPageLoad()
+        if (fromMiniCYA)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode, assessmentId)
+        else routes.CheckYourAnswersController.onPageLoad(assessmentId)
       )
   }
 }

@@ -29,7 +29,7 @@
     govukButton: GovukButton
 )
 
-@(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
     @dropDownContentHelp = {
         @p(id = Some("detail-para-1")) { @messages("info.and.supporting.help.details1") }
@@ -101,7 +101,7 @@
     <p class="govuk-body">
         @govukButton(
         ButtonViewModel(messages("site.continue"))
-        .asLink(routes.WhenCompleteChangeController.onPageLoad(NormalMode).url)
+        .asLink(routes.WhenCompleteChangeController.onPageLoad(NormalMode, assessmentId).url)
         .withAttribute("id" -> "continue")
         )
     </p>

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{AssessmentId, CheckMode, UserAnswers}
 import pages.ChangeToUseOfSpacePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,7 +28,7 @@ import viewmodels.implicits.*
 
 object ChangeToUseOfSpaceSummary  {
 
-  def rows(answers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+  def rows(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     answers.get(ChangeToUseOfSpacePage).map {
       answers =>
 
@@ -48,7 +48,7 @@ object ChangeToUseOfSpaceSummary  {
             key = "changeToUseOfSpace.useOfSpace.h2",
             value = value,
             actions = Seq(
-              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode, assessmentId).url)
                 .withVisuallyHiddenText(messages("changeToUseOfSpace.useOfSpace.h2"))
             )
           )),
@@ -56,7 +56,7 @@ object ChangeToUseOfSpaceSummary  {
             key = "changeToUseOfSpace.permission.h2",
             value = ValueViewModel(messages(booleanValue)),
             actions = Seq(
-              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+              ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode, assessmentId).url)
                 .withVisuallyHiddenText(messages("changeToUseOfSpace.permission.h2"))
             )
           )),
@@ -65,7 +65,7 @@ object ChangeToUseOfSpaceSummary  {
               key = "changeToUseOfSpace.permissionReference",
               value = ValueViewModel(HtmlContent(referenceValue)),
               actions = Seq(
-                ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode).url)
+                ActionItemViewModel("site.change", routes.ChangeToUseOfSpaceController.onPageLoad(CheckMode, assessmentId).url)
                   .withVisuallyHiddenText(messages("changeToUseOfSpace.permissionReference"))
               )
             )

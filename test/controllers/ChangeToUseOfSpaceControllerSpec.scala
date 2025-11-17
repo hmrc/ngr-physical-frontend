@@ -39,7 +39,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
 
   val formProvider = new ChangeToUseOfSpaceFormProvider()
   val form: Form[ChangeToUseOfSpace] = formProvider()
-  lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode).url
+  lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode, assessmentId).url
   val changeToUseOfSpace: ChangeToUseOfSpace = ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("1234555"))
   val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeToUseOfSpacePage, changeToUseOfSpace).success.value
 
@@ -58,7 +58,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(assessmentId, property.addressFull, createDefaultNavBar(), form, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -76,7 +76,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), form.fill(ChangeToUseOfSpace(Set(Rearrangedtheuseofspace),true, Some("1234555"))), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(assessmentId, property.addressFull, createDefaultNavBar(), form.fill(ChangeToUseOfSpace(Set(Rearrangedtheuseofspace),true, Some("1234555"))), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -118,7 +118,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(property.addressFull, createDefaultNavBar(), boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(assessmentId, property.addressFull, createDefaultNavBar(), boundForm, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -133,7 +133,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 
@@ -149,7 +149,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
   }

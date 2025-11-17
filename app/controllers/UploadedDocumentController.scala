@@ -19,7 +19,7 @@ package controllers
 import actions.*
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
-import models.UserAnswers
+import models.{AssessmentId, UserAnswers}
 import models.registration.CredId
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.upscan.UploadStatus.{InProgress, UploadedSuccessfully}
@@ -55,13 +55,13 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
                                            val controllerComponents: MessagesControllerComponents)(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
-  private def showUploadProgress(allUploadStatus: Map[String, UploadStatus])(implicit messages: Messages): SummaryList = {
+  private def showUploadProgress(allUploadStatus: Map[String, UploadStatus], assessmentId: AssessmentId)(implicit messages: Messages): SummaryList = {
     SummaryList(allUploadStatus.map { case (uploadId, uploadStatus) =>
-      createRow(uploadId, uploadStatus)
+      createRow(uploadId, uploadStatus, assessmentId)
     }.toSeq).withCssClass("govuk-summary-list--long-key")
   }
 
-  private def createRow(uploadId: String, uploadStatus: UploadStatus)(implicit messages: Messages): SummaryListRow = {
+  private def createRow(uploadId: String, uploadStatus: UploadStatus, assessmentId: AssessmentId)(implicit messages: Messages): SummaryListRow = {
     uploadStatus match
       case UploadStatus.UploadedSuccessfully(name, mimeType, downloadUrl, size) =>
             SummaryListRowViewModel(
@@ -69,7 +69,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
               value = Value(
                 HtmlContent(s"""<span class="govuk-tag govuk-tag--green govuk-!-margin-0">${messages("uploadedDocument.uploaded").mkString} </span> """)
               ).withCssClass("govuk-!-text-align-right"),
-              actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url))
+              actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId, assessmentId).url))
             )
       case UploadStatus.InProgress =>
           SummaryListRowViewModel(
@@ -77,7 +77,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
             value = ValueViewModel(
               HtmlContent(s"""<span class="govuk-tag govuk-tag--yellow govuk-!-margin-0">${messages("uploadedDocument.uploading").mkString} </span> """)
             ).withCssClass("govuk-!-text-align-right"),
-            actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url))
+            actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId, assessmentId).url))
       )
       case UploadStatus.Failed =>
         SummaryListRowViewModel(
@@ -85,7 +85,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
           value =  ValueViewModel(
             HtmlContent(s"""<span class="govuk-tag govuk-tag--red govuk-!-margin-0">${messages("uploadedDocument.failed").mkString} </span> """)
           ).withCssClass("govuk-!-text-align-right"),
-          actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId).url).withCssClass("govuk-grid-column-one-quarter"))
+          actions = Seq(ActionItemViewModel(messages("site.remove"), routes.RemoveFileController.onPageLoad(uploadId, assessmentId).url).withCssClass("govuk-grid-column-one-quarter"))
       )
   }
 
@@ -95,7 +95,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
 
 
 
-  def show(uploadId: Option[UploadId]): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def show(uploadId: Option[UploadId], assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
 
     val currentAnswers: Seq[String] = (request.userAnswers.get(UploadDocumentsPage), uploadId) match {
       case (None, None) => Seq.empty[String]
@@ -106,7 +106,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     }
 
     if (currentAnswers.isEmpty) {
-      Future.successful(Redirect(routes.UploadDocumentController.onPageLoad(None)))
+      Future.successful(Redirect(routes.UploadDocumentController.onPageLoad(None, assessmentId)))
     } else {
       request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
         updatedAnswers => sessionRepository.set(updatedAnswers)
@@ -122,25 +122,26 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
       Future.sequence(uploadStatusCalls).map(_.flatten.toMap).map { uploadStatuses =>
         val inProgress = containsInProgress(uploadStatuses.values.toSeq)
         Ok(view(
+          assessmentId,
           createDefaultNavBar,
-          showUploadProgress(uploadStatuses),
+          showUploadProgress(uploadStatuses, assessmentId),
           request.property.addressFull,
           inProgress,
-          routes.UploadedDocumentController.onSubmit(uploadId, inProgress)
+          routes.UploadedDocumentController.onSubmit(uploadId, inProgress, assessmentId)
         ))
       }
     }
   }
 
-  def onSubmit(uploadId: Option[UploadId], inProgress: Boolean): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(uploadId: Option[UploadId], inProgress: Boolean, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
     if (inProgress)
-      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId)))
-    else Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad()))
+      Future.successful(Redirect(routes.UploadedDocumentController.show(uploadId, assessmentId)))
+    else Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad(assessmentId)))
 
   }
   
-  def statusFragment(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def statusFragment(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val currentAnswers: Seq[String] = request.userAnswers.get(UploadDocumentsPage) match {
       case Some(value)  => value
       case None => Seq.empty[String]
@@ -155,7 +156,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     }
 
       Future.sequence(uploadStatusCalls).map(_.flatten.toMap).map { uploadStatuses =>
-        val html = showUploadProgress(uploadStatuses)
+        val html = showUploadProgress(uploadStatuses, assessmentId)
         Ok(GovukSummaryList().render(html))
       }
     
