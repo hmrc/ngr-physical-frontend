@@ -41,7 +41,7 @@ class SubmissionConfirmationController @Inject()(
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val ref = request.userAnswers.get(DeclarationPage).getOrElse(throw new NotFoundException("Reference number not found"))
-      sessionRepository.set(request.userAnswers.clear())
+      sessionRepository.clear(request.credId)
       Ok(view(request.property.addressFull, ref, createDefaultNavBar()))
   }
 }

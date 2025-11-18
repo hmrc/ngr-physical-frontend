@@ -63,9 +63,6 @@ final case class UserAnswers(
     }
   }
 
-  def clear(): UserAnswers =
-    copy(data = Json.obj(), lastUpdated = Instant.now())
-    
 }
 
 object UserAnswers {
