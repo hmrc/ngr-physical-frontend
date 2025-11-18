@@ -17,7 +17,7 @@
 package connectors
 
 import config.{AppConfig, FrontendAppConfig}
-import models.{NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
+import models.{AssessmentId, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
 import models.registration.{CredId, RatepayerRegistrationValuation}
 import play.api.Logging
 import play.api.libs.json.Json
@@ -40,11 +40,11 @@ class NGRNotifyConnector @Inject()(http: HttpClientV2,
     HeaderNames.CONTENT_TYPE -> "application/json"
   )
 
-  private def url(path: String): URL = url"${appConfig.nextGenerationRatesNotifyUrl}/ngr-notify/$path"
+  private def url(path: String, assessmentId: AssessmentId): URL = url"${appConfig.nextGenerationRatesNotifyUrl}/ngr-notify/$path/$assessmentId"
 
-  def postPropertyChanges(userAnswers: PropertyChangesUserAnswers)(implicit hc: HeaderCarrier): Future[NotifyPropertyChangeResponse] = {
+  def postPropertyChanges(userAnswers: PropertyChangesUserAnswers, assessmentId: AssessmentId)(implicit hc: HeaderCarrier): Future[NotifyPropertyChangeResponse] = {
     if (appConfig.features.bridgeEndpointEnabled()) {
-      http.post(url("physical"))
+      http.post(url("physical", assessmentId))
         .withBody(Json.toJson(userAnswers))
         .setHeader(headers.toSeq *)
         .execute[NotifyPropertyChangeResponse]

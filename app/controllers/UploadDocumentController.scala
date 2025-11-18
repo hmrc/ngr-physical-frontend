@@ -73,8 +73,7 @@ class UploadDocumentController @Inject()(
       val errorToDisplay: Option[String] = renderError(errorCode)
       val uploadId = UploadId.generate()
       val successRedirectUrl: String = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(Some(uploadId), assessmentId).url}"
-      val errorRedirectUrl : String = s"${appConfig.ngrPhysicalFrontendUrl}/upload-supporting-document"
-
+      val errorRedirectUrl : String = s"${appConfig.ngrPhysicalFrontendUrl}/upload-supporting-document/${assessmentId.value}"
 
       val currentAnswers = request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
         case None => Seq.empty[String]

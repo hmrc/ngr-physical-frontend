@@ -28,7 +28,7 @@ import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
 import models.{AssessmentId, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
-import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, WhenCompleteChangePage}
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, UploadDocumentsPage, WhenCompleteChangePage}
 import play.api.Logging
 import play.api.libs.json.Json
 import repositories.SessionRepository
@@ -66,7 +66,8 @@ class DeclarationController @Inject()(
               useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
               internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
               externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
-              additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId))
+              additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId)),
+              uploadedDocuments = Seq.empty[String] // TODO Implementation is pending for uploaded documents more tickets to follow
             )
 
             request.userAnswers.get(DeclarationPage(assessmentId)) match {
@@ -75,7 +76,7 @@ class DeclarationController @Inject()(
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
                   _ <- sessionRepository.set(updatedAnswers)
-                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)))
+                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)), assessmentId)
                 } yield response.error match {
                   case None => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                   case Some(e) =>
@@ -83,7 +84,7 @@ class DeclarationController @Inject()(
                     BadRequest
                 }
               case Some(value) =>
-                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value))).map {
+                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
                   response => response.error match {
                     case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                     case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
