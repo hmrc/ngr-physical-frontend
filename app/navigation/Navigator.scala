@@ -75,7 +75,6 @@ class Navigator @Inject() {
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, assessmentId: AssessmentId): Call = mode match {
     case NormalMode =>
-      println("Navigator nextPage NormalMode called for page "+page)
       normalRoutes(page, assessmentId)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))
     case CheckMode =>
       checkRouteMap(page, assessmentId)(userAnswers).getOrElse(throw new RuntimeException("No selection - should be caught by form validation"))

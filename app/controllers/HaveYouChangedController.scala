@@ -72,7 +72,6 @@ class HaveYouChangedController @Inject()(
 
   private def onSubmit(use: HaveYouChangedControllerUse, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      println("HaveYouChangedController onSubmit called"+request.userAnswers)
       val form: Form[Boolean] = formProvider(use)
       form.bindFromRequest().fold(
         formWithErrors =>
