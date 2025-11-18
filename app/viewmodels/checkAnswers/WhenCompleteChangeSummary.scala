@@ -28,7 +28,7 @@ import viewmodels.implicits.*
 object WhenCompleteChangeSummary  {
 
   def row(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhenCompleteChangePage).map {
+    answers.get(WhenCompleteChangePage(assessmentId)).map {
       answer =>
 
         implicit val lang: Lang = messages.lang

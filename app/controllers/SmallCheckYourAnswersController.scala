@@ -78,9 +78,9 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
             case CYAExternal if mode == NormalMode =>
 
               val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
-                HaveYouChangedInternalPage,
-                HaveYouChangedSpacePage,
-                HaveYouChangedExternalPage
+                HaveYouChangedInternalPage(assessmentId),
+                HaveYouChangedSpacePage(assessmentId),
+                HaveYouChangedExternalPage(assessmentId)
               ), routes.AnythingElseController.onPageLoad(NormalMode, assessmentId), routes.NotToldAnyChangesController.show(assessmentId))
               Future.successful(Redirect(nextPage))
             case _ => Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad(assessmentId)))
@@ -93,13 +93,13 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
     implicit request =>
       val feature = InternalFeature.withNameOption(featureString)
       val page: QuestionPage[?] = feature match {
-        case Some(group1: InternalFeatureGroup1) => HowMuchOfProperty.page(group1)
-        case Some(InternalFeature.SecurityCamera) => SecurityCamerasChangePage
+        case Some(group1: InternalFeatureGroup1) => HowMuchOfProperty.page(group1, assessmentId)
+        case Some(InternalFeature.SecurityCamera) => SecurityCamerasChangePage(assessmentId)
         case None => throw new RuntimeException("no internal feature chosen to remove")
       }
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
-        newUpdatedAnswers <- if(InternalFeature.getAnswers(updatedAnswers, mode, fromMiniCYA, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage, false)) else Future.successful(updatedAnswers)
+        newUpdatedAnswers <- if(InternalFeature.getAnswers(updatedAnswers, mode, fromMiniCYA, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedInternalPage(assessmentId), false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
         if (fromMiniCYA) routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, mode, assessmentId)
@@ -110,10 +110,10 @@ class SmallCheckYourAnswersController @Inject()(identify: IdentifierAction,
   def removeExternal(featureString: String, mode: Mode, fromMiniCYA: Boolean, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val feature = ExternalFeature.withNameOption(featureString).getOrElse(throw new NotFoundException("no external feature chosen to remove"))
-      val page: QuestionPage[?] = WhatHappenedTo.page(feature)
+      val page: QuestionPage[?] = WhatHappenedTo.page(feature, assessmentId)
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.remove(page))
-        newUpdatedAnswers <- if(ExternalFeature.getAnswers(updatedAnswers, mode, false, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage, false)) else Future.successful(updatedAnswers)
+        newUpdatedAnswers <- if(ExternalFeature.getAnswers(updatedAnswers, mode, false, assessmentId).isEmpty) Future.fromTry(updatedAnswers.set(HaveYouChangedExternalPage(assessmentId), false)) else Future.successful(updatedAnswers)
         _ <- sessionRepository.set(newUpdatedAnswers)
       } yield Redirect(
         if (fromMiniCYA)  routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, mode, assessmentId)

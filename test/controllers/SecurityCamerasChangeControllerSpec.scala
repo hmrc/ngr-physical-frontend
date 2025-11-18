@@ -50,7 +50,7 @@ class SecurityCamerasChangeControllerSpec extends ControllerSpecSupport {
         }
 
         "return 200 with pre-populated data" in {
-          val userAnswers = emptyUserAnswers.set(SecurityCamerasChangePage, 10).success.value
+          val userAnswers = emptyUserAnswers.set(SecurityCamerasChangePage(assessmentId), 10).success.value
           val result = controller(Some(userAnswers)).onPageLoad(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 200
         }

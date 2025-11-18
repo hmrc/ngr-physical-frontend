@@ -28,9 +28,9 @@ object HaveYouChangedSummary  {
   def row(answers: UserAnswers, use: HaveYouChangedControllerUse, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] = {
 
     val (page: QuestionPage[Boolean], key: String) = use match {
-      case Space => (HaveYouChangedSpacePage, "haveYouChangedSpace")
-      case Internal => (HaveYouChangedInternalPage, "haveYouChangedInternal")
-      case External => (HaveYouChangedExternalPage, "haveYouChangedExternal")
+      case Space => (HaveYouChangedSpacePage(assessmentId), "haveYouChangedSpace")
+      case Internal => (HaveYouChangedInternalPage(assessmentId), "haveYouChangedInternal")
+      case External => (HaveYouChangedExternalPage(assessmentId), "haveYouChangedExternal")
     }
 
     answers.get(page).map {

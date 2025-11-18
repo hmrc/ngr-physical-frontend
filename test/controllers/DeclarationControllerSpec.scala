@@ -42,20 +42,20 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
   def minUserAnswers: UserAnswers =
     emptyUserAnswers
-      .set(DeclarationPage, "some-reference").success.value
-      .set(AnythingElsePage, AnythingElseData(false, None)).success.value
+      .set(DeclarationPage(assessmentId), "some-reference").success.value
+      .set(AnythingElsePage(assessmentId), AnythingElseData(false, None)).success.value
       .set(
-        ChangeToUseOfSpacePage,
+        ChangeToUseOfSpacePage(assessmentId),
         ChangeToUseOfSpace(
           selectUseOfSpace = Set.empty[UseOfSpaces],
           hasPlanningPermission = false,
           permissionReference = None
         )).success.value
-      .set(HaveYouChangedSpacePage, false).success.value
-      .set(HowMuchOfProperty.page(AirConditioning), HowMuchOfProperty.values.head).success.value
-      .set(SecurityCamerasChangePage, 0).success.value
-      .set(WhatHappenedTo.page(LoadingBays), WhatHappenedTo.Added).success.value
-      .set(WhenCompleteChangePage, LocalDate.of(2025, 8, 12)).success.value
+      .set(HaveYouChangedSpacePage(assessmentId), false).success.value
+      .set(HowMuchOfProperty.page(AirConditioning, assessmentId), HowMuchOfProperty.values.head).success.value
+      .set(SecurityCamerasChangePage(assessmentId), 0).success.value
+      .set(WhatHappenedTo.page(LoadingBays, assessmentId), WhatHappenedTo.Added).success.value
+      .set(WhenCompleteChangePage(assessmentId), LocalDate.of(2025, 8, 12)).success.value
 
   def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = DeclarationController(
     mcc,
@@ -90,16 +90,16 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
       "redirect when accepted and DeclarationPage data is present without generated Reference" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         when(mockNGRNotifyConnector.postPropertyChanges(any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
-        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(DeclarationPage).success.value)).next(assessmentId)(authenticatedFakeRequest)
+        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(DeclarationPage(assessmentId)).success.value)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad.url
+        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad(assessmentId).url
       }
 
       "redirect when accepted and DeclarationPage data is present without mandatory field when change completed" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         when(mockNGRNotifyConnector.postPropertyChanges(any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
-        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(WhenCompleteChangePage).success.value)).next(assessmentId)(authenticatedFakeRequest)
+        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(WhenCompleteChangePage(assessmentId)).success.value)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe BAD_REQUEST
       }
@@ -110,7 +110,7 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
         val result = controllerWithUserAnswers(Some(minUserAnswers)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad.url
+        redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad(assessmentId).url
       }
 
     }

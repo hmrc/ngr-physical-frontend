@@ -27,26 +27,26 @@ import play.api.mvc.Call
 class ExternalFeatureSpec extends AnyFreeSpec with Matchers {
 
   private val assessmentId = AssessmentId("test-assessment-id")
-  
+
   "ExternalFeature" - {
     "should contain all the pageSet" in {
-      ExternalFeature.pageSet mustBe List(
-        WhatHappenedToLoadingBaysPage,
-        WhatHappenedToLockupGaragesPage,
-        WhatHappenedToOutdoorSeatingPage,
-        WhatHappenedToParkingPage,
-        WhatHappenedToSolarPanelsPage,
-        WhatHappenedToAdvertisingDisplaysPage,
-        WhatHappenedToBikeShedsPage,
-        WhatHappenedToCanopiesPage,
-        WhatHappenedToLandHardSurfacedFencedPage,
-        WhatHappenedToLandHardSurfacedOpenPage,
-        WhatHappenedToLandGravelledFencedPage,
-        WhatHappenedToLandGravelledOpenPage,
-        WhatHappenedToLandUnsurfacedFencedPage,
-        WhatHappenedToLandUnsurfacedOpenPage,
-        WhatHappenedToPortableBuildingsPage,
-        WhatHappenedToShippingContainersPage
+      ExternalFeature.pageSet(assessmentId) mustBe List(
+        WhatHappenedToLoadingBaysPage(assessmentId) ,
+        WhatHappenedToLockupGaragesPage(assessmentId) ,
+        WhatHappenedToOutdoorSeatingPage(assessmentId) ,
+        WhatHappenedToParkingPage(assessmentId) ,
+        WhatHappenedToSolarPanelsPage(assessmentId) ,
+        WhatHappenedToAdvertisingDisplaysPage(assessmentId) ,
+        WhatHappenedToBikeShedsPage(assessmentId) ,
+        WhatHappenedToCanopiesPage(assessmentId) ,
+        WhatHappenedToLandHardSurfacedFencedPage(assessmentId) ,
+        WhatHappenedToLandHardSurfacedOpenPage(assessmentId) ,
+        WhatHappenedToLandGravelledFencedPage(assessmentId) ,
+        WhatHappenedToLandGravelledOpenPage(assessmentId) ,
+        WhatHappenedToLandUnsurfacedFencedPage(assessmentId) ,
+        WhatHappenedToLandUnsurfacedOpenPage(assessmentId) ,
+        WhatHappenedToPortableBuildingsPage(assessmentId) ,
+        WhatHappenedToShippingContainersPage(assessmentId)
       )
     }
   }

@@ -50,7 +50,7 @@ class SecurityCamerasChangeController @Inject()(
   def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(SecurityCamerasChangePage) match {
+      val preparedForm = request.userAnswers.get(SecurityCamerasChangePage(assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -67,9 +67,9 @@ class SecurityCamerasChangeController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(SecurityCamerasChangePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SecurityCamerasChangePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SecurityCamerasChangePage, mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(SecurityCamerasChangePage(assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

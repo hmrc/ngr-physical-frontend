@@ -16,6 +16,7 @@
 
 package pages
 
+import helpers.TestData
 import models.UseOfSpaces.Rearrangedtheuseofspace
 import models.{ChangeToUseOfSpace, UserAnswers}
 import org.scalatest.TryValues.convertTryToSuccessOrFailure
@@ -24,40 +25,40 @@ import org.scalatest.funsuite.AnyFunSuiteLike
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 
-class HaveYouChangedSpacePageSpec extends AnyFreeSpec with Matchers {
+class HaveYouChangedSpacePageSpec extends AnyFreeSpec with Matchers with TestData {
 
   "HaveYouChangedSpacePageSpec" - {
     "cleanup" - {
       "must clear ChangeToUseOfSpacePage data when the flag is changed from 'yes' to 'No'" in {
 
         val result = UserAnswers("id")
-          .set(HaveYouChangedSpacePage, true)
+          .set(HaveYouChangedSpacePage(assessmentId), true)
           .success
           .value
-          .set(ChangeToUseOfSpacePage, ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("details")))
+          .set(ChangeToUseOfSpacePage(assessmentId), ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("details")))
           .success
           .value
-          .set(HaveYouChangedSpacePage, false)
+          .set(HaveYouChangedSpacePage(assessmentId), false)
           .success
           .value
 
-        result.get(ChangeToUseOfSpacePage) must not be defined
+        result.get(ChangeToUseOfSpacePage(assessmentId)) must not be defined
       }
 
       "must retain ChangeToUseOfSpacePage data when the flag is changed from 'No' to 'Yes'" in {
 
         val result = UserAnswers("id")
-          .set(HaveYouChangedSpacePage, false)
+          .set(HaveYouChangedSpacePage(assessmentId), false)
           .success
           .value
-          .set(HaveYouChangedSpacePage, true)
+          .set(HaveYouChangedSpacePage(assessmentId), true)
           .success
           .value
-          .set(ChangeToUseOfSpacePage, ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("details")))
+          .set(ChangeToUseOfSpacePage(assessmentId), ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("details")))
           .success
           .value
 
-        result.get(ChangeToUseOfSpacePage) mustBe defined
+        result.get(ChangeToUseOfSpacePage(assessmentId)) mustBe defined
       }
     }
   }

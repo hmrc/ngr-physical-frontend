@@ -97,7 +97,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
 
   def show(uploadId: Option[UploadId], assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
 
-    val currentAnswers: Seq[String] = (request.userAnswers.get(UploadDocumentsPage), uploadId) match {
+    val currentAnswers: Seq[String] = (request.userAnswers.get(UploadDocumentsPage(assessmentId)), uploadId) match {
       case (None, None) => Seq.empty[String]
       case (None, Some(newUploadId)) => Seq(newUploadId.value)
       case (Some(value), Some(newUploadId)) if value.contains(newUploadId.value) => value
@@ -108,7 +108,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
     if (currentAnswers.isEmpty) {
       Future.successful(Redirect(routes.UploadDocumentController.onPageLoad(None, assessmentId)))
     } else {
-      request.userAnswers.set(UploadDocumentsPage, currentAnswers).map {
+      request.userAnswers.set(UploadDocumentsPage(assessmentId), currentAnswers).map {
         updatedAnswers => sessionRepository.set(updatedAnswers)
       }
 
@@ -142,7 +142,7 @@ class UploadedDocumentController @Inject()(uploadProgressTracker: UploadProgress
   }
   
   def statusFragment(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val currentAnswers: Seq[String] = request.userAnswers.get(UploadDocumentsPage) match {
+    val currentAnswers: Seq[String] = request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
       case Some(value)  => value
       case None => Seq.empty[String]
     }

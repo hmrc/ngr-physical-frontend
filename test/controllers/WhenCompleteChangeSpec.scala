@@ -43,7 +43,7 @@ class WhenCompleteChangeSpec extends ControllerSpecSupport {
       view
     )
 
-  lazy val userAnswersFilled: Option[UserAnswers] = UserAnswers("id").set(WhenCompleteChangePage, LocalDate.of(2025, 8, 12)).toOption
+  lazy val userAnswersFilled: Option[UserAnswers] = UserAnswers("id").set(WhenCompleteChangePage(assessmentId), LocalDate.of(2025, 8, 12)).toOption
 
   "HaveYouChangedController" must {
     "return 200 for space" in {

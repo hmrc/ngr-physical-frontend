@@ -78,7 +78,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
       "Return OK and the correct view when UploadedSuccessfully" in {
         when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(UploadedSuccessfully("filename.png", ".png", url"http://example.com/dummyLink", Some(120L)))))
-        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("12334")).success.value
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage(assessmentId), Seq("12334")).success.value
         val result: Future[Result] = controller(Some(userAnswers)).show(Some(UploadId("12334")), assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
@@ -89,7 +89,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
       "Return OK and the correct view when Upload status is in progress" in {
         when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(InProgress)))
-        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("111111")).success.value
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage(assessmentId), Seq("111111")).success.value
         val result: Future[Result] = controller(Some(userAnswers)).show(Some(UploadId("12235")), assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
@@ -111,7 +111,7 @@ class UploadedDocumentControllerSpec extends ControllerSpecSupport with TestData
 
       "Return BadRequest when no file has been uploaded with files present " in {
         when(mockUploadProgressTracker.getUploadResult(any())).thenReturn(Future.successful(Some(InProgress)))
-        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage, Seq("111111")).success.value
+        val userAnswers = emptyUserAnswers.set(UploadDocumentsPage(assessmentId), Seq("111111")).success.value
         val result: Future[Result] = controller(Some(userAnswers)).show(None, assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)

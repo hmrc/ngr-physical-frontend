@@ -59,7 +59,7 @@ class HowMuchOfPropertyController @Inject()(
 
       val form: Form[HowMuchOfProperty] = formProvider(feature)
 
-      val preparedForm = request.userAnswers.get(HowMuchOfProperty.page(feature)) match {
+      val preparedForm = request.userAnswers.get(HowMuchOfProperty.page(feature, assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -92,9 +92,9 @@ class HowMuchOfPropertyController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(HowMuchOfProperty.page(feature), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(HowMuchOfProperty.page(feature, assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature), mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(HowMuchOfProperty.page(feature, assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

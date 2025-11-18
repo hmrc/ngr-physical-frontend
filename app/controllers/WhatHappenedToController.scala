@@ -67,7 +67,7 @@ class WhatHappenedToController @Inject()(
 
       val form: Form[WhatHappenedTo] = formProvider(feature)
 
-      val preparedForm = request.userAnswers.get(WhatHappenedTo.page(feature)) match {
+      val preparedForm = request.userAnswers.get(WhatHappenedTo.page(feature, assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -109,9 +109,9 @@ class WhatHappenedToController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatHappenedTo.page(feature), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatHappenedTo.page(feature, assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhatHappenedTo.page(feature), mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(WhatHappenedTo.page(feature, assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

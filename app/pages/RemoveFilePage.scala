@@ -16,11 +16,12 @@
 
 package pages
 
+import models.AssessmentId
 import play.api.libs.json.JsPath
 
-case object RemoveFilePage extends QuestionPage[Boolean] {
+case class RemoveFilePage(assessmentId: AssessmentId) extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "removeFile"
 }

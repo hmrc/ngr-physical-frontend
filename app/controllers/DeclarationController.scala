@@ -58,26 +58,26 @@ class DeclarationController @Inject()(
     (authenticate andThen getData andThen requireData).async  {
       implicit request =>
 
-        request.userAnswers.get(WhenCompleteChangePage) match {
+        request.userAnswers.get(WhenCompleteChangePage(assessmentId)) match {
           case Some(date) =>
             val userAnswers = PropertyChangesUserAnswers(
               CredId(request.credId),
               dateOfChange = date,
-              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage),
-              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers),
-              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers),
-              additionalInfo = request.userAnswers.get(AnythingElsePage)
+              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
+              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+              additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId))
             )
 
-            request.userAnswers.get(DeclarationPage) match {
+            request.userAnswers.get(DeclarationPage(assessmentId)) match {
               case None =>
                 val generateRef =  UniqueIdGenerator.generateId
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
                   _ <- sessionRepository.set(updatedAnswers)
                   response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)))
                 } yield response.error match {
-                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad)
+                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                   case Some(e) =>
                     logger.error(s"[DeclarationController] error occurred: $e")
                     BadRequest
@@ -85,7 +85,7 @@ class DeclarationController @Inject()(
               case Some(value) =>
                 connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value))).map {
                   response => response.error match {
-                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad)
+                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                     case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
                       BadRequest
                   }

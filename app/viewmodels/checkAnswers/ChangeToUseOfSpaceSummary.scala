@@ -29,7 +29,7 @@ import viewmodels.implicits.*
 object ChangeToUseOfSpaceSummary  {
 
   def rows(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    answers.get(ChangeToUseOfSpacePage).map {
+    answers.get(ChangeToUseOfSpacePage(assessmentId)).map {
       answers =>
 
         val value = ValueViewModel(

@@ -100,24 +100,24 @@ object WhatHappenedTo extends Enumerable.Implicits {
       case ShippingContainers => onPageSubmitShippingContainers(mode: Mode, assessmentId)
     }
   
-  def page(feature: ExternalFeature): QuestionPage[WhatHappenedTo] =
+  def page(feature: ExternalFeature, assessmentId: AssessmentId): QuestionPage[WhatHappenedTo] =
     feature match {
-      case LoadingBays => WhatHappenedToLoadingBaysPage
-      case LockupGarages => WhatHappenedToLockupGaragesPage
-      case OutdoorSeating => WhatHappenedToOutdoorSeatingPage
-      case Parking => WhatHappenedToParkingPage
-      case SolarPanels => WhatHappenedToSolarPanelsPage
-      case AdvertisingDisplays => WhatHappenedToAdvertisingDisplaysPage
-      case BikeSheds => WhatHappenedToBikeShedsPage
-      case Canopies => WhatHappenedToCanopiesPage
-      case LandHardSurfacedFenced => WhatHappenedToLandHardSurfacedFencedPage
-      case LandHardSurfacedOpen => WhatHappenedToLandHardSurfacedOpenPage
-      case LandGravelledFenced => WhatHappenedToLandGravelledFencedPage
-      case LandGravelledOpen => WhatHappenedToLandGravelledOpenPage
-      case LandUnsurfacedFenced => WhatHappenedToLandUnsurfacedFencedPage
-      case LandUnsurfacedOpen => WhatHappenedToLandUnsurfacedOpenPage
-      case PortableBuildings=> WhatHappenedToPortableBuildingsPage
-      case ShippingContainers => WhatHappenedToShippingContainersPage
+      case LoadingBays => WhatHappenedToLoadingBaysPage(assessmentId)
+      case LockupGarages => WhatHappenedToLockupGaragesPage(assessmentId)
+      case OutdoorSeating => WhatHappenedToOutdoorSeatingPage(assessmentId)
+      case Parking => WhatHappenedToParkingPage(assessmentId)
+      case SolarPanels => WhatHappenedToSolarPanelsPage(assessmentId)
+      case AdvertisingDisplays => WhatHappenedToAdvertisingDisplaysPage(assessmentId)
+      case BikeSheds => WhatHappenedToBikeShedsPage(assessmentId)
+      case Canopies => WhatHappenedToCanopiesPage(assessmentId)
+      case LandHardSurfacedFenced => WhatHappenedToLandHardSurfacedFencedPage(assessmentId)
+      case LandHardSurfacedOpen => WhatHappenedToLandHardSurfacedOpenPage(assessmentId)
+      case LandGravelledFenced => WhatHappenedToLandGravelledFencedPage(assessmentId)
+      case LandGravelledOpen => WhatHappenedToLandGravelledOpenPage(assessmentId)
+      case LandUnsurfacedFenced => WhatHappenedToLandUnsurfacedFencedPage(assessmentId)
+      case LandUnsurfacedOpen => WhatHappenedToLandUnsurfacedOpenPage(assessmentId)
+      case PortableBuildings=> WhatHappenedToPortableBuildingsPage(assessmentId)
+      case ShippingContainers => WhatHappenedToShippingContainersPage(assessmentId)
     }
 
   implicit val enumerable: Enumerable[WhatHappenedTo] =

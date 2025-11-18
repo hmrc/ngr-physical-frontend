@@ -52,7 +52,7 @@ class HaveYouChangedController @Inject()(
   private def onPageLoad(use: HaveYouChangedControllerUse, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val form: Form[Boolean] = formProvider(use)
-      val preparedForm = request.userAnswers.get(pageType(use)) match {
+      val preparedForm = request.userAnswers.get(pageType(use, assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -72,13 +72,14 @@ class HaveYouChangedController @Inject()(
 
   private def onSubmit(use: HaveYouChangedControllerUse, mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      println("HaveYouChangedController onSubmit called"+request.userAnswers)
       val form: Form[Boolean] = formProvider(use)
       form.bindFromRequest().fold(
         formWithErrors =>
           val (title, hint) = getMessageKeys(use)
           Future.successful(BadRequest(view(request.property.addressFull, title, hint, formWithErrors, use, mode, submitAction(use, mode, assessmentId), createDefaultNavBar()))),
         value =>
-          val page = pageType(use)
+          val page = pageType(use, assessmentId)
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(page, value))
             _ <- sessionRepository.set(updatedAnswers)

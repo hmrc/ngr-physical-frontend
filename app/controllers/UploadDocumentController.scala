@@ -76,7 +76,7 @@ class UploadDocumentController @Inject()(
       val errorRedirectUrl : String = s"${appConfig.ngrPhysicalFrontendUrl}/upload-supporting-document"
 
 
-      val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
+      val currentAnswers = request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
         case None => Seq.empty[String]
         case Some(value) => value
       }
@@ -94,13 +94,13 @@ class UploadDocumentController @Inject()(
           request.property.addressFull,
           createDefaultNavBar(),
           currentAnswers.nonEmpty,
-          hasUploaded()
+          hasUploaded(assessmentId)
         )
       )
   }
 
-  private def hasUploaded()(implicit request: DataRequest[AnyContent]): Boolean = {
-    request.userAnswers.get(UploadDocumentsPage) match {
+  private def hasUploaded(assessmentId: AssessmentId)(implicit request: DataRequest[AnyContent]): Boolean = {
+    request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
       case Some(uploads) if uploads.nonEmpty => true
       case _ => false
     }

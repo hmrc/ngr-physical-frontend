@@ -56,7 +56,7 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport with TestData {
         }
 
         s"return 200 with pre-populates date: ${feature.toString}" in {
-          val userAnswers = emptyUserAnswers.set(WhatHappenedTo.page(feature), WhatHappenedTo.Added).success.value
+          val userAnswers = emptyUserAnswers.set(WhatHappenedTo.page(feature, assessmentId), WhatHappenedTo.Added).success.value
           val result = onPageLoad(Some(userAnswers), feature, NormalMode)(authenticatedFakeRequest)
           status(result) mustBe 200
           contentAsString(result) must include("added")

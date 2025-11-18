@@ -16,13 +16,14 @@
 
 package pages
 
+import models.AssessmentId
 import play.api.libs.json.JsPath
 
 import java.time.LocalDate
 
-case object WhenCompleteChangePage extends QuestionPage[LocalDate] {
+case class WhenCompleteChangePage(assessmentId: AssessmentId) extends QuestionPage[LocalDate] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \toString
 
   override def toString: String = "whenCompleteChange"
 }

@@ -16,40 +16,40 @@
 
 package pages
 
-import models.HowMuchOfProperty
+import models.{AssessmentId, HowMuchOfProperty}
 import play.api.libs.json.JsPath
 
-case object HowMuchOfPropertyAirConPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyAirConPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyAirCon"
 }
 
-case object HowMuchOfPropertyHeatingPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyHeatingPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyHeating"
 }
 
-case object HowMuchOfPropertySprinklersPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertySprinklersPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertySprinklers"
 }
 
-case object HowMuchOfPropertyGoodsLiftPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyGoodsLiftPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyGoodsLift"
 }
 
-case object HowMuchOfPropertyEscalatorsPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyEscalatorsPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyEscalators"
 }
 
-case object HowMuchOfPropertyPassengerLiftPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyPassengerLiftPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyPassengerLift"
 }
 
-case object HowMuchOfPropertyCompressedAirPage extends QuestionPage[HowMuchOfProperty] {
-  override def path: JsPath = JsPath \ toString
+case class HowMuchOfPropertyCompressedAirPage(assessmentId : AssessmentId)  extends QuestionPage[HowMuchOfProperty] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "howMuchOfPropertyCompressedAir"
 }

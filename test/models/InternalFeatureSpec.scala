@@ -77,7 +77,7 @@ class InternalFeatureSpec extends TestSupport with TestData {
   "getAnswers" should {
     
     "return a SummaryListRow for SecurityCamera when present in UserAnswers" in {
-      val userAnswers = UserAnswers("id").set(SecurityCamerasChangePage, 50).success.value
+      val userAnswers = UserAnswers("id").set(SecurityCamerasChangePage(assessmentId), 50).success.value
 
       val result: Seq[SummaryListRow] =
         InternalFeature.getAnswers(userAnswers, NormalMode, assessmentId = assessmentId)

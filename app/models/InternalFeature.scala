@@ -60,10 +60,10 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getAnswersToSend(userAnswers: UserAnswers): Seq[(InternalFeature, String)] = {
+  def getAnswersToSend(userAnswers: UserAnswers, assessmentId: AssessmentId): Seq[(InternalFeature, String)] = {
     InternalFeature.values.map {
-      case feature: InternalFeatureGroup1 => (feature, userAnswers.get(HowMuchOfProperty.page(feature)).getOrElse("").toString())
-      case SecurityCamera => (SecurityCamera, userAnswers.get(SecurityCamerasChangePage).getOrElse("").toString())
+      case feature: InternalFeatureGroup1 => (feature, userAnswers.get(HowMuchOfProperty.page(feature, assessmentId)).getOrElse("").toString())
+      case SecurityCamera => (SecurityCamera, userAnswers.get(SecurityCamerasChangePage(assessmentId)).getOrElse("").toString())
     }.filter {case (_, v) => v != ""}
   }
 
@@ -71,7 +71,7 @@ object InternalFeature extends Enumerable.Implicits {
   def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false, assessmentId: AssessmentId)(implicit messages: Messages): Seq[SummaryListRow] = {
     InternalFeature.values.flatMap {
       case feature: InternalFeatureGroup1 =>
-        userAnswers.get(HowMuchOfProperty.page(feature)).map { value =>
+        userAnswers.get(HowMuchOfProperty.page(feature, assessmentId)).map { value =>
           SummaryListRowViewModel(
             key = s"internalFeature.${feature.toString}",
             value = ValueViewModel(valueString(feature, value.toString)),
@@ -84,7 +84,7 @@ object InternalFeature extends Enumerable.Implicits {
         }
 
       case SecurityCamera =>
-        userAnswers.get(SecurityCamerasChangePage).map { value =>
+        userAnswers.get(SecurityCamerasChangePage(assessmentId)).map { value =>
           SummaryListRowViewModel(
             key = "internalFeature.securityCamera",
             value = ValueViewModel(value.toString),
@@ -111,15 +111,15 @@ object InternalFeature extends Enumerable.Implicits {
     }
   }
 
-  val pageSet: Seq[QuestionPage[? >: HowMuchOfProperty & Int]] = Seq(
-    HowMuchOfPropertyAirConPage,
-    HowMuchOfPropertyHeatingPage,
-    HowMuchOfPropertySprinklersPage,
-    HowMuchOfPropertyGoodsLiftPage,
-    HowMuchOfPropertyEscalatorsPage,
-    HowMuchOfPropertyPassengerLiftPage,
-    HowMuchOfPropertyCompressedAirPage,
-    SecurityCamerasChangePage
+  def pageSet(assessmentId: AssessmentId): Seq[QuestionPage[? >: HowMuchOfProperty & Int]] = Seq(
+    HowMuchOfPropertyAirConPage(assessmentId),
+    HowMuchOfPropertyHeatingPage(assessmentId),
+    HowMuchOfPropertySprinklersPage(assessmentId),
+    HowMuchOfPropertyGoodsLiftPage(assessmentId),
+    HowMuchOfPropertyEscalatorsPage(assessmentId),
+    HowMuchOfPropertyPassengerLiftPage(assessmentId),
+    HowMuchOfPropertyCompressedAirPage(assessmentId),
+    SecurityCamerasChangePage(assessmentId)
   )
 
 

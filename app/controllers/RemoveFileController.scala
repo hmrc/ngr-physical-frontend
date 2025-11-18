@@ -74,10 +74,10 @@ class RemoveFileController @Inject()(
         value =>
           if (value) {
             val updatedFiles = request.userAnswers
-              .get(UploadDocumentsPage)
+              .get(UploadDocumentsPage(assessmentId))
               .map(_.filterNot(_ == uploadId))
               .getOrElse(Seq.empty)
-            request.userAnswers.set(UploadDocumentsPage, updatedFiles).map {
+            request.userAnswers.set(UploadDocumentsPage(assessmentId), updatedFiles).map {
               updatedAnswers => sessionRepository.set(updatedAnswers)
             }
           }

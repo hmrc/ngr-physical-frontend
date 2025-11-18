@@ -46,7 +46,7 @@ class WhenCompleteChangeController @Inject()(
   def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form = formProvider()
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhenCompleteChangePage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhenCompleteChangePage(assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -65,9 +65,9 @@ class WhenCompleteChangeController @Inject()(
           Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, mode, createDefaultNavBar()))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenCompleteChangePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenCompleteChangePage(assessmentId), value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhenCompleteChangePage, mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(WhenCompleteChangePage(assessmentId), mode, updatedAnswers, assessmentId))
       )
 
   }

@@ -27,7 +27,7 @@ import viewmodels.implicits.*
 object AnythingElseSummary {
 
   def rows(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    answers.get(AnythingElsePage).map {
+    answers.get(AnythingElsePage(assessmentId)).map {
       answer =>
 
         val value = if (answer.value) "site.yes" else "site.no"

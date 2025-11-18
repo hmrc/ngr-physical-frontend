@@ -37,11 +37,11 @@ class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFlue
     "must return OK and the correct view for a GET" in {
       when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
       val ref = "1234-1234-1234"
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DeclarationPage, ref).success.value)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DeclarationPage(assessmentId), ref).success.value)).build()
 
       implicit val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
       running(application) {
-        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad(assessmentId).url)
         val result = route(application, request).value
         val view = application.injector.instanceOf[SubmissionConfirmationView]
 
@@ -53,7 +53,7 @@ class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFlue
     "must throw NotFoundException when DeclarationPage is missing" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
       running(application) {
-        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.SubmissionConfirmationController.onPageLoad(assessmentId).url)
         val thrown = intercept[NotFoundException] {
           await(route(application, request).value)
         }

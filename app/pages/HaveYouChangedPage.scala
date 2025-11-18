@@ -16,14 +16,14 @@
 
 package pages
 
-import models.UserAnswers
+import models.{AssessmentId, UserAnswers}
 import play.api.libs.json.JsPath
 
 import scala.util.Try
 
-case object HaveYouChangedSpacePage extends QuestionPage[Boolean] {
+case class HaveYouChangedSpacePage(assessmentId : AssessmentId)   extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "haveYouChangedSpace"
 
@@ -31,22 +31,22 @@ case object HaveYouChangedSpacePage extends QuestionPage[Boolean] {
     value match {
       case Some(false) =>
         userAnswers
-          .remove(ChangeToUseOfSpacePage)
+          .remove(ChangeToUseOfSpacePage(assessmentId))
 
       case _ => super.cleanup(value, userAnswers)
     }
 }
 
-case object HaveYouChangedInternalPage extends QuestionPage[Boolean] {
+case class HaveYouChangedInternalPage(assessmentId : AssessmentId) extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \toString
 
   override def toString: String = "haveYouChangedInternal"
 }
 
-case object HaveYouChangedExternalPage extends QuestionPage[Boolean] {
+case class HaveYouChangedExternalPage(assessmentId : AssessmentId)  extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "haveYouChangedExternal"
 }

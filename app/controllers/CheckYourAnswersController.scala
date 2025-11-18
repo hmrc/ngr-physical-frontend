@@ -56,9 +56,9 @@ class CheckYourAnswersController @Inject()(
     (identify andThen getData andThen requireData) {
       implicit request =>
         val nextPage = ChangeChecker.recheckForAnyChanges(request.userAnswers, List(
-          HaveYouChangedInternalPage,
-          HaveYouChangedSpacePage,
-          HaveYouChangedExternalPage
+          HaveYouChangedInternalPage(assessmentId),
+          HaveYouChangedSpacePage(assessmentId),
+          HaveYouChangedExternalPage(assessmentId)
         ), routes.DeclarationController.show(assessmentId), routes.NotToldAnyChangesController.show(assessmentId))
         Redirect(nextPage)
     }

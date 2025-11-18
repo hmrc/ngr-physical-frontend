@@ -98,7 +98,7 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
 
     "onSubmit redirect to anything else page when the viewType is CYAExternal" in {
       val formRequest = requestWithForm(Map("value" -> "false"))
-      val userAnswers = emptyUserAnswers.set(HaveYouChangedExternalPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(HaveYouChangedExternalPage(assessmentId), true).success.value
       val result = controller(Some(userAnswers)).onSubmit(CYAExternal, NormalMode, assessmentId)(formRequest)
       redirectLocation(result) mustBe Some(routes.AnythingElseController.onPageLoad(NormalMode, assessmentId).url)
     }
@@ -127,7 +127,7 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false and userAnswers is not empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage, HowMuchOfProperty.NoneOf).success.value
+        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage(assessmentId), HowMuchOfProperty.NoneOf).success.value
         val result = controller(Some(userAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
@@ -164,7 +164,7 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false and userAnswers is not empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val userAnswers = emptyUserAnswers.set(WhatHappenedToLoadingBaysPage, WhatHappenedTo.Added).success.value
+        val userAnswers = emptyUserAnswers.set(WhatHappenedToLoadingBaysPage(assessmentId), WhatHappenedTo.Added).success.value
         val result = controller(Some(userAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)

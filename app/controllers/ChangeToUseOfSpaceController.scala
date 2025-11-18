@@ -49,7 +49,7 @@ class ChangeToUseOfSpaceController @Inject()(
 
   def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(ChangeToUseOfSpacePage) match {
+      val preparedForm = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -64,9 +64,9 @@ class ChangeToUseOfSpaceController @Inject()(
           Future.successful(BadRequest(view(assessmentId, request.property.addressFull, createDefaultNavBar(), formWithErrors, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChangeToUseOfSpacePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChangeToUseOfSpacePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ChangeToUseOfSpacePage, mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(ChangeToUseOfSpacePage(assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

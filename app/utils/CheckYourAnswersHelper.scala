@@ -105,7 +105,7 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
 
   private def createSupportingDocuments(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages, ec: ExecutionContext
   ): Future[Option[Section]] =
-    val uploadResults = userAnswers.get(UploadDocumentsPage).map(value => value.map {
+    val uploadResults = userAnswers.get(UploadDocumentsPage(assessmentId)).map(value => value.map {
       id => uploadProgressTracker.getUploadResult(UploadId(id))
     })
     uploadResults match {

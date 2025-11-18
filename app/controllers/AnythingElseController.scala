@@ -51,7 +51,7 @@ class AnythingElseController @Inject()(
   def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AnythingElsePage) match {
+      val preparedForm = request.userAnswers.get(AnythingElsePage(assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -68,9 +68,9 @@ class AnythingElseController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AnythingElsePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AnythingElsePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AnythingElsePage, mode, updatedAnswers, assessmentId))
+          } yield Redirect(navigator.nextPage(AnythingElsePage(assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

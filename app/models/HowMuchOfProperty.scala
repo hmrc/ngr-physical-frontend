@@ -81,15 +81,15 @@ object HowMuchOfProperty extends Enumerable.Implicits {
       case Sprinklers => onSubmitSprinklers(mode, assessmentId)
     }
 
-  def page(feature: InternalFeatureGroup1): QuestionPage[HowMuchOfProperty] =
+  def page(feature: InternalFeatureGroup1, assessmentId: AssessmentId): QuestionPage[HowMuchOfProperty] =
     feature match {
-      case AirConditioning => HowMuchOfPropertyAirConPage
-      case Escalators => HowMuchOfPropertyEscalatorsPage
-      case GoodsLift => HowMuchOfPropertyGoodsLiftPage
-      case PassengerLift => HowMuchOfPropertyPassengerLiftPage
-      case CompressedAir => HowMuchOfPropertyCompressedAirPage
-      case Heating => HowMuchOfPropertyHeatingPage
-      case Sprinklers => HowMuchOfPropertySprinklersPage
+      case AirConditioning => HowMuchOfPropertyAirConPage(assessmentId)
+      case Escalators => HowMuchOfPropertyEscalatorsPage(assessmentId)
+      case GoodsLift => HowMuchOfPropertyGoodsLiftPage(assessmentId)
+      case PassengerLift => HowMuchOfPropertyPassengerLiftPage(assessmentId)
+      case CompressedAir => HowMuchOfPropertyCompressedAirPage(assessmentId)
+      case Heating => HowMuchOfPropertyHeatingPage(assessmentId)
+      case Sprinklers => HowMuchOfPropertySprinklersPage(assessmentId)
     }
 
   implicit val enumerable: Enumerable[HowMuchOfProperty] =

@@ -16,109 +16,109 @@
 
 package pages
 
-import models.{ExternalFeature, HowMuchOfProperty, WhatHappenedTo, WithName}
+import models.{AssessmentId, ExternalFeature, HowMuchOfProperty, WhatHappenedTo, WithName}
 import play.api.libs.json.JsPath
 
-case object WhatHappenedToLoadingBaysPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToLoadingBaysPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToLoadingBays"
 }
 
-case object WhatHappenedToLockupGaragesPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToLockupGaragesPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToLockupGarages"
 }
 
-case object WhatHappenedToOutdoorSeatingPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToOutdoorSeatingPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToOutdoorSeating"
 }
 
-case object WhatHappenedToParkingPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToParkingPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToParking"
 }
 
-case object WhatHappenedToSolarPanelsPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToSolarPanelsPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToSolarPanels"
 }
 
-case object WhatHappenedToAdvertisingDisplaysPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToAdvertisingDisplaysPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToAdvertisingDisplays"
 }
 
-case object WhatHappenedToBikeShedsPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToBikeShedsPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToBikeSheds"
 }
 
-case object WhatHappenedToCanopiesPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToCanopiesPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToCanopies"
 }
 
-case object WhatHappenedToLandHardSurfacedFencedPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToLandHardSurfacedFencedPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToLandHardSurfacedFenced"
 }
 
-case object WhatHappenedToLandHardSurfacedOpenPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToLandHardSurfacedOpenPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToLandHardSurfacedOpen"
 }
 
-case object WhatHappenedToLandGravelledFencedPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToLandGravelledFencedPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToLandGravelledFenced"
 }
 
-case object WhatHappenedToLandGravelledOpenPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToLandGravelledOpenPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToLandGravelledOpen"
 }
 
-case object WhatHappenedToLandUnsurfacedFencedPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToLandUnsurfacedFencedPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToLandUnsurfacedFenced"
 }
 
-case object WhatHappenedToLandUnsurfacedOpenPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToLandUnsurfacedOpenPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToLandUnsurfacedOpen"
 }
 
-case object WhatHappenedToPortableBuildingsPage extends QuestionPage[WhatHappenedTo] {
+case class WhatHappenedToPortableBuildingsPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whatHappenedToPortableBuildings"
 }
 
-case object WhatHappenedToShippingContainersPage extends QuestionPage[WhatHappenedTo] {
-  override def path: JsPath = JsPath \ toString
+case class WhatHappenedToShippingContainersPage(assessmentId: AssessmentId) extends QuestionPage[WhatHappenedTo] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "WhatHappenedToShippingContainers"
 }

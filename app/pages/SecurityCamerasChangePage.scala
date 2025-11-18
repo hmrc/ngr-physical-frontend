@@ -16,11 +16,12 @@
 
 package pages
 
+import models.AssessmentId
 import play.api.libs.json.JsPath
 
-case object SecurityCamerasChangePage extends QuestionPage[Int] {
+case class SecurityCamerasChangePage(assessmentId: AssessmentId) extends QuestionPage[Int] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \toString
 
   override def toString: String = "securityCamerasChange"
 }

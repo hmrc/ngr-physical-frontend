@@ -41,7 +41,7 @@ class ChangeToUseOfSpaceControllerSpec extends SpecBase with MockitoSugar with T
   val form: Form[ChangeToUseOfSpace] = formProvider()
   lazy val changeToUseOfSpaceRoute: String = routes.ChangeToUseOfSpaceController.onPageLoad(NormalMode, assessmentId).url
   val changeToUseOfSpace: ChangeToUseOfSpace = ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("1234555"))
-  val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeToUseOfSpacePage, changeToUseOfSpace).success.value
+  val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeToUseOfSpacePage(assessmentId), changeToUseOfSpace).success.value
 
   "ChangeToUseOfSpace Controller" - {
 

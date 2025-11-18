@@ -52,7 +52,7 @@ class AnythingElseControllerSpec extends ControllerSpecSupport with TryValues {
       }
 
       "return 200 and pre-populate the values" in {
-        val userAnswers = emptyUserAnswers.set(AnythingElsePage, AnythingElseData(true, Some("Some text"))).success.value
+        val userAnswers = emptyUserAnswers.set(AnythingElsePage(assessmentId), AnythingElseData(true, Some("Some text"))).success.value
         val result = controller(Some(userAnswers)).onPageLoad(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe OK
         contentAsString(result) must include ("Some text")

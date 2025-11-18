@@ -49,7 +49,7 @@ class HowMuchOfPropertyControllerSpec extends ControllerSpecSupport {
         }
 
         s"return 200 with prepopulated data: ${feature.toString}" in {
-          val userAnswers = emptyUserAnswers.set(HowMuchOfProperty.page(feature), HowMuchOfProperty.values.head).success.value
+          val userAnswers = emptyUserAnswers.set(HowMuchOfProperty.page(feature, assessmentId), HowMuchOfProperty.values.head).success.value
           val result = onPageLoad(feature, Some(userAnswers), NormalMode)
           status(result) mustBe 200
         }

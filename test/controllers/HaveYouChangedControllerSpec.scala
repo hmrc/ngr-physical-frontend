@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues {
   lazy val view: HaveYouChangedView = inject[HaveYouChangedView]
 
-  def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = HaveYouChangedController(
+  def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = HaveYouChangedController (
     mockSessionRepository,
     navigator,
     fakeAuth,
@@ -43,9 +43,9 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues 
   )
 
   lazy val userAnswersFilled: UserAnswers = UserAnswers("id")
-    .set(HaveYouChangedSpacePage, true).success.value
-    .set(HaveYouChangedInternalPage, true).success.value
-    .set(HaveYouChangedExternalPage, true).success.value
+    .set(HaveYouChangedSpacePage(assessmentId), true).success.value
+    .set(HaveYouChangedInternalPage(assessmentId), true).success.value
+    .set(HaveYouChangedExternalPage(assessmentId), true).success.value
 
   "HaveYouChangedController" must {
     "Space type" should {
@@ -65,7 +65,7 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues 
         s"should redirect on successful submission and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitSpace(mode, assessmentId)(formRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).submitSpace(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
 
@@ -114,7 +114,7 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues 
         s"should redirect on successful submission and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitInternal(mode, assessmentId)(formRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).submitInternal(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
 

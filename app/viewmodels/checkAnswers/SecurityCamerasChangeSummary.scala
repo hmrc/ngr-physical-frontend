@@ -27,7 +27,7 @@ import viewmodels.implicits.*
 object SecurityCamerasChangeSummary  {
 
   def row(answers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SecurityCamerasChangePage).map {
+    answers.get(SecurityCamerasChangePage(assessmentId)).map {
       answer =>
 
         SummaryListRowViewModel(
