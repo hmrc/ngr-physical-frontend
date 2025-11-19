@@ -53,7 +53,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
     "Successfully return a response  when provided correct body" in {
       val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(None)
       setupMockHttpV2PostWithHeaderCarrier(
-        s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical/$assessmentId",
+        s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical",
         Seq("Content-Type" -> "application/json")
       )(response)
       val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
@@ -64,7 +64,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
       val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(Some("an error happened"))
       mockConfig.features.bridgeEndpointEnabled(true)
       setupMockHttpV2PostWithHeaderCarrier(
-        s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical/$assessmentId",
+        s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical",
         Seq("Content-Type" -> "application/json")
       )(response)
 
