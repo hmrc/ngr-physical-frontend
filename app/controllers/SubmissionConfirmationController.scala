@@ -38,7 +38,7 @@ class SubmissionConfirmationController @Inject()(
                                        val controllerComponents: MessagesControllerComponents,
                                        view: SubmissionConfirmationView,
                                        sessionRepository: SessionRepository
-                                     )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
+                                     )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
