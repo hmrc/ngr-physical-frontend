@@ -62,6 +62,7 @@ final case class UserAnswers(
         page.cleanup(None, updatedAnswers)
     }
   }
+
 }
 
 object UserAnswers {

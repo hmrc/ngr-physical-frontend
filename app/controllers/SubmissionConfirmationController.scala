@@ -22,23 +22,28 @@ import models.NavBarPageContents.createDefaultNavBar
 import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.SessionRepository
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SubmissionConfirmationView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class SubmissionConfirmationController @Inject()(
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: SubmissionConfirmationView
-                                     )(implicit appConfig: AppConfig) extends FrontendBaseController with I18nSupport {
+                                                  identify: IdentifierAction,
+                                                  getData: DataRetrievalAction,
+                                                  requireData: DataRequiredAction,
+                                                  val controllerComponents: MessagesControllerComponents,
+                                                  view: SubmissionConfirmationView,
+                                                  sessionRepository: SessionRepository
+                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val ref = request.userAnswers.get(DeclarationPage).getOrElse(throw new NotFoundException("Reference number not found"))
-      Ok(view(request.property.addressFull, ref, createDefaultNavBar()))
+      sessionRepository.clear(request.credId).map { _ =>
+        Ok(view(request.property.addressFull, ref, createDefaultNavBar()))
+      }
   }
 }

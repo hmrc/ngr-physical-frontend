@@ -20,6 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import helpers.TestData
 import models.NavBarPageContents.createDefaultNavBar
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import pages.DeclarationPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -27,12 +29,13 @@ import uk.gov.hmrc.http.NotFoundException
 import viewmodels.govuk.SummaryListFluency
 import views.html.SubmissionConfirmationView
 
+import scala.concurrent.Future
 import scala.util.Try
 
 class SubmissionConfirmationControllerSpec extends SpecBase with SummaryListFluency with TestData {
   "SubmissionConfirmationController" - {
     "must return OK and the correct view for a GET" in {
-
+      when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
       val ref = "1234-1234-1234"
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DeclarationPage, ref).success.value)).build()
 

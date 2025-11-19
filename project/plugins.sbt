@@ -12,7 +12,7 @@ addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.9")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.1.0")
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-sass-compiler" % "0.9.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-sass-compiler" % "0.12.0")
 
 addSbtPlugin("com.github.sbt" % "sbt-concat" % "1.0.0")
 
