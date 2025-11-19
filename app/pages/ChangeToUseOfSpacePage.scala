@@ -16,12 +16,12 @@
 
 package pages
 
-import models.ChangeToUseOfSpace
+import models.{AssessmentId, ChangeToUseOfSpace}
 import play.api.libs.json.JsPath
 
-case object ChangeToUseOfSpacePage extends QuestionPage[ChangeToUseOfSpace] {
+case class ChangeToUseOfSpacePage(assessmentId: AssessmentId) extends QuestionPage[ChangeToUseOfSpace] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "changeToUseOfSpace"
 }

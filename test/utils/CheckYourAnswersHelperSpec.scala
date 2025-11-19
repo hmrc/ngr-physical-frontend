@@ -62,17 +62,17 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers with TestData {
 
     "must display all the answers of physical on the page" in {
       val helper = new CheckYourAnswersHelper(mockUploadProgressTracker)
-      val userAnswers = emptyUserAnswers.set(WhenCompleteChangePage, LocalDate.of(20, 2, 2)).success.value
-        .set(HaveYouChangedSpacePage, true).success.value
-        .set(ChangeToUseOfSpacePage,  ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("ref") )).success.value
-        .set(HowMuchOfPropertyEscalatorsPage, AllOf).success.value
-        .set(HowMuchOfPropertyGoodsLiftPage, SomeOf).success.value
-        .set(WhatHappenedToLandHardSurfacedFencedPage, Added).success.value
-        .set(WhatHappenedToLandHardSurfacedOpenPage, RemovedSome).success.value
-        .set(AnythingElsePage, AnythingElseData(true, Some("info"))).success.value
-        .set(UploadDocumentsPage, Seq("1111", "1112")).success.value
+      val userAnswers = emptyUserAnswers.set(WhenCompleteChangePage(assessmentId), LocalDate.of(20, 2, 2)).success.value
+        .set(HaveYouChangedSpacePage(assessmentId), true).success.value
+        .set(ChangeToUseOfSpacePage(assessmentId),  ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("ref") )).success.value
+        .set(HowMuchOfPropertyEscalatorsPage(assessmentId), AllOf).success.value
+        .set(HowMuchOfPropertyGoodsLiftPage(assessmentId), SomeOf).success.value
+        .set(WhatHappenedToLandHardSurfacedFencedPage(assessmentId), Added).success.value
+        .set(WhatHappenedToLandHardSurfacedOpenPage(assessmentId), RemovedSome).success.value
+        .set(AnythingElsePage(assessmentId), AnythingElseData(true, Some("info"))).success.value
+        .set(UploadDocumentsPage(assessmentId), Seq("1111", "1112")).success.value
 
-      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers), 5.seconds)
+      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers, assessmentId), 5.seconds)
       sections.size mustBe 6
       sections.head.title mustBe Some("checkYourAnswers.dateOfChange.heading")
       sections.head.rows.rows.size mustBe 1
@@ -92,14 +92,14 @@ class CheckYourAnswersHelperSpec extends SpecBase with Matchers with TestData {
     "must display external and internal features details as No when user has removed all the internal and external features" in {
 
       val helper = new CheckYourAnswersHelper(mockUploadProgressTracker)
-      val userAnswers = emptyUserAnswers.set(WhenCompleteChangePage, LocalDate.of(20, 2, 2)).success.value
-        .set(HaveYouChangedSpacePage, true).success.value
-        .set(ChangeToUseOfSpacePage, ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("ref"))).success.value
-        .set(HaveYouChangedInternalPage, false).success.value
-        .set(HaveYouChangedExternalPage, false).success.value
-        .set(UploadDocumentsPage, Seq("1111")).success.value
+      val userAnswers = emptyUserAnswers.set(WhenCompleteChangePage(assessmentId), LocalDate.of(20, 2, 2)).success.value
+        .set(HaveYouChangedSpacePage(assessmentId), true).success.value
+        .set(ChangeToUseOfSpacePage(assessmentId), ChangeToUseOfSpace(Set(Rearrangedtheuseofspace), true, Some("ref"))).success.value
+        .set(HaveYouChangedInternalPage(assessmentId), false).success.value
+        .set(HaveYouChangedExternalPage(assessmentId), false).success.value
+        .set(UploadDocumentsPage(assessmentId), Seq("1111")).success.value
 
-      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers), 5.seconds)
+      val sections: Seq[Section] = Await.result(helper.createSectionList(userAnswers, assessmentId), 5.seconds)
       sections.size mustBe 5
       sections(1).title mustBe Some("checkYourAnswers.useOfSpace.heading")
       sections(2).title mustBe Some("checkYourAnswers.internalFeature.heading")

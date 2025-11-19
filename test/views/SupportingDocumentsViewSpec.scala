@@ -44,7 +44,7 @@ class SupportingDocumentsViewSpec extends ViewBaseSpec {
   }
 
   "SupportingDocuments view" must {
-    val dashboardView = view(address, navBarContent())
+    val dashboardView = view(assessmentId, address, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(dashboardView.body)
 
 

@@ -19,7 +19,7 @@ package controllers
 import actions.{DataRetrievalAction, IdentifierAction}
 import config.AppConfig
 import models.NavBarPageContents.createDefaultNavBar
-import models.NormalMode
+import models.{AssessmentId, NormalMode}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,10 +35,10 @@ class InfoAndSupportingDocController @Inject()(
                                                 getData: DataRetrievalAction
 )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
-  val show: Action[AnyContent] =
+  def show(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData) {
       implicit request =>
-        Ok(view(request.property.addressFull, createDefaultNavBar()))
+        Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar()))
     }
     
 }

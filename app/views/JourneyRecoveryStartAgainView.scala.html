@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, navigationBarContent: NavigationBarContent)(implicit request: Request[?], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(titleNoForm(messages("journeyRecovery.startAgain.title"))), showBackLink = false, navigationBarContent = Some(navigationBarContent)) {
 
@@ -31,7 +31,7 @@
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.startAgain"))
-                .asLink(routes.ChangedFeaturesOrSpaceController.show.url)
+                .asLink(routes.ChangedFeaturesOrSpaceController.show(assessmentId).url)
         )
     </p>
 }

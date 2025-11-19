@@ -60,64 +60,64 @@ object WhatHappenedTo extends Enumerable.Implicits {
 
   def errorKey(feature: ExternalFeature): String = s"whatHappenedTo.${feature.toString}.error"
 
-  def pageLoadAction(feature: ExternalFeature, mode: Mode): Call =
+  def pageLoadAction(feature: ExternalFeature, mode: Mode, assessmentId: AssessmentId): Call =
     feature match {
-      case ExternalFeature.LoadingBays => onPageLoadLoadingBays(mode)
-      case ExternalFeature.LockupGarages => onPageLoadLockupGarage(mode)
-      case ExternalFeature.OutdoorSeating => onPageLoadOutdoorSeating(mode)
-      case ExternalFeature.Parking => onPageLoadParking(mode)
-      case ExternalFeature.SolarPanels => onPageLoadSolarPanels(mode)
-      case ExternalFeature.AdvertisingDisplays => onPageLoadAdvertisingDisplays(mode)
-      case ExternalFeature.BikeSheds => onPageLoadBikeSheds(mode)
-      case ExternalFeature.Canopies => onPageLoadCanopies(mode)
-      case ExternalFeature.LandHardSurfacedFenced => onPageLoadLandHardSurfacedFenced(mode)
-      case ExternalFeature.LandHardSurfacedOpen => onPageLoadLandHardSurfacedOpen(mode)
-      case ExternalFeature.LandGravelledFenced => onPageLoadLandGravelledFenced(mode)
-      case ExternalFeature.LandGravelledOpen => onPageLoadLandGravelledOpen(mode)
-      case ExternalFeature.LandUnsurfacedFenced => onPageLoadLandUnsurfacedFenced(mode)
-      case ExternalFeature.LandUnsurfacedOpen => onPageLoadLandUnsurfacedOpen(mode)
-      case ExternalFeature.PortableBuildings => onPageLoadPortableBuildings(mode)
-      case ExternalFeature.ShippingContainers => onPageLoadShippingContainers(mode)
+      case ExternalFeature.LoadingBays => onPageLoadLoadingBays(mode, assessmentId)
+      case ExternalFeature.LockupGarages => onPageLoadLockupGarage(mode, assessmentId)
+      case ExternalFeature.OutdoorSeating => onPageLoadOutdoorSeating(mode, assessmentId)
+      case ExternalFeature.Parking => onPageLoadParking(mode, assessmentId)
+      case ExternalFeature.SolarPanels => onPageLoadSolarPanels(mode, assessmentId)
+      case ExternalFeature.AdvertisingDisplays => onPageLoadAdvertisingDisplays(mode, assessmentId)
+      case ExternalFeature.BikeSheds => onPageLoadBikeSheds(mode, assessmentId)
+      case ExternalFeature.Canopies => onPageLoadCanopies(mode, assessmentId)
+      case ExternalFeature.LandHardSurfacedFenced => onPageLoadLandHardSurfacedFenced(mode, assessmentId)
+      case ExternalFeature.LandHardSurfacedOpen => onPageLoadLandHardSurfacedOpen(mode, assessmentId)
+      case ExternalFeature.LandGravelledFenced => onPageLoadLandGravelledFenced(mode, assessmentId)
+      case ExternalFeature.LandGravelledOpen => onPageLoadLandGravelledOpen(mode, assessmentId)
+      case ExternalFeature.LandUnsurfacedFenced => onPageLoadLandUnsurfacedFenced(mode, assessmentId)
+      case ExternalFeature.LandUnsurfacedOpen => onPageLoadLandUnsurfacedOpen(mode, assessmentId)
+      case ExternalFeature.PortableBuildings => onPageLoadPortableBuildings(mode, assessmentId)
+      case ExternalFeature.ShippingContainers => onPageLoadShippingContainers(mode, assessmentId)
     }
   
-  def submitAction(feature: ExternalFeature, mode: Mode): Call =
+  def submitAction(feature: ExternalFeature, mode: Mode, assessmentId: AssessmentId): Call =
     feature match {
-      case LoadingBays => onPageSubmitLoadLoadingBays(mode: Mode)
-      case LockupGarages => onPageSubmitLockupGarage(mode: Mode)
-      case OutdoorSeating => onPageSubmitOutdoorSeating(mode: Mode)
-      case Parking => onPageSubmitParking(mode: Mode)
-      case SolarPanels => onPageSubmitSolarPanels(mode: Mode)
-      case AdvertisingDisplays => onPageSubmitAdvertisingDisplays(mode: Mode)
-      case BikeSheds => onPageSubmitBikeSheds(mode: Mode)
-      case Canopies => onPageSubmitCanopies(mode: Mode)
-      case LandHardSurfacedFenced => onPageSubmitLandHardSurfacedFenced(mode: Mode)
-      case LandHardSurfacedOpen => onPageSubmitLandHardSurfacedOpen(mode: Mode)
-      case LandGravelledFenced => onPageSubmitLandGravelledFenced(mode: Mode)
-      case LandGravelledOpen => onPageSubmitLandGravelledOpen(mode: Mode)
-      case LandUnsurfacedFenced => onPageSubmitLandUnsurfacedFenced(mode: Mode)
-      case LandUnsurfacedOpen => onPageSubmitLandUnsurfacedOpen(mode: Mode)
-      case PortableBuildings=> onPageSubmitPortableBuildings(mode: Mode)
-      case ShippingContainers => onPageSubmitShippingContainers(mode: Mode)
+      case LoadingBays => onPageSubmitLoadLoadingBays(mode: Mode, assessmentId)
+      case LockupGarages => onPageSubmitLockupGarage(mode: Mode, assessmentId)
+      case OutdoorSeating => onPageSubmitOutdoorSeating(mode: Mode, assessmentId)
+      case Parking => onPageSubmitParking(mode: Mode, assessmentId)
+      case SolarPanels => onPageSubmitSolarPanels(mode: Mode, assessmentId)
+      case AdvertisingDisplays => onPageSubmitAdvertisingDisplays(mode: Mode, assessmentId)
+      case BikeSheds => onPageSubmitBikeSheds(mode: Mode, assessmentId)
+      case Canopies => onPageSubmitCanopies(mode: Mode, assessmentId)
+      case LandHardSurfacedFenced => onPageSubmitLandHardSurfacedFenced(mode: Mode, assessmentId)
+      case LandHardSurfacedOpen => onPageSubmitLandHardSurfacedOpen(mode: Mode, assessmentId)
+      case LandGravelledFenced => onPageSubmitLandGravelledFenced(mode: Mode, assessmentId)
+      case LandGravelledOpen => onPageSubmitLandGravelledOpen(mode: Mode, assessmentId)
+      case LandUnsurfacedFenced => onPageSubmitLandUnsurfacedFenced(mode: Mode, assessmentId)
+      case LandUnsurfacedOpen => onPageSubmitLandUnsurfacedOpen(mode: Mode, assessmentId)
+      case PortableBuildings=> onPageSubmitPortableBuildings(mode: Mode, assessmentId)
+      case ShippingContainers => onPageSubmitShippingContainers(mode: Mode, assessmentId)
     }
   
-  def page(feature: ExternalFeature): QuestionPage[WhatHappenedTo] =
+  def page(feature: ExternalFeature, assessmentId: AssessmentId): QuestionPage[WhatHappenedTo] =
     feature match {
-      case LoadingBays => WhatHappenedToLoadingBaysPage
-      case LockupGarages => WhatHappenedToLockupGaragesPage
-      case OutdoorSeating => WhatHappenedToOutdoorSeatingPage
-      case Parking => WhatHappenedToParkingPage
-      case SolarPanels => WhatHappenedToSolarPanelsPage
-      case AdvertisingDisplays => WhatHappenedToAdvertisingDisplaysPage
-      case BikeSheds => WhatHappenedToBikeShedsPage
-      case Canopies => WhatHappenedToCanopiesPage
-      case LandHardSurfacedFenced => WhatHappenedToLandHardSurfacedFencedPage
-      case LandHardSurfacedOpen => WhatHappenedToLandHardSurfacedOpenPage
-      case LandGravelledFenced => WhatHappenedToLandGravelledFencedPage
-      case LandGravelledOpen => WhatHappenedToLandGravelledOpenPage
-      case LandUnsurfacedFenced => WhatHappenedToLandUnsurfacedFencedPage
-      case LandUnsurfacedOpen => WhatHappenedToLandUnsurfacedOpenPage
-      case PortableBuildings=> WhatHappenedToPortableBuildingsPage
-      case ShippingContainers => WhatHappenedToShippingContainersPage
+      case LoadingBays => WhatHappenedToLoadingBaysPage(assessmentId)
+      case LockupGarages => WhatHappenedToLockupGaragesPage(assessmentId)
+      case OutdoorSeating => WhatHappenedToOutdoorSeatingPage(assessmentId)
+      case Parking => WhatHappenedToParkingPage(assessmentId)
+      case SolarPanels => WhatHappenedToSolarPanelsPage(assessmentId)
+      case AdvertisingDisplays => WhatHappenedToAdvertisingDisplaysPage(assessmentId)
+      case BikeSheds => WhatHappenedToBikeShedsPage(assessmentId)
+      case Canopies => WhatHappenedToCanopiesPage(assessmentId)
+      case LandHardSurfacedFenced => WhatHappenedToLandHardSurfacedFencedPage(assessmentId)
+      case LandHardSurfacedOpen => WhatHappenedToLandHardSurfacedOpenPage(assessmentId)
+      case LandGravelledFenced => WhatHappenedToLandGravelledFencedPage(assessmentId)
+      case LandGravelledOpen => WhatHappenedToLandGravelledOpenPage(assessmentId)
+      case LandUnsurfacedFenced => WhatHappenedToLandUnsurfacedFencedPage(assessmentId)
+      case LandUnsurfacedOpen => WhatHappenedToLandUnsurfacedOpenPage(assessmentId)
+      case PortableBuildings=> WhatHappenedToPortableBuildingsPage(assessmentId)
+      case ShippingContainers => WhatHappenedToShippingContainersPage(assessmentId)
     }
 
   implicit val enumerable: Enumerable[WhatHappenedTo] =

@@ -60,37 +60,37 @@ object InternalFeature extends Enumerable.Implicits {
     case _ => None
   }
 
-  def getAnswersToSend(userAnswers: UserAnswers): Seq[(InternalFeature, String)] = {
+  def getAnswersToSend(userAnswers: UserAnswers, assessmentId: AssessmentId): Seq[(InternalFeature, String)] = {
     InternalFeature.values.map {
-      case feature: InternalFeatureGroup1 => (feature, userAnswers.get(HowMuchOfProperty.page(feature)).getOrElse("").toString())
-      case SecurityCamera => (SecurityCamera, userAnswers.get(SecurityCamerasChangePage).getOrElse("").toString())
+      case feature: InternalFeatureGroup1 => (feature, userAnswers.get(HowMuchOfProperty.page(feature, assessmentId)).getOrElse("").toString())
+      case SecurityCamera => (SecurityCamera, userAnswers.get(SecurityCamerasChangePage(assessmentId)).getOrElse("").toString())
     }.filter {case (_, v) => v != ""}
   }
 
 
-  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def getAnswers(userAnswers: UserAnswers, mode: Mode, fromMiniCYA: Boolean = false, assessmentId: AssessmentId)(implicit messages: Messages): Seq[SummaryListRow] = {
     InternalFeature.values.flatMap {
       case feature: InternalFeatureGroup1 =>
-        userAnswers.get(HowMuchOfProperty.page(feature)).map { value =>
+        userAnswers.get(HowMuchOfProperty.page(feature, assessmentId)).map { value =>
           SummaryListRowViewModel(
             key = s"internalFeature.${feature.toString}",
             value = ValueViewModel(valueString(feature, value.toString)),
             actions = Seq(
-              ActionItemViewModel("site.change", changeLink(feature, mode).url),
-              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA).url)
+              ActionItemViewModel("site.change", changeLink(feature, mode, assessmentId).url),
+              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(feature.toString), mode, fromMiniCYA, assessmentId).url)
             ),
             actionClasses = "govuk-!-width-one-third"
           )
         }
 
       case SecurityCamera =>
-        userAnswers.get(SecurityCamerasChangePage).map { value =>
+        userAnswers.get(SecurityCamerasChangePage(assessmentId)).map { value =>
           SummaryListRowViewModel(
             key = "internalFeature.securityCamera",
             value = ValueViewModel(value.toString),
             actions = Seq(
-              ActionItemViewModel("site.change", changeLink(SecurityCamera, mode).url),
-              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode, fromMiniCYA).url)
+              ActionItemViewModel("site.change", changeLink(SecurityCamera, mode, assessmentId).url),
+              ActionItemViewModel("site.remove", routes.SureWantRemoveChangeController.onPageLoad(camelCaseToHyphen(SecurityCamera.toString), mode, fromMiniCYA, assessmentId).url)
             ),
             actionClasses = "govuk-!-width-one-third"
           )
@@ -98,28 +98,28 @@ object InternalFeature extends Enumerable.Implicits {
     }
   }
 
-  def changeLink(feature: InternalFeature, mode: Mode): Call = {
+  def changeLink(feature: InternalFeature, mode: Mode, assessmentId: AssessmentId): Call = {
     feature match {
-      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(mode)
-      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(mode)
-      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(mode)
-      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(mode)
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode)
-      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(mode)
-      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(mode)
-      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(mode)
+      case AirConditioning => routes.HowMuchOfPropertyController.onPageLoadAirCon(mode, assessmentId)
+      case Escalators => routes.HowMuchOfPropertyController.onPageLoadEscalator(mode, assessmentId)
+      case GoodsLift => routes.HowMuchOfPropertyController.onPageLoadGoodsLift(mode, assessmentId)
+      case PassengerLift => routes.HowMuchOfPropertyController.onPageLoadPassengerLift(mode, assessmentId)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode, assessmentId)
+      case CompressedAir => routes.HowMuchOfPropertyController.onPageLoadCompressedAir(mode, assessmentId)
+      case Heating => routes.HowMuchOfPropertyController.onPageLoadHeating(mode, assessmentId)
+      case Sprinklers => routes.HowMuchOfPropertyController.onPageLoadSprinklers(mode, assessmentId)
     }
   }
 
-  val pageSet: Seq[QuestionPage[? >: HowMuchOfProperty & Int]] = Seq(
-    HowMuchOfPropertyAirConPage,
-    HowMuchOfPropertyHeatingPage,
-    HowMuchOfPropertySprinklersPage,
-    HowMuchOfPropertyGoodsLiftPage,
-    HowMuchOfPropertyEscalatorsPage,
-    HowMuchOfPropertyPassengerLiftPage,
-    HowMuchOfPropertyCompressedAirPage,
-    SecurityCamerasChangePage
+  def pageSet(assessmentId: AssessmentId): Seq[QuestionPage[? >: HowMuchOfProperty & Int]] = Seq(
+    HowMuchOfPropertyAirConPage(assessmentId),
+    HowMuchOfPropertyHeatingPage(assessmentId),
+    HowMuchOfPropertySprinklersPage(assessmentId),
+    HowMuchOfPropertyGoodsLiftPage(assessmentId),
+    HowMuchOfPropertyEscalatorsPage(assessmentId),
+    HowMuchOfPropertyPassengerLiftPage(assessmentId),
+    HowMuchOfPropertyCompressedAirPage(assessmentId),
+    SecurityCamerasChangePage(assessmentId)
   )
 
 

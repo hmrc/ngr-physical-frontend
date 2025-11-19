@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import controllers.routes
 import models.upscan.UploadStatus
-import models.{CheckMode, UserAnswers}
+import models.{AssessmentId, CheckMode, UserAnswers}
 import pages.UploadDocumentsPage
 import play.api.i18n.Messages
 import services.UploadProgressTracker
@@ -28,13 +28,13 @@ import viewmodels.implicits.*
 
 
 object UploadDocumentsSummary  {
-  def rows(uploadStatuses: Seq[UploadStatus])(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
+  def rows(uploadStatuses: Seq[UploadStatus], assessmentId: AssessmentId)(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
     val documents = uploadStatuses.collect {
       case UploadStatus.UploadedSuccessfully(name, mimeType, downloadUrl, size) => SummaryListRowViewModel(
         key = name,
         value = Value(),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.UploadedDocumentController.show(None).url)
+          ActionItemViewModel("site.change", routes.UploadedDocumentController.show(None, assessmentId).url)
         )
       )
     }

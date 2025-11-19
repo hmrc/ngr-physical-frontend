@@ -43,7 +43,7 @@ class WhichExternalFeatureViewSpec extends ViewBaseSpec {
   }
 
   "WhichExternalFeatureView" must {
-    val document: Document = Jsoup.parse(view(address, formProvider(), navBarContent(), NormalMode).body)
+    val document: Document = Jsoup.parse(view(assessmentId, address, formProvider(), navBarContent(), NormalMode).body)
     "show correct text" in {
       elementText(Selectors.address)(document) mustBe address
       elementText(Selectors.heading)(document) mustBe "Which external feature have you changed?"
@@ -55,7 +55,7 @@ class WhichExternalFeatureViewSpec extends ViewBaseSpec {
       elementText(Selectors.other)(document) mustBe "Other external feature"
 
       val formWithError = formProvider().withError(FormError("value", "whichExternalFeature.error.required"))
-      val errorDocument: Document = Jsoup.parse(view(address, formWithError, navBarContent(), NormalMode).body)
+      val errorDocument: Document = Jsoup.parse(view(assessmentId, address, formWithError, navBarContent(), NormalMode).body)
 
       elementText(Selectors.topError)(errorDocument) mustBe "Select which external feature you have changed"
     }

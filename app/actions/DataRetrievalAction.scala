@@ -17,12 +17,14 @@
 package actions
 
 import connectors.NGRConnector
+import models.AssessmentId
 import models.registration.CredId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
 import repositories.SessionRepository
 import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,10 +38,8 @@ class DataRetrievalActionImpl @Inject()(
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     sessionRepository.get(request.credId).flatMap { userAnswersOpt =>
-      ngrConnector.getLinkedProperty(CredId(request.credId)).map {
-        case Some(property) =>
-          OptionalDataRequest(request = request.request, userId = request.credId, userAnswers = userAnswersOpt, property = property)
-        case None => throw new NotFoundException("Property not found")
+      ngrConnector.getLinkedProperty(CredId(request.credId)).map { linkedPropertyOpt =>
+          OptionalDataRequest(request = request.request, userId = request.credId, userAnswers = userAnswersOpt, property = linkedPropertyOpt.vmvProperty, assessmentId = linkedPropertyOpt.requestSentReference.map(AssessmentId(_)))
       }
     }
   }

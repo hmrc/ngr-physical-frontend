@@ -56,7 +56,7 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport with TestData {
         }
 
         s"return 200 with pre-populates date: ${feature.toString}" in {
-          val userAnswers = emptyUserAnswers.set(WhatHappenedTo.page(feature), WhatHappenedTo.Added).success.value
+          val userAnswers = emptyUserAnswers.set(WhatHappenedTo.page(feature, assessmentId), WhatHappenedTo.Added).success.value
           val result = onPageLoad(Some(userAnswers), feature, NormalMode)(authenticatedFakeRequest)
           status(result) mustBe 200
           contentAsString(result) must include("added")
@@ -65,7 +65,7 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport with TestData {
         s"redirect to journey recovery Expired for a GET if no existing data is found: ${feature.toString}" in {
           val result = onPageLoad(None, feature, NormalMode)(authenticatedFakeRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
 
@@ -88,7 +88,7 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport with TestData {
           val formRequest = requestWithForm(Map("value" -> "added"))
           val result = onSubmit(None, feature, NormalMode)(formRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }
@@ -96,44 +96,44 @@ class WhatHappenedToControllerSpec extends ControllerSpecSupport with TestData {
     def onPageLoad(userAnswers: Option[UserAnswers], feature: ExternalFeature, mode: Mode)(fakeRequest: IdentifierRequest[AnyContentAsEmpty.type]) = {
       val controller = createController(userAnswers)
       feature match {
-        case LoadingBays => controller.onPageLoadLoadingBays(mode)(fakeRequest)
-        case ExternalFeature.LockupGarages => controller.onPageLoadLockupGarage(mode)(fakeRequest)
-        case ExternalFeature.OutdoorSeating => controller.onPageLoadOutdoorSeating(mode)(fakeRequest)
-        case ExternalFeature.Parking => controller.onPageLoadParking(mode)(fakeRequest)
-        case ExternalFeature.SolarPanels => controller.onPageLoadSolarPanels(mode)(fakeRequest)
-        case ExternalFeature.AdvertisingDisplays => controller.onPageLoadAdvertisingDisplays(mode)(fakeRequest)
-        case ExternalFeature.BikeSheds => controller.onPageLoadBikeSheds(mode)(fakeRequest)
-        case ExternalFeature.Canopies => controller.onPageLoadCanopies(mode)(fakeRequest)
-        case ExternalFeature.LandHardSurfacedFenced => controller.onPageLoadLandHardSurfacedFenced(mode)(fakeRequest)
-        case ExternalFeature.LandHardSurfacedOpen => controller.onPageLoadLandHardSurfacedOpen(mode)(fakeRequest)
-        case ExternalFeature.LandGravelledFenced => controller.onPageLoadLandGravelledFenced(mode)(fakeRequest)
-        case ExternalFeature.LandGravelledOpen => controller.onPageLoadLandGravelledOpen(mode)(fakeRequest)
-        case ExternalFeature.LandUnsurfacedFenced => controller.onPageLoadLandUnsurfacedFenced(mode)(fakeRequest)
-        case ExternalFeature.LandUnsurfacedOpen => controller.onPageLoadLandUnsurfacedOpen(mode)(fakeRequest)
-        case ExternalFeature.PortableBuildings => controller.onPageLoadPortableBuildings(mode)(fakeRequest)
-        case ExternalFeature.ShippingContainers => controller.onPageLoadShippingContainers(mode)(fakeRequest)
+        case LoadingBays => controller.onPageLoadLoadingBays(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LockupGarages => controller.onPageLoadLockupGarage(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.OutdoorSeating => controller.onPageLoadOutdoorSeating(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.Parking => controller.onPageLoadParking(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.SolarPanels => controller.onPageLoadSolarPanels(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.AdvertisingDisplays => controller.onPageLoadAdvertisingDisplays(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.BikeSheds => controller.onPageLoadBikeSheds(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.Canopies => controller.onPageLoadCanopies(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandHardSurfacedFenced => controller.onPageLoadLandHardSurfacedFenced(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandHardSurfacedOpen => controller.onPageLoadLandHardSurfacedOpen(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandGravelledFenced => controller.onPageLoadLandGravelledFenced(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandGravelledOpen => controller.onPageLoadLandGravelledOpen(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandUnsurfacedFenced => controller.onPageLoadLandUnsurfacedFenced(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.LandUnsurfacedOpen => controller.onPageLoadLandUnsurfacedOpen(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.PortableBuildings => controller.onPageLoadPortableBuildings(mode, assessmentId)(fakeRequest)
+        case ExternalFeature.ShippingContainers => controller.onPageLoadShippingContainers(mode, assessmentId)(fakeRequest)
       }
     }
 
     def onSubmit(userAnswers: Option[UserAnswers], feature: ExternalFeature, mode: Mode)(formRequest: IdentifierRequest[AnyContentAsFormUrlEncoded]) = {
       val controller = createController(userAnswers)
       feature match {
-        case LoadingBays => controller.onPageSubmitLoadLoadingBays(mode)(formRequest)
-        case ExternalFeature.LockupGarages => controller.onPageSubmitLockupGarage(mode)(formRequest)
-        case ExternalFeature.OutdoorSeating => controller.onPageSubmitOutdoorSeating(mode)(formRequest)
-        case ExternalFeature.Parking => controller.onPageSubmitParking(mode)(formRequest)
-        case ExternalFeature.SolarPanels => controller.onPageSubmitSolarPanels(mode)(formRequest)
-        case ExternalFeature.AdvertisingDisplays => controller.onPageSubmitAdvertisingDisplays(mode)(formRequest)
-        case ExternalFeature.BikeSheds => controller.onPageSubmitBikeSheds(mode)(formRequest)
-        case ExternalFeature.Canopies => controller.onPageSubmitCanopies(mode)(formRequest)
-        case ExternalFeature.LandHardSurfacedFenced => controller.onPageSubmitLandHardSurfacedFenced(mode)(formRequest)
-        case ExternalFeature.LandHardSurfacedOpen => controller.onPageSubmitLandHardSurfacedOpen(mode)(formRequest)
-        case ExternalFeature.LandGravelledFenced => controller.onPageSubmitLandGravelledFenced(mode)(formRequest)
-        case ExternalFeature.LandGravelledOpen => controller.onPageSubmitLandGravelledOpen(mode)(formRequest)
-        case ExternalFeature.LandUnsurfacedFenced => controller.onPageSubmitLandUnsurfacedFenced(mode)(formRequest)
-        case ExternalFeature.LandUnsurfacedOpen => controller.onPageSubmitLandUnsurfacedOpen(mode)(formRequest)
-        case ExternalFeature.PortableBuildings => controller.onPageSubmitPortableBuildings(mode)(formRequest)
-        case ExternalFeature.ShippingContainers => controller.onPageSubmitShippingContainers(mode)(formRequest)
+        case LoadingBays => controller.onPageSubmitLoadLoadingBays(mode, assessmentId)(formRequest)
+        case ExternalFeature.LockupGarages => controller.onPageSubmitLockupGarage(mode, assessmentId)(formRequest)
+        case ExternalFeature.OutdoorSeating => controller.onPageSubmitOutdoorSeating(mode, assessmentId)(formRequest)
+        case ExternalFeature.Parking => controller.onPageSubmitParking(mode, assessmentId)(formRequest)
+        case ExternalFeature.SolarPanels => controller.onPageSubmitSolarPanels(mode, assessmentId)(formRequest)
+        case ExternalFeature.AdvertisingDisplays => controller.onPageSubmitAdvertisingDisplays(mode, assessmentId)(formRequest)
+        case ExternalFeature.BikeSheds => controller.onPageSubmitBikeSheds(mode, assessmentId)(formRequest)
+        case ExternalFeature.Canopies => controller.onPageSubmitCanopies(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandHardSurfacedFenced => controller.onPageSubmitLandHardSurfacedFenced(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandHardSurfacedOpen => controller.onPageSubmitLandHardSurfacedOpen(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandGravelledFenced => controller.onPageSubmitLandGravelledFenced(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandGravelledOpen => controller.onPageSubmitLandGravelledOpen(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandUnsurfacedFenced => controller.onPageSubmitLandUnsurfacedFenced(mode, assessmentId)(formRequest)
+        case ExternalFeature.LandUnsurfacedOpen => controller.onPageSubmitLandUnsurfacedOpen(mode, assessmentId)(formRequest)
+        case ExternalFeature.PortableBuildings => controller.onPageSubmitPortableBuildings(mode, assessmentId)(formRequest)
+        case ExternalFeature.ShippingContainers => controller.onPageSubmitShippingContainers(mode, assessmentId)(formRequest)
       }
     }
   }

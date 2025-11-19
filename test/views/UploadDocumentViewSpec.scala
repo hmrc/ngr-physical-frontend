@@ -44,6 +44,7 @@ class UploadDocumentViewSpec extends ViewBaseSpec {
   "UploadDocument view" must {
     val pageView = view(
       form,
+      assessmentId,
       upscanResponse,
       None,
       Map("accept" -> ".pdf,.png,.docx",

@@ -36,7 +36,7 @@ class ChangedFeaturesOrSpaceControllerSpec
 
     when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
     "return 200" in {
-      val result: Future[Result] = controller.show(authenticatedFakeRequest)
+      val result: Future[Result] = controller.show(assessmentId)(authenticatedFakeRequest)
       status(result) mustBe Status.OK
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
@@ -46,9 +46,9 @@ class ChangedFeaturesOrSpaceControllerSpec
   
   "POST /" should {
     "redirect to InfoAndSupportingDocController" in {
-      val result: Future[Result] = controller.next(authenticatedFakeRequest)
+      val result: Future[Result] = controller.next(assessmentId)(authenticatedFakeRequest)
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.InfoAndSupportingDocController.show.url)
+      redirectLocation(result) mustBe Some(routes.InfoAndSupportingDocController.show(assessmentId).url)
     }
   }
 }

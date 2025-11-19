@@ -34,7 +34,7 @@ class DeclarationViewSpec extends ViewBaseSpec {
   }
 
   "Declaration view" must {
-    val declarationView = view(address, navBarContent())
+    val declarationView = view(assessmentId, address, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(declarationView.body)
 
 

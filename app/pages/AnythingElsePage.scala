@@ -16,10 +16,10 @@
 
 package pages
 
-import models.AnythingElseData
+import models.{AnythingElseData, AssessmentId}
 import play.api.libs.json.JsPath
 
-case object AnythingElsePage extends QuestionPage[AnythingElseData] {
-  override def path: JsPath = JsPath \ toString
+case class AnythingElsePage(assessmentId: AssessmentId) extends QuestionPage[AnythingElseData] {
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
   override def toString: String = "anythingElse"
 }

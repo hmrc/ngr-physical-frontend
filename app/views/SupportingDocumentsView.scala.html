@@ -30,7 +30,7 @@
 )
 
 
-@(address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, navigationBarContent: NavigationBarContent)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @dropDownContentHelp = {
 
@@ -42,7 +42,7 @@
 
 @layout(pageTitle = Some(titleNoForm("supporting.documents.heading")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = controllers.routes.SupportingDocumentsController.next()) {
+    @formHelper(action = controllers.routes.SupportingDocumentsController.next(assessmentId)) {
         <span class="govuk-caption-m">@address</span>
         @h1(msg = messages("supporting.documents.heading"), size = "l", id = Some("page-heading"))
 

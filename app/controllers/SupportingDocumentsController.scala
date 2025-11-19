@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SupportingDocumentsView
 import models.NavBarPageContents.createDefaultNavBar
-import models.NormalMode
+import models.{AssessmentId, NormalMode}
 
 
 class SupportingDocumentsController @Inject()(
@@ -36,14 +36,14 @@ class SupportingDocumentsController @Inject()(
                                        view: SupportingDocumentsView
                                      )(implicit appConfig: AppConfig)  extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] =
+  def onPageLoad(assessmentId: AssessmentId): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        Ok(view(request.property.addressFull, createDefaultNavBar()))
+        Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar()))
     }
 
-  def next(): Action[AnyContent] =
+  def next(assessmentId: AssessmentId): Action[AnyContent] =
     (identify andThen getData) {
-      Redirect(routes.UploadDocumentController.onPageLoad(None))
+      Redirect(routes.UploadDocumentController.onPageLoad(None, assessmentId))
     }
 }

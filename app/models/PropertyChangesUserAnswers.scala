@@ -28,6 +28,7 @@ case class PropertyChangesUserAnswers(credId: CredId,
                                       internalFeatures: Seq[(InternalFeature, String)],
                                       externalFeatures: Seq[(ExternalFeature, String)],
                                       additionalInfo: Option[AnythingElseData] = None,
+                                      uploadedDocuments: Seq[String],
                                       declarationRef: Option[String] = None
                                      )
 

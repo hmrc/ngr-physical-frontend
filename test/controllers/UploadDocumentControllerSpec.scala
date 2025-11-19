@@ -78,7 +78,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
 
       def testErrorCase(errorCode: String, expectedMessage: String): Unit = {
-        val result: Future[Result] = controller().onPageLoad(Some(errorCode))(fakeRequest)
+        val result: Future[Result] = controller().onPageLoad(Some(errorCode), assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(org.apache.commons.text.StringEscapeUtils.escapeHtml4(Messages(expectedMessage)))
@@ -86,7 +86,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
       "Return OK and the correct view with no upload errors" in {
 
-        val result: Future[Result] = controller().onPageLoad(None)(fakeRequest)
+        val result: Future[Result] = controller().onPageLoad(None, assessmentId)(fakeRequest)
         status(result) mustBe OK
         val content = contentAsString(result)
         content must include(pageTitle)
@@ -121,7 +121,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
       "throw runtime exception for unrecognisable error code" in {
         val result = intercept[RuntimeException] {
-          await(controller().onPageLoad(Some("SOMEOTHERCODE"))(fakeRequest))
+          await(controller().onPageLoad(Some("SOMEOTHERCODE"), assessmentId)(fakeRequest))
         }
         result.getMessage must include("unrecognisable error from upscan 'SOMEOTHERCODE'")
       }
@@ -130,9 +130,9 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
 
     "method onCancel" must {
       "redirect to correct location" in {
-        val result: Future[Result] = controller().onCancel(None)(fakeRequest)
+        val result: Future[Result] = controller().onCancel(None, assessmentId)(fakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.UploadedDocumentController.show(None).url)
+        redirectLocation(result) mustBe Some(routes.UploadedDocumentController.show(None, assessmentId).url)
       }
     }
   }

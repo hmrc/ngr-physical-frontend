@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues {
   lazy val view: HaveYouChangedView = inject[HaveYouChangedView]
 
-  def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = HaveYouChangedController(
+  def controllerWithUserAnswers(userAnswers: Option[UserAnswers]) = HaveYouChangedController (
     mockSessionRepository,
     navigator,
     fakeAuth,
@@ -43,92 +43,92 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues 
   )
 
   lazy val userAnswersFilled: UserAnswers = UserAnswers("id")
-    .set(HaveYouChangedSpacePage, true).success.value
-    .set(HaveYouChangedInternalPage, true).success.value
-    .set(HaveYouChangedExternalPage, true).success.value
+    .set(HaveYouChangedSpacePage(assessmentId), true).success.value
+    .set(HaveYouChangedInternalPage(assessmentId), true).success.value
+    .set(HaveYouChangedExternalPage(assessmentId), true).success.value
 
   "HaveYouChangedController" must {
     "Space type" should {
       Seq(NormalMode, CheckMode).foreach { mode =>
         s"return 200 and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadSpace(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadSpace(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe OK
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
 
         s"pre-filled form and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadSpace(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadSpace(mode, assessmentId)(authenticatedFakeRequest)
           contentAsString(result) must include("checked")
         }
 
         s"should redirect on successful submission and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitSpace(mode)(formRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).submitSpace(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
 
         s"should error if no selection and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitSpace(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitSpace(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe BAD_REQUEST
         }
 
         s"redirect to Journey Recovery for a GET if no existing data is found and mode $mode" in {
 
-          val result = controllerWithUserAnswers(None).loadSpace(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(None).loadSpace(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
 
         s"redirect to Journey Recovery for a POST if no existing data is found and mode $mode" in {
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(None).submitSpace(mode)(formRequest)
+          val result = controllerWithUserAnswers(None).submitSpace(mode, assessmentId)(formRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }
     "Internal type" should {
       Seq(NormalMode, CheckMode).foreach { mode =>
         s"return 200 and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadInternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadInternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe OK
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
 
         s"pre-filled form and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadInternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadInternal(mode, assessmentId)(authenticatedFakeRequest)
           contentAsString(result) must include("checked")
         }
 
         s"redirect to Journey Recovery for a GET if no existing data is found and mode $mode" in {
 
-          val result = controllerWithUserAnswers(None).loadInternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(None).loadInternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
 
         s"should redirect on successful submission and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitInternal(mode)(formRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).submitInternal(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
 
         s"should error if no selection and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitInternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitInternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe BAD_REQUEST
         }
 
         s"redirect to Journey Recovery for a POST if no existing data is found and mode $mode" in {
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(None).submitInternal(mode)(formRequest)
+          val result = controllerWithUserAnswers(None).submitInternal(mode, assessmentId)(formRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }
@@ -136,42 +136,42 @@ class HaveYouChangedControllerSpec extends ControllerSpecSupport with TryValues 
     "External type" should {
       Seq(NormalMode, CheckMode).foreach { mode =>
         s"return 200 and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadExternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).loadExternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe OK
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
 
         s"pre-filled form and mode $mode" in {
-          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadExternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(userAnswersFilled)).loadExternal(mode, assessmentId)(authenticatedFakeRequest)
           contentAsString(result) must include("checked")
         }
 
         s"should redirect on successful submission and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitExternal(mode)(formRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitExternal(mode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
 
         s"redirect to Journey Recovery for a GET if no existing data is found and mode $mode" in {
 
-          val result = controllerWithUserAnswers(None).loadExternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(None).loadExternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
 
         s"should error if no selection and mode $mode" in {
           when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitExternal(mode)(authenticatedFakeRequest)
+          val result = controllerWithUserAnswers(Some(emptyUserAnswers)).submitExternal(mode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe BAD_REQUEST
         }
 
         s"redirect to Journey Recovery for a POST if no existing data is found and mode $mode" in {
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controllerWithUserAnswers(None).submitExternal(mode)(formRequest)
+          val result = controllerWithUserAnswers(None).submitExternal(mode, assessmentId)(formRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }

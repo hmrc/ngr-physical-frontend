@@ -16,11 +16,12 @@
 
 package pages
 
+import models.AssessmentId
 import play.api.libs.json.JsPath
 
-case object UploadDocumentsPage extends QuestionPage[Seq[String]] {
+case class UploadDocumentsPage(assessmentId: AssessmentId) extends QuestionPage[Seq[String]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "upload"
 }

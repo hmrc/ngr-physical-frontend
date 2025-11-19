@@ -16,12 +16,12 @@
 
 package pages
 
-import models.ExternalFeature
+import models.{AssessmentId, ExternalFeature}
 import play.api.libs.json.JsPath
 
-case object WhichExternalFeaturePage extends QuestionPage[ExternalFeature] {
+case class WhichExternalFeaturePage(assessmentId: AssessmentId) extends QuestionPage[ExternalFeature] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whichExternalFeature"
 }

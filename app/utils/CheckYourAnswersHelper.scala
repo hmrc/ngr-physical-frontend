@@ -17,7 +17,7 @@
 package utils
 
 import models.upscan.UploadId
-import models.{CheckMode, External, ExternalFeature, HaveYouChangedControllerUse, Internal, InternalFeature, Space, UserAnswers}
+import models.{AssessmentId, CheckMode, External, ExternalFeature, HaveYouChangedControllerUse, Internal, InternalFeature, Space, UserAnswers}
 import pages.UploadDocumentsPage
 import play.api.i18n.Messages
 import services.UploadProgressTracker
@@ -32,48 +32,48 @@ import scala.concurrent.{ExecutionContext, Future}
 class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracker) {
 
 
-  def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext): Future[Seq[Section]] = {
+  def createSectionList(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages, ec: ExecutionContext): Future[Seq[Section]] = {
     val staticSections: Seq[Option[Section]] = Seq(
-      createDateOfChangeSection(userAnswers),
-      createUseOfSpaceSection(userAnswers),
-      createInternalFeaturesSection(userAnswers),
-      createExternalFeaturesSection(userAnswers),
-      createAdditionalInformationSection(userAnswers)
+      createDateOfChangeSection(userAnswers, assessmentId),
+      createUseOfSpaceSection(userAnswers, assessmentId),
+      createInternalFeaturesSection(userAnswers, assessmentId),
+      createExternalFeaturesSection(userAnswers, assessmentId),
+      createAdditionalInformationSection(userAnswers, assessmentId)
     )
 
-    val supportingDocumentsFuture: Future[Option[Section]] = createSupportingDocuments(userAnswers)
+    val supportingDocumentsFuture: Future[Option[Section]] = createSupportingDocuments(userAnswers, assessmentId)
 
     supportingDocumentsFuture.map { supportingDocumentsOpt =>
       (staticSections :+ supportingDocumentsOpt).flatten
     }
   }
   
-  private def createDateOfChangeSection(userAnswers: UserAnswers)(implicit
-    messages: Messages
+  private def createDateOfChangeSection(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit
+                                                                                              messages: Messages
   ): Option[Section] =
     buildSection(
       "checkYourAnswers.dateOfChange.heading",
       Seq(
-        WhenCompleteChangeSummary.row(userAnswers),
+        WhenCompleteChangeSummary.row(userAnswers, assessmentId),
       )
     )
 
-  private def createUseOfSpaceSection(userAnswers: UserAnswers)(implicit
+  private def createUseOfSpaceSection(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit
                                                                   messages: Messages
   ): Option[Section] =
 
     buildSection(
       "checkYourAnswers.useOfSpace.heading",
-      (HaveYouChangedSummary.row(userAnswers, Space).toSeq ++
-        ChangeToUseOfSpaceSummary.rows(userAnswers).getOrElse(Seq.empty)).map(Some(_))
+      (HaveYouChangedSummary.row(userAnswers, Space, assessmentId).toSeq ++
+        ChangeToUseOfSpaceSummary.rows(userAnswers, assessmentId).getOrElse(Seq.empty)).map(Some(_))
     )
 
-  private def createInternalFeaturesSection(userAnswers: UserAnswers)(implicit
+  private def createInternalFeaturesSection(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit
     messages: Messages
   ): Option[Section] =
-    val rowsSeq = InternalFeature.getAnswers(userAnswers, CheckMode)
+    val rowsSeq = InternalFeature.getAnswers(userAnswers, CheckMode, fromMiniCYA = false, assessmentId)
     val rows  = if (rowsSeq.nonEmpty) rowsSeq.map(Some(_)) else Seq(
-      HaveYouChangedSummary.row(userAnswers, Internal)
+      HaveYouChangedSummary.row(userAnswers, Internal, assessmentId)
     )
 
     buildSection(
@@ -81,31 +81,31 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
       rows
     )
 
-  private def createExternalFeaturesSection(userAnswers: UserAnswers)(implicit
+  private def createExternalFeaturesSection(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit
                                                                       messages: Messages
   ): Option[Section] =
 
-    val rowsSeq = ExternalFeature.getAnswers(userAnswers, CheckMode)
+    val rowsSeq = ExternalFeature.getAnswers(userAnswers, CheckMode, fromMiniCYA = false, assessmentId)
     val rows  = if (rowsSeq.nonEmpty) rowsSeq.map(Some(_)) else Seq(
-      HaveYouChangedSummary.row(userAnswers, External)
+      HaveYouChangedSummary.row(userAnswers, External, assessmentId)
     )
     buildSection(
       "checkYourAnswers.externalFeature.heading",
       rows
     )
 
-  private def createAdditionalInformationSection(userAnswers: UserAnswers)(implicit
+  private def createAdditionalInformationSection(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit
                                                                 messages: Messages
   ): Option[Section] =
 
     buildSection(
       "checkYourAnswers.additionalInformation.heading",
-      AnythingElseSummary.rows(userAnswers).getOrElse(Seq.empty).map(Some(_))
+      AnythingElseSummary.rows(userAnswers, assessmentId).getOrElse(Seq.empty).map(Some(_))
     )
 
-  private def createSupportingDocuments(userAnswers: UserAnswers)(implicit messages: Messages, ec: ExecutionContext
+  private def createSupportingDocuments(userAnswers: UserAnswers, assessmentId: AssessmentId)(implicit messages: Messages, ec: ExecutionContext
   ): Future[Option[Section]] =
-    val uploadResults = userAnswers.get(UploadDocumentsPage).map(value => value.map {
+    val uploadResults = userAnswers.get(UploadDocumentsPage(assessmentId)).map(value => value.map {
       id => uploadProgressTracker.getUploadResult(UploadId(id))
     })
     uploadResults match {
@@ -115,7 +115,7 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
         } yield {
           buildSection(
             "checkYourAnswers.supportingDocuments.heading",
-            UploadDocumentsSummary.rows(uploadStatuses).getOrElse(Seq.empty).map(Some(_))
+            UploadDocumentsSummary.rows(uploadStatuses, assessmentId).getOrElse(Seq.empty).map(Some(_))
           )
         }
       case None => Future.successful(None)

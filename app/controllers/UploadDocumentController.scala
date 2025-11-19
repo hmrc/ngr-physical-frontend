@@ -22,7 +22,7 @@ import config.AppConfig
 import connectors.UpscanConnector
 import forms.UploadForm
 import models.NavBarPageContents.createDefaultNavBar
-import models.UserAnswers
+import models.{AssessmentId, UserAnswers}
 import models.registration.CredId
 import models.requests.DataRequest
 import models.upscan.{Reference, UploadId}
@@ -67,16 +67,15 @@ class UploadDocumentController @Inject()(
     }
   }
 
-  def onPageLoad(errorCode: Option[String]): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(errorCode: Option[String], assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       val errorToDisplay: Option[String] = renderError(errorCode)
       val uploadId = UploadId.generate()
-      val successRedirectUrl = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(Some(uploadId)).url}"
-      val errorRedirectUrl = s"${appConfig.ngrPhysicalFrontendUrl}/upload-supporting-document"
+      val successRedirectUrl: String = s"${appConfig.uploadRedirectTargetBase}${routes.UploadedDocumentController.show(Some(uploadId), assessmentId).url}"
+      val errorRedirectUrl : String = s"${appConfig.ngrPhysicalFrontendUrl}/upload-supporting-document/${assessmentId.value}"
 
-
-      val currentAnswers = request.userAnswers.get(UploadDocumentsPage) match {
+      val currentAnswers = request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
         case None => Seq.empty[String]
         case Some(value) => value
       }
@@ -87,27 +86,28 @@ class UploadDocumentController @Inject()(
       yield Ok(
         view(
           uploadForm(),
+          assessmentId,
           upscanInitiateResponse,
           errorToDisplay,
           attributes,
           request.property.addressFull,
           createDefaultNavBar(),
           currentAnswers.nonEmpty,
-          hasUploaded()
+          hasUploaded(assessmentId)
         )
       )
   }
 
-  private def hasUploaded()(implicit request: DataRequest[AnyContent]): Boolean = {
-    request.userAnswers.get(UploadDocumentsPage) match {
+  private def hasUploaded(assessmentId: AssessmentId)(implicit request: DataRequest[AnyContent]): Boolean = {
+    request.userAnswers.get(UploadDocumentsPage(assessmentId)) match {
       case Some(uploads) if uploads.nonEmpty => true
       case _ => false
     }
   }
 
 
-  def onCancel(uploadId: Option[UploadId]): Action[AnyContent] = (identify andThen getData).async {
+  def onCancel(uploadId: Option[UploadId], assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-      Future.successful(Redirect(routes.UploadedDocumentController.show(None)))
+      Future.successful(Redirect(routes.UploadedDocumentController.show(None, assessmentId)))
   }
 }

@@ -30,11 +30,12 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.HeaderCarrier
 import config.AppConfig
 import mocks.MockAppConfig
-import models.{NavBarContents, NavBarCurrentPage, NavBarPageContents, NavigationBarContent}
+import models.{AssessmentId, NavBarContents, NavBarCurrentPage, NavBarPageContents, NavigationBarContent}
 
 trait ViewBaseSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach with Matchers {
   implicit lazy val messages: Messages = MessagesImpl(Lang("en"), messagesApi)
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
+  val assessmentId = AssessmentId("test-assessment-id")
   def injector: Injector = app.injector
   def element(cssSelector: String)(implicit document: Document): Element = {
     val elements = document.select(cssSelector)

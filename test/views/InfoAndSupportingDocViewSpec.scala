@@ -54,7 +54,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
   }
 
   "InfoAndSupportingDoc view" must {
-    val dashboardView = view(address, navBarContent())
+    val dashboardView = view(assessmentId, address, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(dashboardView.body)
 
 
@@ -109,7 +109,7 @@ class InfoAndSupportingDocViewSpec extends ViewBaseSpec {
 
     "show conitnue button" in {
       elementText(".govuk-button") mustBe "Continue"
-      element(".govuk-button").attr("href") must include(routes.WhenCompleteChangeController.onPageLoad(NormalMode).url)
+      element(".govuk-button").attr("href") must include(routes.WhenCompleteChangeController.onPageLoad(NormalMode, assessmentId).url)
     }
 
   }

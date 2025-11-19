@@ -29,7 +29,7 @@ final case class RatepayerRegistration(userType: Option[UserType] = None,
                                        address: Option[Address] = None,
                                        trnReferenceNumber: Option[TRNReferenceNumber] = None,
                                        isRegistered: Option[Boolean] = Some(false)
-                                )
+                                 )
 
 
 object RatepayerRegistration {

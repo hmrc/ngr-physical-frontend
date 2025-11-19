@@ -25,7 +25,7 @@ import views.html.ChangedFeaturesOrSpaceView
 class ChangedFeaturesOrSpaceViewSpec extends ViewBaseSpec {
   val view: ChangedFeaturesOrSpaceView = injector.instanceOf[ChangedFeaturesOrSpaceView]
   val address: String = "123 Street Lane"
-  implicit val document: Document = Jsoup.parse(view(address, navBarContent()).body)
+  implicit val document: Document = Jsoup.parse(view(assessmentId, address, navBarContent()).body)
   val title = "Tell us you changed property features or use of space"
   val p1 = "We use information about certain things in your property to work out the rateable value. A change to them could affect the rateable value."
   val p2 = "You must tell us within 60 days of completing a change."

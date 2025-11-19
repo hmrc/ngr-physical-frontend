@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.WhichExternalFeatureFormProvider
 import models.ExternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{ExternalFeature, Mode, NormalMode, WhatHappenedTo}
+import models.{AssessmentId, ExternalFeature, Mode, NormalMode, WhatHappenedTo}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,23 +42,23 @@ class WhichExternalFeatureController @Inject()(identify: IdentifierAction,
 
   val form: Form[ExternalFeature] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view(request.property.addressFull, form, createDefaultNavBar(), mode))
+      Ok(view(assessmentId, request.property.addressFull, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
         feature =>
-          nextPage(feature, mode)
+          nextPage(feature, mode, assessmentId)
       )
   }
 
-  private def nextPage(feature: ExternalFeature, mode: Mode): Future[Result] = {
-    Future.successful(Redirect(WhatHappenedTo.pageLoadAction(feature, mode)))
+  private def nextPage(feature: ExternalFeature, mode: Mode, assessmentId: AssessmentId): Future[Result] = {
+    Future.successful(Redirect(WhatHappenedTo.pageLoadAction(feature, mode, assessmentId)))
   }
 
 }

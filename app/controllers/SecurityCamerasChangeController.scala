@@ -20,7 +20,7 @@ import actions.*
 import config.AppConfig
 import forms.SecurityCamerasChangeFormProvider
 import models.NavBarPageContents.createDefaultNavBar
-import models.{Mode, UserAnswers}
+import models.{AssessmentId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.SecurityCamerasChangePage
 import play.api.data.Form
@@ -47,29 +47,29 @@ class SecurityCamerasChangeController @Inject()(
 
   val form: Form[Int] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(SecurityCamerasChangePage) match {
+      val preparedForm = request.userAnswers.get(SecurityCamerasChangePage(assessmentId)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(request.property.addressFull, preparedForm, mode, createDefaultNavBar()))
+      Ok(view(assessmentId, request.property.addressFull, preparedForm, mode, createDefaultNavBar()))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, mode, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, mode, createDefaultNavBar()))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(SecurityCamerasChangePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SecurityCamerasChangePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SecurityCamerasChangePage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(SecurityCamerasChangePage(assessmentId), mode, updatedAnswers, assessmentId))
       )
   }
 }

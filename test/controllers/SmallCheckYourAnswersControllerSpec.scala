@@ -41,146 +41,146 @@ class SmallCheckYourAnswersControllerSpec extends ControllerSpecSupport {
     Seq(CYAInternal, CYAExternal).foreach { case (viewType: CYAViewType) =>
       s"onPageLoad for $viewType" must {
         "return 200" in {
-          val result = controller(Some(emptyUserAnswers)).onPageLoad(viewType, NormalMode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onPageLoad(viewType, NormalMode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe OK
           contentType(result) mustBe Some("text/html")
           charset(result) mustBe Some("utf-8")
         }
         "redirect to journey recovery Expired for a GET if no existing data is found" in {
-          val result = controller(None).onPageLoad(viewType, NormalMode)(authenticatedFakeRequest)
+          val result = controller(None).onPageLoad(viewType, NormalMode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
 
       s"onSubmit for $viewType" must {
         "redirect to check your answers page when the mode is CheckMode" in {
           val formRequest = requestWithForm(Map("value" -> "false"))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(viewType, CheckMode)(formRequest)
-          redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(viewType, CheckMode, assessmentId)(formRequest)
+          redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
         }
         "bad request when no selection" in {
-          val result = controller(Some(emptyUserAnswers)).onSubmit(viewType, NormalMode)(authenticatedFakeRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(viewType, NormalMode, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe 400
         }
         "redirect to journey recovery Expired for a POST if no existing data is found" in {
           val formRequest = requestWithForm(Map("value" -> "true"))
-          val result = controller(None).onSubmit(viewType, NormalMode)(formRequest)
+          val result = controller(None).onSubmit(viewType, NormalMode, assessmentId)(formRequest)
           status(result) mustBe 303
-          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
         }
       }
     }
 
     "onSubmit redirect to have you changed Internal when the viewType is CYAInternal" in {
       val formRequest = requestWithForm(Map("value" -> "true"))
-      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAInternal, NormalMode)(formRequest)
-      redirectLocation(result) mustBe Some(routes.WhichInternalFeatureController.onPageLoad(NormalMode).url)
+      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAInternal, NormalMode, assessmentId)(formRequest)
+      redirectLocation(result) mustBe Some(routes.WhichInternalFeatureController.onPageLoad(NormalMode, assessmentId).url)
     }
 
     "onSubmit redirect to have you changed External when the viewType is CYAInternal" in {
       val formRequest = requestWithForm(Map("value" -> "false"))
-      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAInternal, NormalMode)(formRequest)
-      redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadExternal(NormalMode).url)
+      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAInternal, NormalMode, assessmentId)(formRequest)
+      redirectLocation(result) mustBe Some(routes.HaveYouChangedController.loadExternal(NormalMode, assessmentId).url)
     }
 
     "onSubmit redirect to have you changed External when the viewType is CYAExternal" in {
       val formRequest = requestWithForm(Map("value" -> "true"))
-      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAExternal, NormalMode)(formRequest)
-      redirectLocation(result) mustBe Some(routes.WhichExternalFeatureController.onPageLoad(NormalMode).url)
+      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAExternal, NormalMode, assessmentId)(formRequest)
+      redirectLocation(result) mustBe Some(routes.WhichExternalFeatureController.onPageLoad(NormalMode, assessmentId).url)
     }
 
     "onSubmit redirect to not tole any changes page when the viewType is External and HaveYouChangedInternal and HaveYouChangedExternal and HaveYouChangedSpace option is 'No'" in {
       val formRequest = requestWithForm(Map("value" -> "false"))
-      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAExternal, NormalMode)(formRequest)
-      redirectLocation(result) mustBe Some(routes.NotToldAnyChangesController.show.url)
+      val result = controller(Some(emptyUserAnswers)).onSubmit(CYAExternal, NormalMode, assessmentId)(formRequest)
+      redirectLocation(result) mustBe Some(routes.NotToldAnyChangesController.show(assessmentId).url)
     }
 
     "onSubmit redirect to anything else page when the viewType is CYAExternal" in {
       val formRequest = requestWithForm(Map("value" -> "false"))
-      val userAnswers = emptyUserAnswers.set(HaveYouChangedExternalPage, true).success.value
-      val result = controller(Some(userAnswers)).onSubmit(CYAExternal, NormalMode)(formRequest)
-      redirectLocation(result) mustBe Some(routes.AnythingElseController.onPageLoad(NormalMode).url)
+      val userAnswers = emptyUserAnswers.set(HaveYouChangedExternalPage(assessmentId), true).success.value
+      val result = controller(Some(userAnswers)).onSubmit(CYAExternal, NormalMode, assessmentId)(formRequest)
+      redirectLocation(result) mustBe Some(routes.AnythingElseController.onPageLoad(NormalMode, assessmentId).url)
     }
 
     "removeInternal" must {
       "remove data and redirect to mini check your answers page when fromMiniCYA flag is true" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller(Some(emptyUserAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = true)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = true, assessmentId)(authenticatedFakeRequest)
           status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode).url)
+          redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode, assessmentId).url)
         }
 
       "remove data for SecurityCamera and redirect to mini check your answers page when fromMiniCYA flag is true" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller(Some(emptyUserAnswers)).removeInternal(SecurityCamera.toString, NormalMode, fromMiniCYA = true)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).removeInternal(SecurityCamera.toString, NormalMode, fromMiniCYA = true, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAInternal, NormalMode, assessmentId).url)
       }
 
       "remove data for invalid InternalFeature and redirect to mini check your answers page when fromMiniCYA flag is true" in {
         val result = intercept[Exception](
-          await(controller(Some(emptyUserAnswers)).removeInternal("Random", NormalMode, fromMiniCYA = true)(authenticatedFakeRequest))
+          await(controller(Some(emptyUserAnswers)).removeInternal("Random", NormalMode, fromMiniCYA = true, assessmentId)(authenticatedFakeRequest))
         )
         result.getMessage mustBe "no internal feature chosen to remove"
       }
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false and userAnswers is not empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage, HowMuchOfProperty.NoneOf).success.value
-        val result = controller(Some(userAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val userAnswers = emptyUserAnswers.set(HowMuchOfPropertyAirConPage(assessmentId), HowMuchOfProperty.NoneOf).success.value
+        val result = controller(Some(userAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
       }
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller(Some(emptyUserAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
       }
 
       "redirect to journey recovery Expired for a POST if no existing data is found" in {
-        val result = controller(None).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val result = controller(None).removeInternal(Escalators.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe 303
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 
     "removeExternal" must {
       "remove data and redirect to mini check your answers page when fromMiniCYA flag is true" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller(Some(emptyUserAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = true)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = true, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.SmallCheckYourAnswersController.onPageLoad(CYAExternal, NormalMode, assessmentId).url)
       }
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controller(Some(emptyUserAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
       }
 
       "remove data and redirect to check your answers page when fromMiniCYA flag is false and userAnswers is not empty" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val userAnswers = emptyUserAnswers.set(WhatHappenedToLoadingBaysPage, WhatHappenedTo.Added).success.value
-        val result = controller(Some(userAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val userAnswers = emptyUserAnswers.set(WhatHappenedToLoadingBaysPage(assessmentId), WhatHappenedTo.Added).success.value
+        val result = controller(Some(userAnswers)).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(assessmentId).url)
       }
 
       "remove data for invalid ExternalFeature and redirect to mini check your answers page when fromMiniCYA flag is true" in {
         val result = intercept[Exception](
-          await(controller(Some(emptyUserAnswers)).removeExternal("Random", NormalMode, fromMiniCYA = true)(authenticatedFakeRequest))
+          await(controller(Some(emptyUserAnswers)).removeExternal("Random", NormalMode, fromMiniCYA = true, assessmentId)(authenticatedFakeRequest))
         )
         result.getMessage mustBe "no external feature chosen to remove"
       }
       
       "redirect to journey recovery Expired for a POST if no existing data is found" in {
-        val result = controller(None).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false)(authenticatedFakeRequest)
+        val result = controller(None).removeExternal(ExternalFeature.SolarPanels.toString, NormalMode, fromMiniCYA = false, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe 303
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
   }

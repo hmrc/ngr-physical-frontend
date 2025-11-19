@@ -42,11 +42,11 @@ object HaveYouChangedControllerUse {
       case External => ("haveYouChangedExternal.title", "haveYouChangedExternal.hint")
     }
 
-  def pageType(use: HaveYouChangedControllerUse): QuestionPage[Boolean] =
+  def pageType(use: HaveYouChangedControllerUse, assessmentId: AssessmentId): QuestionPage[Boolean] =
     use match {
-      case Space => HaveYouChangedSpacePage
-      case Internal => HaveYouChangedInternalPage
-      case External => HaveYouChangedExternalPage
+      case Space => HaveYouChangedSpacePage(assessmentId)
+      case Internal => HaveYouChangedInternalPage(assessmentId)
+      case External => HaveYouChangedExternalPage(assessmentId)
     }
 
 }

@@ -28,6 +28,7 @@
 )
 
 @(
+    assessmentId: AssessmentId,
     address: String,
     titleKey: String,
     featureString: String,
@@ -39,7 +40,7 @@
 
 @layout(pageTitle = Some(title(form, titleKey)), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
 
-    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString, mode, fromMiniCYA), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.SureWantRemoveChangeController.onSubmit(featureString, mode, fromMiniCYA, assessmentId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

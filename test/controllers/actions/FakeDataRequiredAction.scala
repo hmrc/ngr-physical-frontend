@@ -32,7 +32,7 @@ class FakeDataRequiredAction @Inject()(userAnswers: Option[UserAnswers])(implici
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
     userAnswers match {
       case None =>
-        Future.successful(Left(Results.Redirect(routes.JourneyRecoveryController.onPageLoad())))
+        Future.successful(Left(Results.Redirect(routes.JourneyRecoveryController.onPageLoad(assessmentId))))
       case Some(data) =>
         Future.successful(Right(DataRequest(request.request, request.userId, data, request.property)))
     }

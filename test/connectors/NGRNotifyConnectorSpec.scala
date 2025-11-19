@@ -16,6 +16,7 @@
 
 package connectors
 
+import helpers.TestData
 import mocks.MockHttpV2
 import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
 import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
@@ -28,7 +29,7 @@ import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class NGRNotifyConnectorSpec extends MockHttpV2 {
+class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
   val ngrConnector: NGRNotifyConnector = new NGRNotifyConnector(mockHttpClientV2, mockConfig)
   val credId: CredId = CredId("1234")
 
@@ -39,7 +40,8 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
     internalFeatures = Seq.empty[(InternalFeature, String)],
     externalFeatures = Seq.empty[(ExternalFeature, String)],
     additionalInfo = None,
-    declarationRef = None
+    declarationRef = None,
+    uploadedDocuments = Seq.empty[String]
   )
 
   override def beforeEach(): Unit = {
@@ -54,7 +56,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical",
         Seq("Content-Type" -> "application/json")
       )(response)
-      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers)
+      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
       result.futureValue.error mustBe None
     }
 
@@ -66,7 +68,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 {
         Seq("Content-Type" -> "application/json")
       )(response)
 
-      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers)
+      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
       result.futureValue mustBe response
 
     }

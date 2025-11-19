@@ -44,7 +44,7 @@ class NGRConnector @Inject()(http: HttpClientV2,
       .execute[Option[RatepayerRegistrationValuation]]
   }
 
-  def getPropertyLinkingUserAnswers(credId: CredId)(implicit hc: HeaderCarrier): Future[Option[PropertyLinkingUserAnswers]] = {
+  private def getPropertyLinkingUserAnswers(credId: CredId)(implicit hc: HeaderCarrier): Future[Option[PropertyLinkingUserAnswers]] = {
     implicit val rds: HttpReads[PropertyLinkingUserAnswers] = readFromJson
     val dummyVMVProperty: VMVProperty = VMVProperty(0L, "", "", "", List.empty) // TODO: Replace with a proper VMVProperty instance if needed
     val model: PropertyLinkingUserAnswers = PropertyLinkingUserAnswers(credId, dummyVMVProperty)
@@ -53,12 +53,11 @@ class NGRConnector @Inject()(http: HttpClientV2,
       .execute[Option[PropertyLinkingUserAnswers]]
   }
 
-  def getLinkedProperty(credId: CredId)(implicit hc: HeaderCarrier): Future[Option[VMVProperty]] = {
-    getPropertyLinkingUserAnswers(credId)
-      .map {
-        case Some(propertyLinkingUserAnswers) => Some(propertyLinkingUserAnswers.vmvProperty)
+  def getLinkedProperty(credId: CredId)(implicit hc: HeaderCarrier): Future[PropertyLinkingUserAnswers] =
+    getPropertyLinkingUserAnswers(credId).map {
+      case Some(propertyLinkingUserAnswers) => propertyLinkingUserAnswers
         case None => throw new NotFoundException("failed to find propertyLinkingUserAnswers from backend mongo")
       }
-  }
+  
 
 }

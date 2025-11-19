@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, External, HaveYouChangedControllerUse, Internal, Space, UserAnswers}
+import models.{AssessmentId, CheckMode, External, HaveYouChangedControllerUse, Internal, Space, UserAnswers}
 import pages.{HaveYouChangedExternalPage, HaveYouChangedInternalPage, HaveYouChangedSpacePage, QuestionPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -25,21 +25,21 @@ import viewmodels.govuk.summarylist.*
 import viewmodels.implicits.*
 
 object HaveYouChangedSummary  {
-  def row(answers: UserAnswers, use: HaveYouChangedControllerUse)(implicit messages: Messages): Option[SummaryListRow] = {
+  def row(answers: UserAnswers, use: HaveYouChangedControllerUse, assessmentId: AssessmentId)(implicit messages: Messages): Option[SummaryListRow] = {
 
     val (page: QuestionPage[Boolean], key: String) = use match {
-      case Space => (HaveYouChangedSpacePage, "haveYouChangedSpace")
-      case Internal => (HaveYouChangedInternalPage, "haveYouChangedInternal")
-      case External => (HaveYouChangedExternalPage, "haveYouChangedExternal")
+      case Space => (HaveYouChangedSpacePage(assessmentId), "haveYouChangedSpace")
+      case Internal => (HaveYouChangedInternalPage(assessmentId), "haveYouChangedInternal")
+      case External => (HaveYouChangedExternalPage(assessmentId), "haveYouChangedExternal")
     }
 
     answers.get(page).map {
       answer =>
         val value = if (answer) "site.yes" else "site.no"
         val url = use match {
-          case Space => routes.HaveYouChangedController.loadSpace(CheckMode).url
-          case Internal => routes.HaveYouChangedController.loadInternal(CheckMode).url
-          case External => routes.HaveYouChangedController.loadExternal(CheckMode).url
+          case Space => routes.HaveYouChangedController.loadSpace(CheckMode, assessmentId).url
+          case Internal => routes.HaveYouChangedController.loadInternal(CheckMode, assessmentId).url
+          case External => routes.HaveYouChangedController.loadExternal(CheckMode, assessmentId).url
         }
         SummaryListRowViewModel(
           key     = s"$key.title",

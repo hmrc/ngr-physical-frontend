@@ -50,11 +50,12 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
 
   "UploadedDocument view" must {
     val pageView = view(
+      assessmentId,
       navBarContent(),
       SummaryList(Seq(summaryListRow)),
       address,
       false,
-      routes.UploadedDocumentController.onSubmit(Some(UploadId("12345")), false)
+      routes.UploadedDocumentController.onSubmit(Some(UploadId("12345")), false, assessmentId)
     )
 
     lazy implicit val document: Document = Jsoup.parse(pageView.body)

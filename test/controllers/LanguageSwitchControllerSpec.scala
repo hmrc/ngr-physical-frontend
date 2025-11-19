@@ -17,16 +17,17 @@
 package controllers
 
 import base.SpecBase
+import helpers.TestData
 import org.scalatest.freespec.AnyFreeSpec
 import play.api.i18n.Lang
 
-class LanguageSwitchControllerSpec extends SpecBase {
+class LanguageSwitchControllerSpec extends SpecBase with TestData {
 
   val controller: LanguageSwitchController = applicationBuilder(None).build().injector.instanceOf[LanguageSwitchController]
 
   "LanguageSwitchController" - {
     "must have a fallback URL" in {
-      controller.fallbackURL mustBe routes.ChangedFeaturesOrSpaceController.show.url
+      controller.fallbackURL mustBe "http://localhost:1503/ngr-dashboard-frontend/dashboard"
     }
 
     "must have a non-empty language map" in {

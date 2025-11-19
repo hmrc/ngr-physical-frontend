@@ -21,7 +21,7 @@ import config.AppConfig
 import forms.WhichInternalFeatureFormProvider
 import models.InternalFeature.*
 import models.NavBarPageContents.createDefaultNavBar
-import models.{HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode}
+import models.{AssessmentId, HowMuchOfProperty, InternalFeature, InternalFeatureGroup1, Mode, NormalMode}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,25 +42,25 @@ class WhichInternalFeatureController @Inject()(identify: IdentifierAction,
 
   val form: Form[InternalFeature] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view(request.property.addressFull, form, createDefaultNavBar(), mode))
+      Ok(view(assessmentId, request.property.addressFull, form, createDefaultNavBar(), mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
+          Future.successful(BadRequest(view(assessmentId, request.property.addressFull, formWithErrors, createDefaultNavBar(), mode))),
         feature =>
-          nextPage(feature, mode)
+          nextPage(feature, mode, assessmentId)
       )
   }
 
-  private def nextPage(feature: InternalFeature, mode: Mode): Future[Result] = {
+  private def nextPage(feature: InternalFeature, mode: Mode, assessmentId: AssessmentId): Future[Result] = {
     val call = feature match {
-      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, mode)
-      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode)
+      case group1Feature: InternalFeatureGroup1 => HowMuchOfProperty.pageLoadAction(group1Feature, mode, assessmentId)
+      case SecurityCamera => routes.SecurityCamerasChangeController.onPageLoad(mode, assessmentId)
     }
     Future.successful(Redirect(call))
   }

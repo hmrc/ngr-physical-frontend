@@ -49,7 +49,7 @@ class WhenCompleteChangeViewSpec extends ViewBaseSpec {
 
   "WhenCompleteChange with errors view" must {
     
-    val whenCompleteChangeView = view(address, formWithError("whenCompleteChange.error.invalid"), NormalMode, navBarContent())
+    val whenCompleteChangeView = view(assessmentId, address, formWithError("whenCompleteChange.error.invalid"), NormalMode, navBarContent())
     lazy implicit val document: Document = Jsoup.parse(whenCompleteChangeView.body)
     
     

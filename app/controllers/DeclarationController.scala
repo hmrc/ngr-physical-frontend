@@ -27,8 +27,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
-import models.{ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
-import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, WhenCompleteChangePage}
+import models.{AssessmentId, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
+import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, UploadDocumentsPage, WhenCompleteChangePage}
 import play.api.Logging
 import play.api.libs.json.Json
 import repositories.SessionRepository
@@ -48,44 +48,45 @@ class DeclarationController @Inject()(
                                        connector: NGRNotifyConnector
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport with Logging {
 
-  val show: Action[AnyContent] =
+  def show(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData andThen requireData) {
       implicit request =>
-        Ok(view(request.property.addressFull, createDefaultNavBar()))
+        Ok(view(assessmentId, request.property.addressFull, createDefaultNavBar()))
     }
 
-  val next: Action[AnyContent] =
+  def next(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData andThen requireData).async  {
       implicit request =>
 
-        request.userAnswers.get(WhenCompleteChangePage) match {
+        request.userAnswers.get(WhenCompleteChangePage(assessmentId)) match {
           case Some(date) =>
             val userAnswers = PropertyChangesUserAnswers(
               CredId(request.credId),
               dateOfChange = date,
-              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage),
-              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers),
-              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers),
-              additionalInfo = request.userAnswers.get(AnythingElsePage)
+              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
+              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+              additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId)),
+              uploadedDocuments = Seq.empty[String] // TODO Implementation is pending for uploaded documents more tickets to follow
             )
 
-            request.userAnswers.get(DeclarationPage) match {
+            request.userAnswers.get(DeclarationPage(assessmentId)) match {
               case None =>
                 val generateRef =  UniqueIdGenerator.generateId
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, generateRef))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
                   _ <- sessionRepository.set(updatedAnswers)
-                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)))
+                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)), assessmentId)
                 } yield response.error match {
-                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                   case Some(e) =>
                     logger.error(s"[DeclarationController] error occurred: $e")
                     BadRequest
                 }
               case Some(value) =>
-                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value))).map {
+                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
                   response => response.error match {
-                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad())
+                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                     case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
                       BadRequest
                   }

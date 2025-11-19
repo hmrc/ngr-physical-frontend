@@ -29,13 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends DataRequiredAction {
 
-  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-
+  override def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
     request.userAnswers match {
-      case None =>
-        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
       case Some(data) =>
         Future.successful(Right(DataRequest(request = request.request, credId = request.userId, userAnswers = data, property = request.property)))
+      case None =>
+        request.assessmentId match {
+          case Some(assessmentId) =>
+            Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad(assessmentId, None))))
+          case None =>
+            Future.failed(new NotFoundException("assessmentId not found"))
+        }
     }
   }
 }

@@ -32,16 +32,16 @@ class WhichInternalFeatureControllerSpec extends ControllerSpecSupport {
   "WhichInternalFeatureController" should {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller(Some(emptyUserAnswers)).onPageLoad(NormalMode)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).onPageLoad(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe 200
         contentType(result) mustBe Some("text/html")
         charset(result) mustBe Some("utf-8")
       }
 
       "redirect to journey recovery for a GET if no existing data is found" in {
-        val result = controller(None).onPageLoad(NormalMode)(authenticatedFakeRequest)
+        val result = controller(None).onPageLoad(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe 303
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 
@@ -49,27 +49,27 @@ class WhichInternalFeatureControllerSpec extends ControllerSpecSupport {
       "redirect" in {
         InternalFeature.values.map { feature =>
           val formRequest = requestWithForm(Map("value" -> feature.toString))
-          val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode)(formRequest)
+          val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode, assessmentId)(formRequest)
           status(result) mustBe 303
         }
       }
 
       "get other value" in {
         val formRequest = requestWithForm(Map("value" -> "other", "otherSelect" -> "sprinklers"))
-        val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode)(formRequest)
+        val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode, assessmentId)(formRequest)
         status(result) mustBe 303
       }
 
       "BadRequest when no form data" in {
-        val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode)(authenticatedFakeRequest)
+        val result = controller(Some(emptyUserAnswers)).onSubmit(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe 400
       }
 
       "redirect to journey recovery for a POST if no existing data is found" in {
         val formRequest = requestWithForm(Map("value" -> InternalFeature.AirConditioning.toString))
-        val result = controller(None).onSubmit(NormalMode)(formRequest)
+        val result = controller(None).onSubmit(NormalMode, assessmentId)(formRequest)
         status(result) mustBe 303
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad(assessmentId).url
       }
     }
 

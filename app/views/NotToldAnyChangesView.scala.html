@@ -23,7 +23,7 @@
 layout: Layout
 )
 
-@(address: String, navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+@(assessmentId: AssessmentId, address: String, navigationBarContent: NavigationBarContent, mode: Mode)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("notToldAnyChanges.title")), showBackLink = true, navigationBarContent = Some(navigationBarContent)) {
     <span class="govuk-caption-m">@address</span>
@@ -31,17 +31,17 @@ layout: Layout
     <p class="govuk-body">@messages("notToldAnyChanges.p1")</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>
-            <a class="govuk-link" href="@routes.HaveYouChangedController.loadSpace(mode)">
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadSpace(mode, assessmentId)">
                 @messages("notToldAnyChanges.ul1.li1")
             </a>
         </li>
         <li>
-            <a class="govuk-link" href="@routes.HaveYouChangedController.loadInternal(mode)">
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadInternal(mode, assessmentId)">
                 @messages("notToldAnyChanges.ul1.li2")
             </a>
         </li>
         <li>
-            <a class="govuk-link" href="@routes.HaveYouChangedController.loadExternal(mode)">
+            <a class="govuk-link" href="@routes.HaveYouChangedController.loadExternal(mode, assessmentId)">
                 @messages("notToldAnyChanges.ul1.li3")
             </a>
         </li>

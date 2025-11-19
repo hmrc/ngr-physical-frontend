@@ -27,7 +27,7 @@ class SecurityCamerasChangeViewSpec extends ViewBaseSpec {
   val view: SecurityCamerasChangeView = inject[SecurityCamerasChangeView]
   val address: String = "123 Street Lane"
   val formProvider: SecurityCamerasChangeFormProvider = inject[SecurityCamerasChangeFormProvider]
-  implicit val document: Document = Jsoup.parse(view(address, formProvider(), NormalMode, navBarContent()).body)
+  implicit val document: Document = Jsoup.parse(view(assessmentId, address, formProvider(), NormalMode, navBarContent()).body)
 
   object Selectors {
     val address = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"
