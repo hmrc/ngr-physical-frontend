@@ -64,5 +64,12 @@ navigationBarContent = Some(navigationBarContent)
 
     <script @CSPNonce.attr  src='@routes.Assets.versioned("upload.js")'></script>
 
+    <!-- Fallback for browsers with JavaScript disabled -->
+    <noscript>
+        <p class="govuk-body">@messages("javascript.disabled.message")</p>
+        @govukButton(
+            ButtonViewModel(messages("site.refresh")).withAttribute("id" -> "refresh").asLink(controllers.routes.UploadedDocumentController.show(None, assessmentId).url)
+        )
+    </noscript>
 }
 
