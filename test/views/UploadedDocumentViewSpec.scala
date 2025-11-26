@@ -38,8 +38,8 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
     val uploadAnotherFileButton = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
     val continueButton = "#continue"
     val rowKey = "#uploadStatusTable > dl > div:nth-child(1) > dt"
-    val noscriptRefreshButton = "noscript #refresh"
-    val noscriptMessage = "noscript p"
+    val noJSRefreshButton = "noscript #refresh"
+    val noJSMessage = "noscript p"
   }
 
 
@@ -71,8 +71,8 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
       elementText(Selectors.continueButton) mustBe "Continue"
       elementText(Selectors.rowKey) mustBe "exampleFile"
 
-      document.select(Selectors.noscriptRefreshButton).size() mustBe 0
-      document.select(Selectors.noscriptMessage).size() mustBe 0
+      document.select(Selectors.noJSRefreshButton).size() mustBe 0
+      document.select(Selectors.noJSMessage).size() mustBe 0
     }
 
     "render noscript refresh button and message when inProgress = true" in {
@@ -87,11 +87,12 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
 
       implicit val document: Document = Jsoup.parse(pageView.body)
 
-      val refreshButton = document.select(Selectors.noscriptRefreshButton)
+      val refreshButton = document.select(Selectors.noJSRefreshButton)
       refreshButton.size() mustBe 1
       refreshButton.text() mustBe "Refresh"
+      refreshButton.attr("href") mustBe routes.UploadedDocumentController.show(None, assessmentId).url
 
-      document.select(Selectors.noscriptMessage).text() must include("JavaScript is disabled")
+      document.select(Selectors.noJSMessage).text() must include("JavaScript is disabled")
     }
   }
 }
