@@ -50,6 +50,17 @@ navigationBarContent = Some(navigationBarContent)
 
     }
 
+    <noscript>
+        @if(inProgress){
+            <p class="govuk-body">@messages("uploadedDocument.javascript.disabled.message")</p>
+            @govukButton(
+                ButtonViewModel(messages("site.refresh"))
+                    .withAttribute("id" -> "refresh")
+                    .asLink(controllers.routes.UploadedDocumentController.show(None, assessmentId).url)
+            )
+        }
+    </noscript>
+
     @formHelper(action = action) {
         @if(inProgress){
         @govukButton(

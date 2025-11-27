@@ -15,6 +15,7 @@ site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.acceptAndSend = Accept and send
+site.refresh = Refresh
 
 date.day = Day
 date.month = Month
@@ -466,6 +467,7 @@ uploadedDocument.uploadAnother = Upload another file
 uploadedDocument.uploaded = Uploaded
 uploadedDocument.uploading = Uploading
 uploadedDocument.failed = Failed
+uploadedDocument.javascript.disabled.message = JavaScript is disabled. Please click the button below to refresh the page.
 
 uploadDocument.error.required = Select a document
 uploadDocument.error.virus = The selected file contains a virus
