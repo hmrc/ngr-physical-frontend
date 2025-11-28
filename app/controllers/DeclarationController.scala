@@ -32,7 +32,6 @@ import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYou
 import play.api.Logging
 import play.api.libs.json.Json
 import repositories.SessionRepository
-import sun.util.logging.resources.logging
 import utils.UniqueIdGenerator
 
 import java.time.LocalDate
@@ -96,8 +95,5 @@ class DeclarationController @Inject()(
           case None => logger.error(s"[DeclarationController] missing date of completion")
             Future.successful(BadRequest)
         }
-        
-        
-      
     }
 }
