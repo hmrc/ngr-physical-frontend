@@ -18,8 +18,17 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NotifyPropertyChangeResponse(error: Option[String])
+case class NotifyPropertyChangeResponse(error: Option[Seq[ApiFailure]])
+
+import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.functional.syntax._
 
 object NotifyPropertyChangeResponse {
-  implicit val format: OFormat[NotifyPropertyChangeResponse] = Json.format
+  implicit val reads: Reads[NotifyPropertyChangeResponse] =
+    JsPath.readNullable[Seq[ApiFailure]].map(NotifyPropertyChangeResponse.apply)
 }
+
+case class ApiFailure(code: String, reason: String)
+
+object ApiFailure:
+  implicit val format: OFormat[ApiFailure] = Json.format

@@ -17,19 +17,20 @@
 package connectors
 
 import config.{AppConfig, FrontendAppConfig}
-import models.{AssessmentId, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
+import models.{ApiFailure, AssessmentId, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
 import models.registration.{CredId, RatepayerRegistrationValuation}
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, NotFoundException, StringContextOps}
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.HttpErrorFunctions.is2xx
 
 
 @Singleton
@@ -44,7 +45,7 @@ class NGRNotifyConnector @Inject()(http: HttpClientV2,
 
   def postPropertyChanges(userAnswers: PropertyChangesUserAnswers, assessmentId: AssessmentId)(implicit hc: HeaderCarrier): Future[NotifyPropertyChangeResponse] = {
     if (appConfig.features.bridgeEndpointEnabled()) {
-      http.post(url("physical", assessmentId))
+     http.post(url("physical", assessmentId))
         .withBody(Json.toJson(userAnswers))
         .setHeader(headers.toSeq *)
         .execute[NotifyPropertyChangeResponse]

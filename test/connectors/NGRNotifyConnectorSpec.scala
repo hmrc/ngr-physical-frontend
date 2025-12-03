@@ -18,7 +18,7 @@ package connectors
 
 import helpers.TestData
 import mocks.MockHttpV2
-import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
+import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, ApiFailure}
 import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
 import models.registration.*
 import models.registration.ReferenceType.TRN
@@ -61,7 +61,7 @@ class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
     }
 
     "endpoint returns an error" in {
-      val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(Some("an error happened"))
+      val response = NotifyPropertyChangeResponse(Some(Seq(ApiFailure("ACTION_FAILED", "an error happened"))))
       mockConfig.features.bridgeEndpointEnabled(true)
       setupMockHttpV2PostWithHeaderCarrier(
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical/$assessmentId",
