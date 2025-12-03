@@ -41,7 +41,7 @@ class SupportingDocumentsControllerSpec extends ControllerSpecSupport with TestD
   val pageTitle = "Supporting documents"
   val contentP = "You should upload at least one document to support the changes you told us about. You can upload more documents if you have them."
 
-  when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
+  when(mockNGRConnector.getLinkedProperty(any[String])(any())).thenReturn(Future.successful(Some(property)))
 
   "Supporting Documents Controller" must {
     "method show" must {
