@@ -18,11 +18,12 @@ package connectors
 
 import helpers.TestData
 import mocks.MockHttpV2
-import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, ApiFailure}
+import models.{AnythingElseData, ChangeToUseOfSpace, ExternalFeature, InternalFeature, PropertyChangesUserAnswers}
 import models.propertyLinking.{PropertyLinkingUserAnswers, VMVProperty}
 import models.registration.*
 import models.registration.ReferenceType.TRN
 import org.mockito.Mockito.when
+import play.api.http.Status.{NOT_FOUND, ACCEPTED}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 
@@ -51,25 +52,23 @@ class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
 
   "postPropertyChanges" when {
     "Successfully return a response  when provided correct body" in {
-      val response: NotifyPropertyChangeResponse = NotifyPropertyChangeResponse(None)
       setupMockHttpV2PostWithHeaderCarrier(
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical/$assessmentId",
         Seq("Content-Type" -> "application/json")
-      )(response)
-      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
-      result.futureValue.error mustBe None
+      )(HttpResponse(NOT_FOUND, ""))
+      val result: Future[Int] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
+      result.futureValue mustBe NOT_FOUND
     }
 
     "endpoint returns an error" in {
-      val response = NotifyPropertyChangeResponse(Some(Seq(ApiFailure("ACTION_FAILED", "an error happened"))))
       mockConfig.features.bridgeEndpointEnabled(true)
       setupMockHttpV2PostWithHeaderCarrier(
         s"${mockConfig.nextGenerationRatesNotifyUrl}/ngr-notify/physical/$assessmentId",
         Seq("Content-Type" -> "application/json")
-      )(response)
+      )(HttpResponse(ACCEPTED, ""))
 
-      val result: Future[NotifyPropertyChangeResponse] = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
-      result.futureValue mustBe response
+      val result: Future[Int]  = ngrConnector.postPropertyChanges(userAnswers, assessmentId)
+      result.futureValue mustBe ACCEPTED
 
     }
   }

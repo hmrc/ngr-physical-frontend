@@ -22,7 +22,7 @@ import helpers.{ControllerSpecSupport, TestData}
 import models.ExternalFeature.LoadingBays
 import models.InternalFeature.AirConditioning
 import models.NavBarPageContents.createDefaultNavBar
-import models.{AnythingElseData, ChangeToUseOfSpace, HowMuchOfProperty, NotifyPropertyChangeResponse, UseOfSpaces, UserAnswers, WhatHappenedTo}
+import models.{AnythingElseData, ChangeToUseOfSpace, HowMuchOfProperty, UseOfSpaces, UserAnswers, WhatHappenedTo}
 import models.registration.CredId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -89,7 +89,7 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
       "redirect when accepted and DeclarationPage data is present without generated Reference" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(ACCEPTED))
         val result = controllerWithUserAnswers(Some(minUserAnswers.remove(DeclarationPage(assessmentId)).success.value)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe SEE_OTHER
@@ -98,7 +98,7 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
       "redirect when accepted and DeclarationPage data is present without mandatory field when change completed" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(ACCEPTED))
         val result = controllerWithUserAnswers(Some(minUserAnswers.remove(WhenCompleteChangePage(assessmentId)).success.value)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe BAD_REQUEST
@@ -106,7 +106,7 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
       "redirect when accepted and DeclarationPage data is present with generated Reference" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(NotifyPropertyChangeResponse(None)))
+        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(ACCEPTED))
         val result = controllerWithUserAnswers(Some(minUserAnswers)).next(assessmentId)(authenticatedFakeRequest)
 
         status(result) mustBe SEE_OTHER

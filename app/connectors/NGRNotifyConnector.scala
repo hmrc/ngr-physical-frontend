@@ -17,11 +17,14 @@
 package connectors
 
 import config.{AppConfig, FrontendAppConfig}
-import models.{ApiFailure, AssessmentId, NotifyPropertyChangeResponse, PropertyChangesUserAnswers}
 import models.registration.{CredId, RatepayerRegistrationValuation}
+import models.{AssessmentId, PropertyChangesUserAnswers}
 import play.api.Logging
+import play.api.http.Status.ACCEPTED
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.HttpErrorFunctions.is2xx
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, NotFoundException, StringContextOps}
@@ -29,8 +32,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, NotFoundExcepti
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import play.mvc.Http.HeaderNames
-import uk.gov.hmrc.http.HttpErrorFunctions.is2xx
 
 
 @Singleton
@@ -43,14 +44,15 @@ class NGRNotifyConnector @Inject()(http: HttpClientV2,
 
   private def url(path: String, assessmentId: AssessmentId): URL = url"${appConfig.nextGenerationRatesNotifyUrl}/ngr-notify/$path/$assessmentId"
 
-  def postPropertyChanges(userAnswers: PropertyChangesUserAnswers, assessmentId: AssessmentId)(implicit hc: HeaderCarrier): Future[NotifyPropertyChangeResponse] = {
+  def postPropertyChanges(userAnswers: PropertyChangesUserAnswers, assessmentId: AssessmentId)(implicit hc: HeaderCarrier): Future[Int] = {
     if (appConfig.features.bridgeEndpointEnabled()) {
      http.post(url("physical", assessmentId))
         .withBody(Json.toJson(userAnswers))
         .setHeader(headers.toSeq *)
-        .execute[NotifyPropertyChangeResponse]
+        .execute[HttpResponse]
+        .map(_.status)
     } else {
-      Future.successful(NotifyPropertyChangeResponse(None))
+      Future.successful(ACCEPTED)
     }
   }
 

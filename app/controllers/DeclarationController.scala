@@ -19,23 +19,21 @@ package controllers
 import actions.*
 import config.AppConfig
 import connectors.NGRNotifyConnector
-
-import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.DeclarationView
 import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
-import models.{AssessmentId, ExternalFeature, InternalFeature, NotifyPropertyChangeResponse, PropertyChangesUserAnswers, UserAnswers}
-import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYouChangedExternalPage, HaveYouChangedInternalPage, UploadDocumentsPage, WhenCompleteChangePage}
+import models.{AssessmentId, ExternalFeature, InternalFeature, PropertyChangesUserAnswers, UserAnswers}
+import pages.*
 import play.api.Logging
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import sun.util.logging.resources.logging
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.UniqueIdGenerator
+import views.html.DeclarationView
 
 import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationController @Inject()(
@@ -77,27 +75,21 @@ class DeclarationController @Inject()(
                   updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
                   _ <- sessionRepository.set(updatedAnswers)
                   response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)), assessmentId)
-                } yield response.error match {
-                  case None => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
-                  case Some(e) =>
-                    logger.error(s"[DeclarationController] error occurred: $e")
-                    BadRequest
+                } yield response match {
+                  case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
+                  case _ =>
+                    InternalServerError
                 }
               case Some(value) =>
                 connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
-                  response => response.error match {
-                    case None =>  Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
-                    case Some(e) => logger.error(s"[DeclarationController] error occurred: $e")
-                      BadRequest
-                  }
+                  case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
+                  case _ =>
+                    InternalServerError
                 }
             }
 
-          case None => logger.error(s"[DeclarationController] missing date of completion")
+          case None => logger.warn(s"[DeclarationController] missing date of completion")
             Future.successful(BadRequest)
         }
-        
-        
-      
     }
 }
