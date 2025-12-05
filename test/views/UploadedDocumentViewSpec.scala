@@ -38,6 +38,8 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
     val uploadAnotherFileButton = "#main-content > div > div.govuk-grid-column-two-thirds > form > button"
     val continueButton = "#continue"
     val rowKey = "#uploadStatusTable > dl > div:nth-child(1) > dt"
+    val noJSRefreshButton = "noscript #refresh"
+    val noJSMessage = "noscript p"
   }
 
 
@@ -49,40 +51,48 @@ class UploadedDocumentViewSpec extends ViewBaseSpec {
   )
 
   "UploadedDocument view" must {
-    val pageView = view(
-      assessmentId,
-      navBarContent(),
-      SummaryList(Seq(summaryListRow)),
-      address,
-      false,
-      routes.UploadedDocumentController.onSubmit(Some(UploadId("12345")), false, assessmentId)
-    )
 
-    lazy implicit val document: Document = Jsoup.parse(pageView.body)
+    "render correctly when inProgress = false" in {
+      val pageView = view(
+        assessmentId,
+        navBarContent(),
+        SummaryList(Seq(summaryListRow)),
+        address,
+        inProgress = false,
+        routes.UploadedDocumentController.onSubmit(Some(UploadId("12345")), false, assessmentId)
+      )
 
-    "show correct header" in {
+      implicit val document: Document = Jsoup.parse(pageView.body)
+
       elementText("h1") mustBe "Uploaded files"
-    }
-
-    "show correct first paragraph" in {
       elementText(Selectors.firstParagraph) mustBe "Files must be PDF, JPG or PNG and must be smaller than 25MB."
-    }
-
-    "show correct second paragraph" in {
       elementText(Selectors.secondParagraph) mustBe "You can send other file types or files larger than 25MB to files@voa.gov.uk ."
-    }
-
-    "contain upload another file button" in {
       elementText(Selectors.uploadAnotherFileButton) mustBe "Upload another file"
-    }
-
-    "contain continue button" in {
       elementText(Selectors.continueButton) mustBe "Continue"
-    }
-
-    "contain list section of files" in {
       elementText(Selectors.rowKey) mustBe "exampleFile"
+
+      document.select(Selectors.noJSRefreshButton).size() mustBe 0
+      document.select(Selectors.noJSMessage).size() mustBe 0
     }
 
+    "render noscript refresh button and message when inProgress = true" in {
+      val pageView = view(
+        assessmentId,
+        navBarContent(),
+        SummaryList(Seq(summaryListRow)),
+        address,
+        inProgress = true,
+        routes.UploadedDocumentController.onSubmit(Some(UploadId("12345")), true, assessmentId)
+      )
+
+      implicit val document: Document = Jsoup.parse(pageView.body)
+
+      val refreshButton = document.select(Selectors.noJSRefreshButton)
+      refreshButton.size() mustBe 1
+      refreshButton.text() mustBe "Refresh"
+      refreshButton.attr("href") mustBe routes.UploadedDocumentController.show(None, assessmentId).url
+
+      document.select(Selectors.noJSMessage).text() must include("JavaScript is disabled")
+    }
   }
 }
