@@ -20,8 +20,8 @@
     layout: Layout
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader, messages: Messages, appConfig: AppConfig)
-@layout(pageTitle = Some(titleNoForm(pageTitle)), showBackLink = true, navigationBarContent = None) {
+@()(implicit rh: RequestHeader, messages: Messages, appConfig: AppConfig)
+@layout(pageTitle = Some(titleNoForm(messages("thereIsAProblem.title"))), showBackLink = true, navigationBarContent = None) {
 
     <h1 class="govuk-heading-l">@messages("error.heading")</h1>
 
