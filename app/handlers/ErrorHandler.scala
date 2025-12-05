@@ -21,7 +21,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import views.html.ErrorTemplate
+import views.html.{AnswerErrorTemplate, ErrorTemplate}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ErrorHandler @Inject()(
                               val messagesApi: MessagesApi,
-                              view: ErrorTemplate,
+                              view: AnswerErrorTemplate,
                               appConfig: AppConfig
                             )(override implicit val ec: ExecutionContext) extends FrontendErrorHandler with I18nSupport {
 
