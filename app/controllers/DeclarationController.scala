@@ -30,7 +30,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.UniqueIdGenerator
-import views.html.DeclarationView
+import views.html.{AnswerErrorTemplate, DeclarationView}
 
 import java.time.LocalDate
 import javax.inject.Inject
@@ -43,7 +43,8 @@ class DeclarationController @Inject()(
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
                                        sessionRepository: SessionRepository,
-                                       connector: NGRNotifyConnector
+                                       connector: NGRNotifyConnector,
+                                       errorTemplate: AnswerErrorTemplate
                                      )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport with Logging {
 
   def show(assessmentId: AssessmentId): Action[AnyContent] =
@@ -78,18 +79,18 @@ class DeclarationController @Inject()(
                 } yield response match {
                   case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                   case _ =>
-                    InternalServerError
+                    InternalServerError(errorTemplate())
                 }
               case Some(value) =>
                 connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
                   case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
                   case _ =>
-                    InternalServerError
+                    InternalServerError(errorTemplate())
                 }
             }
 
           case None => logger.warn(s"[DeclarationController] missing date of completion")
-            Future.successful(BadRequest)
+            Future.successful(BadRequest(errorTemplate()))
         }
     }
 }

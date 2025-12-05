@@ -31,7 +31,7 @@ import pages.{AnythingElsePage, ChangeToUseOfSpacePage, DeclarationPage, HaveYou
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import views.html.DeclarationView
+import views.html.{AnswerErrorTemplate, DeclarationView}
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -39,6 +39,7 @@ import scala.concurrent.Future
 class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
   lazy val view: DeclarationView = inject[DeclarationView]
+  lazy val errorTemplateView: AnswerErrorTemplate = inject[AnswerErrorTemplate]
 
   def minUserAnswers: UserAnswers =
     emptyUserAnswers
@@ -64,7 +65,8 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
     fakeData(userAnswers),
     fakeRequireData(userAnswers),
     mockSessionRepository,
-    mockNGRNotifyConnector
+    mockNGRNotifyConnector,
+    errorTemplateView
   )
 
   "Declaration Controller" must {
