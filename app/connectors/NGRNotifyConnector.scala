@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, NotFoundException, StringContextOps}
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
@@ -47,7 +47,14 @@ class NGRNotifyConnector @Inject()(http: HttpClientV2,
       http.post(url("physical", assessmentId))
         .withBody(Json.toJson(userAnswers))
         .setHeader(headers.toSeq *)
-        .execute[NotifyPropertyChangeResponse]
+        .execute[HttpResponse]
+        .map { resp =>
+          resp.status match {
+            case 202 | 204 => NotifyPropertyChangeResponse(None)
+            case 200       => resp.json.as[NotifyPropertyChangeResponse]
+            case other     => NotifyPropertyChangeResponse(Some(s"Unexpected status: $other"))
+          }
+        }
     } else {
       Future.successful(NotifyPropertyChangeResponse(None))
     }
