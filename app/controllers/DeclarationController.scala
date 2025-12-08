@@ -60,7 +60,6 @@ class DeclarationController @Inject()(
         request.userAnswers.get(WhenCompleteChangePage(assessmentId)) match {
           case Some(date) =>
             val userAnswers = PropertyChangesUserAnswers(
-              CredId(request.credId),
               dateOfChange = date,
               useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
               internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
