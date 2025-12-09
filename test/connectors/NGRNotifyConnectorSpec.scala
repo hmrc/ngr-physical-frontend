@@ -35,7 +35,6 @@ class NGRNotifyConnectorSpec extends MockHttpV2 with TestData {
   val credId: CredId = CredId("1234")
 
   val userAnswers: PropertyChangesUserAnswers = PropertyChangesUserAnswers(
-    credId = credId,
     dateOfChange = LocalDate.of(1999, 1, 4),
     useOfSpace = None,
     internalFeatures = Seq.empty[(InternalFeature, String)],
