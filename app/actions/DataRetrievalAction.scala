@@ -38,7 +38,7 @@ class DataRetrievalActionImpl @Inject()(
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     sessionRepository.get(request.credId).flatMap { userAnswersOpt =>
-      ngrConnector.getLinkedProperty(CredId(request.credId)).map { linkedPropertyOpt =>
+      ngrConnector.getLinkedProperty(request.credId).map { linkedPropertyOpt =>
           OptionalDataRequest(request = request.request, userId = request.credId, userAnswers = userAnswersOpt, property = linkedPropertyOpt.vmvProperty, assessmentId = linkedPropertyOpt.requestSentReference.map(AssessmentId(_)))
       }
     }

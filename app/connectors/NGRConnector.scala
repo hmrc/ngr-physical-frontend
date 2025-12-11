@@ -34,7 +34,12 @@ class NGRConnector @Inject()(http: HttpClientV2,
                              appConfig: AppConfig,
                             )
                             (implicit ec: ExecutionContext) {
-  private def url(path: String): URL = url"${appConfig.nextGenerationRatesUrl}/next-generation-rates/$path"
+  private def url(path: String, parameter: Option[String] = None): URL =
+    parameter match {
+      case None => url"${appConfig.nextGenerationRatesUrl}/next-generation-rates/$path"
+      case Some(param) => url"${appConfig.nextGenerationRatesUrl}/next-generation-rates/$path/$param"
+    }
+
 
   def getRatepayer(credId: CredId)(implicit hc: HeaderCarrier): Future[Option[RatepayerRegistrationValuation]] = {
     implicit val rds: HttpReads[RatepayerRegistrationValuation] = readFromJson
@@ -44,20 +49,17 @@ class NGRConnector @Inject()(http: HttpClientV2,
       .execute[Option[RatepayerRegistrationValuation]]
   }
 
-  private def getPropertyLinkingUserAnswers(credId: CredId)(implicit hc: HeaderCarrier): Future[Option[PropertyLinkingUserAnswers]] = {
+  private def getPropertyLinkingUserAnswers(credId: String)(implicit hc: HeaderCarrier): Future[Option[PropertyLinkingUserAnswers]] = {
     implicit val rds: HttpReads[PropertyLinkingUserAnswers] = readFromJson
-    val dummyVMVProperty: VMVProperty = VMVProperty(0L, "", "", "", List.empty) // TODO: Replace with a proper VMVProperty instance if needed
-    val model: PropertyLinkingUserAnswers = PropertyLinkingUserAnswers(credId, dummyVMVProperty)
-    http.get(url("get-property-linking-user-answers"))
-      .withBody(Json.toJson(model))
+    http.get(url("get-property-linking-user-answers", Some(credId)))
       .execute[Option[PropertyLinkingUserAnswers]]
   }
 
-  def getLinkedProperty(credId: CredId)(implicit hc: HeaderCarrier): Future[PropertyLinkingUserAnswers] =
+  def getLinkedProperty(credId: String)(implicit hc: HeaderCarrier): Future[PropertyLinkingUserAnswers] =
     getPropertyLinkingUserAnswers(credId).map {
       case Some(propertyLinkingUserAnswers) => propertyLinkingUserAnswers
         case None => throw new NotFoundException("failed to find propertyLinkingUserAnswers from backend mongo")
       }
-  
+
 
 }

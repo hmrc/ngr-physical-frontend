@@ -59,7 +59,7 @@ class UploadDocumentControllerSpec extends ControllerSpecSupport with TestData {
   val pageTitle = "Upload"
   val contentP = "Files must be PDF, JPG or PNG and must be smaller than 25MB."
 
-  when(mockNGRConnector.getLinkedProperty(any[CredId])(any())).thenReturn(Future.successful(Some(property)))
+  when(mockNGRConnector.getLinkedProperty(any[String])(any())).thenReturn(Future.successful(Some(property)))
 
   "Upload documents Controller" must {
     "method show" must {
