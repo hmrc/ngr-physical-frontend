@@ -24,6 +24,7 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
+  val appName: String
   val registrationUrl: String
   val dashboardUrl: String
   val ngrPhysicalFrontendUrl: String

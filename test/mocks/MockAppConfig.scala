@@ -21,6 +21,7 @@ import config.AppConfig
 import config.features.Features
 
 class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
+  
   override val features: Features = new Features()(runModeConfiguration)
   override val ngrLogoutUrl: String = "http://localhost:1503/ngr-dashboard-frontend/signout"
   override val nextGenerationRatesUrl: String = "https://localhost:1500"
@@ -34,4 +35,5 @@ class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   override val callbackEndpointTarget: String = "http://localhost:1506/internal/callback-from-upscan"
   override val uploadRedirectTargetBase: String = "http://localhost:1504"
   override val nextGenerationRatesNotifyUrl: String = "http://localhost:1515"
+  override val appName: String = "ngr-physical-frontend"
 }
