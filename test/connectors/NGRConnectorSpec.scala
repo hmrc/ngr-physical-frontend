@@ -53,12 +53,12 @@ class NGRConnectorSpec extends MockHttpV2 {
     "Successfully return a VMV Property" in {
       val dummyVMVProperty: VMVProperty = VMVProperty(0L, "", "", "", List.empty)
       val response: PropertyLinkingUserAnswers = PropertyLinkingUserAnswers(credId, dummyVMVProperty)
-      setupMockHttpV2Get(s"${mockConfig.nextGenerationRatesUrl}/next-generation-rates/get-property-linking-user-answers/${credId.value}")(Some(response))
+      setupMockHttpV2Get(s"${mockConfig.nextGenerationRatesUrl}/next-generation-rates/get-property-linking-user-answers")(Some(response))
       val result: Future[PropertyLinkingUserAnswers] = ngrConnector.getLinkedProperty(credId.value)
       result.futureValue.vmvProperty mustBe dummyVMVProperty
     }
     "ratepayer not found" in {
-      setupMockHttpV2Get(s"${mockConfig.nextGenerationRatesUrl}/next-generation-rates/get-property-linking-user-answers/${credId.value}")(None)
+      setupMockHttpV2Get(s"${mockConfig.nextGenerationRatesUrl}/next-generation-rates/get-property-linking-user-answers")(None)
 
       intercept[NotFoundException] {
        await(ngrConnector.getLinkedProperty(credId.value))
