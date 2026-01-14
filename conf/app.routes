@@ -218,3 +218,6 @@ POST       /uploaded-supporting-document/:assessmentId                          
 
 GET        /removeFile/:assessmentId                                                                controllers.RemoveFileController.onPageLoad(uploadId: String, assessmentId: AssessmentId)
 POST       /removeFile/:assessmentId                                                                controllers.RemoveFileController.onSubmit(uploadId: String, assessmentId: AssessmentId)
+
+GET        /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onPageLoad(assessmentId: AssessmentId)
+POST       /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onSubmit(assessmentId: AssessmentId)

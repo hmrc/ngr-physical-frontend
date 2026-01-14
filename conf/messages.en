@@ -485,3 +485,17 @@ removeFile.change.hidden = remove uploaded file
 error.heading = Sorry, the service is unavailable
 error.p1 = You will be able to use this service later
 error.p2.not.saved = We have not saved your answers. When the service is available, you will have to start again
+
+whenChangeTookPlace.heading = Do you know when this change took place?
+whenChangeTookPlace.date.heading = When did this change take place?
+whenChangeTookPlace.yes = Yes
+whenChangeTookPlace.no = No
+whenChangeTookPlace.checkYourAnswersLabel = WhenChangeTookPlace
+whenChangeTookPlace.error.required = Select yes if you know when the change took place
+whenChangeTookPlace.change.hidden = WhenChangeTookPlace
+whenChangeTookPlace.hint = For example, 27 6 2026
+whenChangeTookPlace.date.error.required.all = Enter when the change was made
+whenChangeTookPlace.date.error.required.two =  When you completed the change must include a {0} and {1}.
+whenChangeTookPlace.date.error.required =  When you completed the change must include a {0}.
+whenChangeTookPlace.date.error.invalid = When you completed the change must be a real date.
+whenChangeTookPlace.date.error.future = When you completed the change must be today or in the past
