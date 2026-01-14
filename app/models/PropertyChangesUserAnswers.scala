@@ -22,7 +22,7 @@ import play.api.libs.json.{Format, Json, OFormat}
 
 import java.time.LocalDate
 
-case class PropertyChangesUserAnswers(dateOfChange: LocalDate,
+case class PropertyChangesUserAnswers(dateOfChange: Option[LocalDate],
                                       useOfSpace: Option[ChangeToUseOfSpace] = None,
                                       internalFeatures: Seq[(InternalFeature, String)],
                                       externalFeatures: Seq[(ExternalFeature, String)],

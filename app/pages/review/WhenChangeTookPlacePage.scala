@@ -17,12 +17,13 @@
 package pages.review
 
 import forms.review.WhenChangeTookPlaceData
+import models.AssessmentId
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object WhenChangeTookPlacePage extends QuestionPage[WhenChangeTookPlaceData] {
+case class WhenChangeTookPlacePage(assessmentId: AssessmentId) extends QuestionPage[WhenChangeTookPlaceData] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ assessmentId.value \ toString
 
   override def toString: String = "whenChangeTookPlace"
 }

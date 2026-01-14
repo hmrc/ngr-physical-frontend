@@ -49,7 +49,7 @@ class WhenChangeTookPlaceController @Inject()(
     implicit request =>
       val form = formProvider()
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhenChangeTookPlacePage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhenChangeTookPlacePage(assessmentId)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -66,7 +66,7 @@ class WhenChangeTookPlaceController @Inject()(
           Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, assessmentId, createDefaultNavBar()))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenChangeTookPlacePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenChangeTookPlacePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(routes.HaveYouChangedController.loadSpace(NormalMode, assessmentId))
       )

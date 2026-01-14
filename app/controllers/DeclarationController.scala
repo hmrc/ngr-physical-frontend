@@ -23,6 +23,7 @@ import models.NavBarPageContents.createDefaultNavBar
 import models.registration.CredId
 import models.{AssessmentId, ExternalFeature, InternalFeature, PropertyChangesUserAnswers, UserAnswers}
 import pages.*
+import pages.review.WhenChangeTookPlacePage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
@@ -45,7 +46,7 @@ class DeclarationController @Inject()(
                                        sessionRepository: SessionRepository,
                                        connector: NGRNotifyConnector,
                                        errorTemplate: AnswerErrorTemplate
-                                     )(implicit ec: ExecutionContext, appConfig: AppConfig)  extends FrontendBaseController with I18nSupport with Logging {
+                                     )(implicit ec: ExecutionContext, appConfig: AppConfig) extends FrontendBaseController with I18nSupport with Logging {
 
   def show(assessmentId: AssessmentId): Action[AnyContent] =
     (authenticate andThen getData andThen requireData) {
@@ -54,42 +55,41 @@ class DeclarationController @Inject()(
     }
 
   def next(assessmentId: AssessmentId): Action[AnyContent] =
-    (authenticate andThen getData andThen requireData).async  {
+    (authenticate andThen getData andThen requireData).async {
       implicit request =>
 
-        request.userAnswers.get(WhenCompleteChangePage(assessmentId)) match {
-          case Some(date) =>
-            val userAnswers = PropertyChangesUserAnswers(
-              dateOfChange = date,
-              useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
-              internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
-              externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
-              additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId)),
-              uploadedDocuments = Seq.empty[String] // TODO Implementation is pending for uploaded documents more tickets to follow
-            )
+        val dateOfChange: Option[LocalDate] =
+          request.userAnswers.get(WhenCompleteChangePage(assessmentId))
+            .orElse(request.userAnswers.get(WhenChangeTookPlacePage(assessmentId)).flatMap(_.date))
 
-            request.userAnswers.get(DeclarationPage(assessmentId)) match {
-              case None =>
-                val generateRef =  UniqueIdGenerator.generateId
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
-                  _ <- sessionRepository.set(updatedAnswers)
-                  response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)), assessmentId)
-                } yield response match {
-                  case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
-                  case _ =>
-                    InternalServerError(errorTemplate())
-                }
-              case Some(value) =>
-                connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
-                  case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
-                  case _ =>
-                    InternalServerError(errorTemplate())
-                }
+        val userAnswers = PropertyChangesUserAnswers(
+          dateOfChange = dateOfChange,
+          useOfSpace = request.userAnswers.get(ChangeToUseOfSpacePage(assessmentId)),
+          internalFeatures = InternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+          externalFeatures = ExternalFeature.getAnswersToSend(request.userAnswers, assessmentId),
+          additionalInfo = request.userAnswers.get(AnythingElsePage(assessmentId)),
+          uploadedDocuments = Seq.empty[String] // TODO Implementation is pending for uploaded documents more tickets to follow
+        )
+
+        request.userAnswers.get(DeclarationPage(assessmentId)) match {
+          case None =>
+            val generateRef = UniqueIdGenerator.generateId
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage(assessmentId), generateRef))
+              _ <- sessionRepository.set(updatedAnswers)
+              response <- connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(generateRef)), assessmentId)
+            } yield response match {
+              case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
+              case _ =>
+                InternalServerError(errorTemplate())
             }
-
-          case None => logger.warn(s"[DeclarationController] missing date of completion")
-            Future.successful(BadRequest(errorTemplate()))
+          case Some(value) =>
+            connector.postPropertyChanges(userAnswers.copy(declarationRef = Some(value)), assessmentId).map {
+              case ACCEPTED => Redirect(routes.SubmissionConfirmationController.onPageLoad(assessmentId))
+              case _ =>
+                InternalServerError(errorTemplate())
+            }
         }
+
     }
 }

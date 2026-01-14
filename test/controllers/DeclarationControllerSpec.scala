@@ -82,13 +82,6 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
     }
 
     ".next" should {
-      "redirect when accepted and DeclarationPage data is empty" in {
-        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        val result = controllerWithUserAnswers(Some(emptyUserAnswers)).next(assessmentId)(authenticatedFakeRequest)
-
-        status(result) mustBe BAD_REQUEST
-      }
-
       "redirect when accepted and DeclarationPage data is present without generated Reference" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(ACCEPTED))
@@ -96,14 +89,6 @@ class DeclarationControllerSpec extends ControllerSpecSupport with TryValues {
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.SubmissionConfirmationController.onPageLoad(assessmentId).url
-      }
-
-      "redirect when accepted and DeclarationPage data is present without mandatory field when change completed" in {
-        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-        when(mockNGRNotifyConnector.postPropertyChanges(any(), any())(any())).thenReturn(Future.successful(ACCEPTED))
-        val result = controllerWithUserAnswers(Some(minUserAnswers.remove(WhenCompleteChangePage(assessmentId)).success.value)).next(assessmentId)(authenticatedFakeRequest)
-
-        status(result) mustBe BAD_REQUEST
       }
 
       "redirect when accepted and DeclarationPage data is present with generated Reference" in {
