@@ -38,5 +38,5 @@ class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   override val nextGenerationRatesNotifyUrl: String = "http://localhost:1515"
   override val appName: String = "ngr-physical-frontend"
 
-  override def reviewDetailsUrl(assessmentId: AssessmentId): String = "http://localhost:1507/ngr-review-frontend /your-property-details"
+  override def reviewDetailsUrl(assessmentId: AssessmentId): String = "http://localhost:1507/ngr-review-frontend/your-property-details"
 }
