@@ -45,7 +45,7 @@ class WhenChangeTookPlaceController @Inject()(
 ) extends FrontendBaseController
   with I18nSupport {
 
-  def onPageLoad(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode:Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val form = formProvider()
 
@@ -54,21 +54,24 @@ class WhenChangeTookPlaceController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(request.property.addressFull, preparedForm, assessmentId, createDefaultNavBar()))
+      Ok(view(request.property.addressFull, preparedForm, mode, assessmentId, createDefaultNavBar()))
   }
 
-  def onSubmit(assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode, assessmentId: AssessmentId): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       val form = formProvider()
 
       form.bindFromRequest()(request.request).fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, assessmentId, createDefaultNavBar()))),
+          Future.successful(BadRequest(view(request.property.addressFull, formWithErrors, mode, assessmentId, createDefaultNavBar()))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhenChangeTookPlacePage(assessmentId), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(routes.HaveYouChangedController.loadSpace(NormalMode, assessmentId))
+          } yield mode match {
+            case NormalMode => Redirect(routes.HaveYouChangedController.loadSpace(NormalMode, assessmentId))
+            case _          => Redirect(routes.CheckYourAnswersController.onSubmit(assessmentId))
+          }
       )
   }
 }

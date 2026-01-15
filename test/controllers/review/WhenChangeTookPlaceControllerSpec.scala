@@ -19,7 +19,7 @@ package controllers.review
 import forms.review.WhenChangeTookPlaceFormProvider
 import forms.review.WhenChangeTookPlaceFormProvider
 import helpers.ControllerSpecSupport
-import models.{NormalMode, UserAnswers}
+import models.{CheckMode, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.test.Helpers.*
@@ -44,7 +44,7 @@ class WhenChangeTookPlaceControllerSpec extends ControllerSpecSupport {
   "AnythingElseController" should {
     "onPageLoad" must {
       "return 200" in {
-        val result = controller.onPageLoad(assessmentId)(authenticatedFakeRequest)
+        val result = controller.onPageLoad(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe OK
       }
     }
@@ -52,16 +52,29 @@ class WhenChangeTookPlaceControllerSpec extends ControllerSpecSupport {
       "redirect with valid form" in {
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
         val formRequest = requestWithForm(Map("value" -> "false"))
-        val result      = controller.onSubmit(assessmentId)(formRequest)
+        val result      = controller.onSubmit(NormalMode, assessmentId)(formRequest)
         status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.HaveYouChangedController.loadSpace(NormalMode, assessmentId).url
+        )
+      }
+
+      "redirect with valid form when mode is CheckMode" in {
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        val formRequest = requestWithForm(Map("value" -> "false"))
+        val result = controller.onSubmit(CheckMode, assessmentId)(formRequest)
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.CheckYourAnswersController.onPageLoad(assessmentId).url
+        )
       }
       "bad request if no date and yes selected" in {
         val formRequest = requestWithForm(Map("value" -> "true"))
-        val result      = controller.onSubmit(assessmentId)(formRequest)
+        val result      = controller.onSubmit(NormalMode, assessmentId)(formRequest)
         status(result) mustBe BAD_REQUEST
       }
       "bad request with invalid form" in {
-        val result = controller.onSubmit(assessmentId)(authenticatedFakeRequest)
+        val result = controller.onSubmit(NormalMode, assessmentId)(authenticatedFakeRequest)
         status(result) mustBe BAD_REQUEST
       }
     }

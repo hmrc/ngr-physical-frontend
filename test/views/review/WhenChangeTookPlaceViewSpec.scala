@@ -27,7 +27,7 @@ class WhenChangeTookPlaceViewSpec extends ViewBaseSpec {
   val view: WhenChangeTookPlaceView                 = inject[WhenChangeTookPlaceView]
   val address                                       = "123 street lane"
   val formProvider: WhenChangeTookPlaceFormProvider = inject[WhenChangeTookPlaceFormProvider]
-  implicit val document: Document                   = Jsoup.parse(view(address = address, form = formProvider(), AssessmentId("id"), navigationBarContent = navBarContent()).body)
+  implicit val document: Document                   = Jsoup.parse(view(address = address, form = formProvider(), NormalMode, AssessmentId("id"), navigationBarContent = navBarContent()).body)
 
   object Selectors {
     val address   = "#main-content > div > div.govuk-grid-column-two-thirds > form > span"

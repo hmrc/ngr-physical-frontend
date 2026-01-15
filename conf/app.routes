@@ -219,5 +219,7 @@ POST       /uploaded-supporting-document/:assessmentId                          
 GET        /removeFile/:assessmentId                                                                controllers.RemoveFileController.onPageLoad(uploadId: String, assessmentId: AssessmentId)
 POST       /removeFile/:assessmentId                                                                controllers.RemoveFileController.onSubmit(uploadId: String, assessmentId: AssessmentId)
 
-GET        /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onPageLoad(assessmentId: AssessmentId)
-POST       /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onSubmit(assessmentId: AssessmentId)
+GET        /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onPageLoad(mode: Mode = NormalMode, assessmentId: AssessmentId)
+POST       /review/when-change-took-place/:assessmentId                                             controllers.review.WhenChangeTookPlaceController.onSubmit(mode: Mode = NormalMode,assessmentId: AssessmentId)
+GET        /review/change-when-change-took-place/:assessmentId                                      controllers.review.WhenChangeTookPlaceController.onPageLoad(mode: Mode = CheckMode,assessmentId: AssessmentId)
+POST       /review/change-when-change-took-place/:assessmentId                                      controllers.review.WhenChangeTookPlaceController.onSubmit(mode: Mode = CheckMode,assessmentId: AssessmentId)
