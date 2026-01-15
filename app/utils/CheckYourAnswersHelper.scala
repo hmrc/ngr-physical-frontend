@@ -19,11 +19,13 @@ package utils
 import models.upscan.UploadId
 import models.{AssessmentId, CheckMode, External, ExternalFeature, HaveYouChangedControllerUse, Internal, InternalFeature, Space, UserAnswers}
 import pages.UploadDocumentsPage
+import pages.review.WhenChangeTookPlacePage
 import play.api.i18n.Messages
 import services.UploadProgressTracker
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
 import viewmodels.checkAnswers.*
+import viewmodels.checkAnswers.review.WhenChangeTookPlaceSummary
 import viewmodels.govuk.summarylist.*
 
 import javax.inject.Inject
@@ -55,6 +57,7 @@ class CheckYourAnswersHelper @Inject(uploadProgressTracker: UploadProgressTracke
       "checkYourAnswers.dateOfChange.heading",
       Seq(
         WhenCompleteChangeSummary.row(userAnswers, assessmentId),
+        WhenChangeTookPlaceSummary.row(userAnswers, assessmentId),
       )
     )
 

@@ -19,6 +19,7 @@ package mocks
 import play.api.Configuration
 import config.AppConfig
 import config.features.Features
+import models.AssessmentId
 
 class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   
@@ -36,4 +37,6 @@ class MockAppConfig(runModeConfiguration: Configuration) extends AppConfig {
   override val uploadRedirectTargetBase: String = "http://localhost:1504"
   override val nextGenerationRatesNotifyUrl: String = "http://localhost:1515"
   override val appName: String = "ngr-physical-frontend"
+
+  override def reviewDetailsUrl(assessmentId: AssessmentId): String = "http://localhost:1507/ngr-review-frontend/your-property-details"
 }

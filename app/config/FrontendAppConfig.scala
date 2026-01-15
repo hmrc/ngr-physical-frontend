@@ -18,6 +18,7 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import config.features.Features
+import models.AssessmentId
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -37,6 +38,7 @@ trait AppConfig {
   val timeout: Int
   val countdown: Int
   val nextGenerationRatesNotifyUrl: String
+  def reviewDetailsUrl(assessmentId: AssessmentId): String
 }
 
 @Singleton
@@ -48,6 +50,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   private lazy val dashboardHost: String = getString("microservice.services.ngr-dashboard-frontend.host")
   private lazy val registrationHost: String = getString("microservice.services.ngr-login-register-frontend.host")
   private lazy val physicalHost: String = getString("microservice.services.physical-frontend.host")
+  private lazy val reviewHost: String = getString("microservice.services.ngr-review-frontend.host")
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
@@ -71,7 +74,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, sc: ServicesCon
   override val uploadRedirectTargetBase: String = getString("upscan.upload-redirect-target-base")
   override val upscanHost: String = sc.baseUrl("upscan")
   override val callbackEndpointTarget: String = getString("upscan.callback-endpoint")
-
+  override def reviewDetailsUrl(assessmentId: AssessmentId): String = s"$reviewHost/ngr-review-frontend/your-property-details/$assessmentId"
+  
   def getString(key: String): String =
     configuration.get[String](key)
 
